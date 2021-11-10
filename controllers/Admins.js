@@ -74,6 +74,9 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const userId = req.params.userId; // Getting admin id from URL parameter
+    if (req.file) {
+      req.body.profile_picture = req.file.path;
+    }
     const user = await Admins.findByIdAndUpdate(userId, req.body, {
       new: true,
     }); // Updating the admin

@@ -11,7 +11,7 @@ Validations
 */
 
 // You can create multiple validations strategies (Read express-validator documentation for more details)
-// User Signup Validation
+// Admin Register Validation
 exports.validateAdmin = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
@@ -34,7 +34,7 @@ exports.validateAdmin = [
     }),
 ];
 
-// User Signup Validation
+// Admin Signup Validation
 exports.validateAdminUpdate = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
@@ -56,7 +56,31 @@ exports.validateAdminUpdate = [
       }
     }),
 ];
+// Provider Register Validation
+exports.validateProvider = [
+  check("name", " Name is required.").notEmpty().trim(),
+  check("email", "Email is required.").notEmpty().isEmail().trim(),
+  check("address1", " Address1 is required.").notEmpty().trim(),
+  check("address2", " Address2 is required.").notEmpty().trim(),
+  check("zipcode", " ZipCode is required.").notEmpty(),
+  check("city", " City is required.").notEmpty(),
+  check("contact_no", " Contact No. is required.").notEmpty(),
+  check("telephone_no", " Telephone No. is required.").notEmpty(),
 
+  check("url", " Telephone No. is required.").notEmpty(),
+];
+// Provider Signup Validation
+exports.validateProviderUpdate = [
+  check("name", " Name is required.").notEmpty().trim(),
+  check("email", "Email is required.").notEmpty().isEmail().trim(),
+  check("address1", " Address1 is required.").notEmpty().trim(),
+  check("address2", " Address2 is required.").notEmpty().trim(),
+  check("zipcode", " ZipCode is required.").notEmpty().trim(),
+  check("city", " City is required.").notEmpty().trim(),
+  check("contact_no", " Contact No. is required.").notEmpty().trim(),
+  check("telephone_no", " Telephone No. is required.").notEmpty().trim(),
+  check("url", " Telephone No. is required.").notEmpty().trim(),
+];
 /*
 ======================
 Result
