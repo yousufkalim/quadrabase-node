@@ -8,7 +8,7 @@ const architectsSchema = new mongoose.Schema(
       required: true,
     },
     last_name: {
-      type: Number,
+      type: String,
       required: true,
     },
     email: {
