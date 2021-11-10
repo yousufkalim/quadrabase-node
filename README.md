@@ -1,4 +1,4 @@
-# Node-JS Boilerplate
+# Quadrabase
 
 Installation steps to run server locally
 
