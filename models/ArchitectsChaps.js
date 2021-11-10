@@ -8,7 +8,7 @@ const architectChapsSchema = new mongoose.Schema(
       required: true,
     },
     text: {
-      type: Number,
+      type: String,
       required: true,
     },
     architect: {

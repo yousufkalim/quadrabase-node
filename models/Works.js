@@ -41,6 +41,10 @@ const worksSchema = new mongoose.Schema(
         ref: "WorkDetails",
       },
     ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
   },
   {
     timestamps: true,

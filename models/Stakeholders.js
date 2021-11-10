@@ -34,7 +34,7 @@ const stakeholdersSchema = new mongoose.Schema(
       required: false,
     },
     zipcode: {
-      type: String,
+      type: Number,
       required: false,
     },
     city: {

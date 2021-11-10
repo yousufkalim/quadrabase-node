@@ -23,15 +23,15 @@ const architectsSchema = new mongoose.Schema(
       minlength: 8,
     },
     establishment: {
-      type: Number,
+      type: String,
       required: true,
     },
     service: {
-      type: Number,
+      type: String,
       required: true,
     },
     client_code: {
-      type: Number,
+      type: String,
       required: true,
     },
     subscription: {

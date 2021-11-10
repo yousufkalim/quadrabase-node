@@ -14,7 +14,7 @@ const projectsSchema = new mongoose.Schema(
       required: true,
     },
     prescriber: {
-      type: Number,
+      type: String,
       required: true,
     },
     name: {
