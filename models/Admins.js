@@ -8,7 +8,7 @@ const adminsSchema = new mongoose.Schema(
       required: true,
     },
     last_name: {
-      type: Number,
+      type: String,
       required: true,
     },
     email: {
@@ -21,6 +21,9 @@ const adminsSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 8,
+    },
+    profile_picture: {
+      type: String,
     },
     role: {
       type: String,

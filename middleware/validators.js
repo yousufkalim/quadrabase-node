@@ -12,31 +12,47 @@ Validations
 
 // You can create multiple validations strategies (Read express-validator documentation for more details)
 // User Signup Validation
-exports.validateUser = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("cnic", "CNIC is required.").notEmpty().trim().isNumeric(),
+exports.validateAdmin = [
+  check("first_name", "First Name is required.").notEmpty().trim(),
+  check("last_name", "Last Name is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
   check("password", "Password is required.")
     .notEmpty()
     .trim()
     .isLength({ min: 8 }),
-  check("confirmPassword", "Password is required.")
+  check("confirm_password", "Confirm Password is required.")
     .notEmpty()
     .trim()
-    .isLength({ min: 8 }),
-  check("gender", "Gender is required.").notEmpty(),
-  check("role", "Role is required.").notEmpty(),
-  check("number", "Number is required.").notEmpty().isNumeric().trim(),
+    .isLength({ min: 8 })
+    .withMessage("Confirm Password min length must be 6 characters")
+    .custom(async (confirm_password, { req }) => {
+      const password = req.body.password;
+      if (password !== confirm_password) {
+        throw new Error("Password and Confirm Password must be same");
+      }
+    }),
 ];
 
 // User Signup Validation
-exports.validateUserUpdate = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("cnic", "CNIC is required.").notEmpty().isNumeric().trim(),
+exports.validateAdminUpdate = [
+  check("first_name", "First Name is required.").notEmpty().trim(),
+  check("last_name", "Last Name is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("gender", "Gender is required.").notEmpty(),
-  check("role", "Role is required.").notEmpty(),
-  check("number", "Number is required.").notEmpty().isNumeric().trim(),
+  check("password", "Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 }),
+  check("confirm_password", "Confirm Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage("Confirm Password min length must be 6 characters")
+    .custom(async (confirm_password, { req }) => {
+      const password = req.body.password;
+      if (password !== confirm_password) {
+        throw new Error("Password and Confirm Password must be same");
+      }
+    }),
 ];
 
 /*
@@ -54,8 +70,9 @@ Result
 exports.isValidated = (req, res, next) => {
   const errors = validationResult(req); // Validating the request by previous middleware's strategy
   if (!errors.isEmpty()) {
+    let message = errors.array()[0].msg; //error message
     // On error
-    res.status(400).send({ success: false, message: errors.array()[0] }); // Sending first error to the client from array of errors
+    res.status(400).send({ success: false, message: message }); // Sending first error to the client from array of errors
   } else {
     // Validated successfully
     next(); // Pass the request to next middleware or controller
