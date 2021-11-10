@@ -19,7 +19,8 @@ exports.validateAdmin = [
   check("password", "Password is required.")
     .notEmpty()
     .trim()
-    .isLength({ min: 8 }),
+    .isLength({ min: 8 })
+    .withMessage(" Password min length must be 6 characters"),
   check("confirm_password", "Confirm Password is required.")
     .notEmpty()
     .trim()
@@ -41,7 +42,8 @@ exports.validateAdminUpdate = [
   check("password", "Password is required.")
     .notEmpty()
     .trim()
-    .isLength({ min: 8 }),
+    .isLength({ min: 8 })
+    .withMessage(" Password min length must be 6 characters"),
   check("confirm_password", "Confirm Password is required.")
     .notEmpty()
     .trim()
