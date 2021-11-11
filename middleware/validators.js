@@ -81,6 +81,50 @@ exports.validateProviderUpdate = [
   check("telephone_no", " Telephone No. is required.").notEmpty().trim(),
   check("url", " Telephone No. is required.").notEmpty().trim(),
 ];
+// Chaps Create Validation
+exports.validateChaps = [
+  check("title", "Title is required.").notEmpty().trim(),
+  check("text", "Text is required.").notEmpty().trim(),
+];
+// Chaps Signup Validation
+exports.validateChapsUpdate = [
+  check("title", " Title is required.").notEmpty().trim(),
+  check("text", "Text is required.").notEmpty().trim(),
+];
+// VAT Create Validation
+exports.validateVAT = [
+  check("value", "Value is required.").notEmpty().trim(),
+  check("ranking", "Ranking is required.").notEmpty().trim(),
+];
+// VAT Signup Validation
+exports.validateVATUpdate = [
+  check("value", "Value is required.").notEmpty().trim(),
+  check("ranking", "Ranking is required.").notEmpty().trim(),
+];
+// Units Create Validation
+exports.validateUnits = [
+  check("name", "Name is required.").notEmpty().trim(),
+  check("symbol", "Symbol is required.").notEmpty().trim(),
+  check("ranking", "Ranking is required.").notEmpty().trim(),
+];
+// Units Signup Validation
+exports.validateUnitsUpdate = [
+  check("name", "Name is required.").notEmpty().trim(),
+  check("symbol", "Symbol is required.").notEmpty().trim(),
+  check("ranking", "Ranking is required.").notEmpty().trim(),
+];
+// CCTP Create Validation
+exports.validateCCTP = [
+  check("name", "Name is required.").notEmpty().trim(),
+  check("type", "Type is required.").notEmpty().trim(),
+  check("ranking", "Ranking is required.").notEmpty().trim(),
+];
+// CCTP Signup Validation
+exports.validateCCTPUpdate = [
+  check("name", "Name is required.").notEmpty().trim(),
+  check("type", "Type is required.").notEmpty().trim(),
+  check("ranking", "Ranking is required.").notEmpty().trim(),
+];
 /*
 ======================
 Result
