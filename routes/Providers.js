@@ -16,13 +16,13 @@ const {
  * @method delete delete Provider
  */
 
-// register - Provider Signup
+// create - Provider Signup
 router.post(
-  "/register",
+  "/create",
   upload.single("logo"),
   validateProvider,
   isValidated,
-  Providers.register
+  Providers.create
 );
 
 // Read

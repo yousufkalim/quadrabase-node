@@ -1,11 +1,11 @@
 const Providers = require("../models/Providers");
 
-//provider register
-exports.register = async (req, res) => {
+//provider create
+exports.create = async (req, res) => {
   try {
     let email = req.body.email; //email
-    const existingUser = await Providers.findOne({ email }); // Finding already existing provider
-    if (existingUser) {
+    const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
+    if (existingProvider) {
       // If we found existing provider in db
       return res
         .status(404)
@@ -14,6 +14,7 @@ exports.register = async (req, res) => {
     if (req.file) {
       req.body.logo = req.file.path;
     }
+
     // Creating provider
     const provider = await Providers.create(req.body); // Adding provider in db
 
