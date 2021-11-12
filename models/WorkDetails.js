@@ -10,7 +10,7 @@ const workDetailsSchema = new mongoose.Schema(
 
     ranking: {
       type: Number,
-      required: true,
+      required: false,
     },
 
     unit: { type: String },

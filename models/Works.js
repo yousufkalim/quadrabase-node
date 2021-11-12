@@ -7,15 +7,19 @@ const worksSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cctp: [
+    cctp_text: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CCTP",
+        type: String,
+      },
+    ],
+    btu_text: [
+      {
+        type: String,
       },
     ],
     ranking: {
       type: Number,
-      required: true,
+      required: false,
     },
     documents: [
       {

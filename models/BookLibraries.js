@@ -7,21 +7,24 @@ const bookLibrariesSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cctp: [
+    cctp_text: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CCTP",
+        type: String,
       },
     ],
     ranking: {
       type: Number,
       required: true,
     },
-    documents: [
-      {
-        type: String,
-      },
-    ],
+    type: {
+      type: String,
+      required: true,
+    },
+
+    architect: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Architects",
+    },
 
     families: [
       {

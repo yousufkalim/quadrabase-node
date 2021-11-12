@@ -67,7 +67,7 @@ exports.update = async (req, res) => {
     const CCTPId = req.params.CCTPId; // Getting CCTP id from URL parameter
 
     const cctp = await CCTP.findByIdAndUpdate(CCTPId, req.body, {}); // Updating the CCTP
-    res.json({ success: true, cctp }); // Success
+    res.json({ success: true, message: "CCTP updated successfully", cctp }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -84,7 +84,7 @@ exports.delete = async (req, res) => {
   try {
     const CCTPId = req.params.CCTPId; // Getting CCTP id from URL parameter
     const cctp = await CCTP.findByIdAndDelete(CCTPId); // Deleting the CCTP
-    res.json({ success: true, cctp }); // Success
+    res.json({ success: true, message: "CCTP deleted successfully", cctp }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

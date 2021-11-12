@@ -67,7 +67,7 @@ exports.update = async (req, res) => {
     const unitsId = req.params.unitsId; // Getting unit id from URL parameter
 
     const unit = await Units.findByIdAndUpdate(unitsId, req.body, {}); // Updating the unit
-    res.json({ success: true, unit }); // Success
+    res.json({ success: true, message: "Unit updated successfully", unit }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

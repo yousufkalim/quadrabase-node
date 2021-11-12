@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // Schema
-const chapsSchema = new mongoose.Schema(
+const ChapsSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -18,4 +18,4 @@ const chapsSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("Chaps", chapsSchema);
+module.exports = mongoose.model("Chap0", ChapsSchema);

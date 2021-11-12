@@ -1,22 +1,22 @@
-const Chaps = require("../models/Chaps");
+const Chap0 = require("../models/Chap0");
 
-//chaps create
+//chap0 create
 exports.create = async (req, res) => {
   try {
     let title = req.body.title; //title
-    const existingChap = await Chaps.findOne({ title }); // Finding already existing chaps
+    const existingChap = await Chap0.findOne({ title }); // Finding already existing Chap0
     if (existingChap) {
-      // If we found existing chaps in db
+      // If we found existing Chap0 in db
       return res
         .status(404)
         .json({ success: false, message: "Chap already exists." });
     }
 
-    // Creating chaps
-    const chaps = await Chaps.create(req.body); // Adding chaps in db
+    // Creating Chap0
+    const chap0 = await Chap0.create(req.body); // Adding Chap0 in db
 
     // Done
-    res.json({ message: "chaps created successfully", chaps }); //Success
+    res.json({ message: "Chap0 created successfully", chap0 }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -25,14 +25,14 @@ exports.create = async (req, res) => {
 };
 
 /**
- * Get all Chaps
+ * Get all Chap0
  * @param {object} req
  * @param {object} res
  */
 exports.getAll = async (req, res) => {
   try {
-    const Chaps = await Chaps.find(); // Finding all the Chaps from db
-    res.json({ success: true, Chaps }); // Success
+    const Chap0 = await Chap0.find(); // Finding all the Chap0 from db
+    res.json({ success: true, Chap0 }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -41,15 +41,15 @@ exports.getAll = async (req, res) => {
 };
 
 /**
- * Get chaps by id
+ * Get Chap0 by id
  * @param {object} req
  * @param {object} res
  */
 exports.getById = async (req, res) => {
   try {
-    const chapsId = req.params.chapsId; // Getting chaps id from URL parameter
-    const chaps = await Chaps.findById(chapsId); // Finding chaps by id
-    res.json({ success: true, chaps }); // Success
+    const Chap0Id = req.params.Chap0Id; // Getting chap0 id from URL parameter
+    const chap0 = await Chap0.findById(Chap0Id); // Finding chap0 by id
+    res.json({ success: true, chap0 }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
@@ -58,18 +58,18 @@ exports.getById = async (req, res) => {
 };
 
 /**
- * Update chaps
+ * Update chap0
  * @param {object} req
  * @param {object} res
  */
 exports.update = async (req, res) => {
   try {
-    const chapsId = req.params.chapsId; // Getting chaps id from URL parameter
+    const Chap0Id = req.params.Chap0Id; // Getting chap0 id from URL parameter
 
-    const chaps = await Chaps.findByIdAndUpdate(chapsId, req.body, {
+    const chap0 = await Chap0.findByIdAndUpdate(Chap0Id, req.body, {
       new: true,
-    }); // Updating the chaps
-    res.json({ success: true, chaps }); // Success
+    }); // Updating the chap0
+    res.json({ success: true, message: "Chap0 updated successfully", chap0 }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -84,9 +84,9 @@ exports.update = async (req, res) => {
  */
 exports.delete = async (req, res) => {
   try {
-    const chapsId = req.params.chapsId; // Getting chaps id from URL parameter
-    const chaps = await Chaps.findByIdAndDelete(chapsId); // Deleting the chaps
-    res.json({ success: true, chaps }); // Success
+    const Chap0Id = req.params.Chap0Id; // Getting chap0 id from URL parameter
+    const chap0 = await Chap0.findByIdAndDelete(Chap0Id); // Deleting the chap0
+    res.json({ success: true, chap0 }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

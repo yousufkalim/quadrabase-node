@@ -7,18 +7,11 @@ const familiesSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
     ranking: {
       type: Number,
       required: true,
     },
-    owner: {
-      type: String,
-      required: true,
-    },
+
     book_library: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -30,13 +30,14 @@ const architectsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    client_code: {
-      type: String,
-      required: true,
+    authorized: {
+      type: Boolean,
+      default: false,
     },
     subscription: {
-      type: {
-        type: String,
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subscriptions",
       },
       start_date: {
         type: Date,
@@ -66,10 +67,10 @@ const architectsSchema = new mongoose.Schema(
         ref: "Stakeholders",
       },
     ],
-    chap0part2: [
+    Chapspart2: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Chap0part2",
+        ref: "Chapspart2",
       },
     ],
     libraries: [

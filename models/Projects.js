@@ -53,9 +53,9 @@ const projectsSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    chap0part2: {
+    Chapspart2: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Chap0part2",
+      ref: "Chapspart2",
     },
     stakeholders: [
       {

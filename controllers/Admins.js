@@ -7,12 +7,12 @@ exports.register = async (req, res) => {
   try {
     let email = req.body.email; //email
     let password = req.body.password; //password
-    const existingUser = await Admins.findOne({ email }); // Finding already existing user
-    if (existingUser) {
+    const existingAdmin = await Admins.findOne({ email }); // Finding already existing admin
+    if (existingAdmin) {
       // If we found existing user in db
       return res
         .status(404)
-        .json({ success: false, message: "User already exists." });
+        .json({ success: false, message: "Admin already exists." });
     }
 
     // Getting url of the image
@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
     const user = await Admins.create(req.body); // Adding admin in db
 
     // Done
-    res.json({ message: "User created successfully", user }); //Success
+    res.json({ message: "Admin created successfully", user }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -62,7 +62,7 @@ exports.getById = async (req, res) => {
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -80,7 +80,7 @@ exports.update = async (req, res) => {
     const user = await Admins.findByIdAndUpdate(userId, req.body, {
       new: true,
     }); // Updating the admin
-    res.json({ success: true, user }); // Success
+    res.json({ success: true, message: "Admin updated successfully", user }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
@@ -97,7 +97,12 @@ exports.delete = async (req, res) => {
   try {
     const userId = req.params.userId; // Getting admin id from URL parameter
     const user = await Admins.findByIdAndDelete(userId); // Deleting the admin
-    res.json({ success: true, user }); // Success
+    res.json({
+      success: true,
+      message: "Admin deleted successfully",
+
+      user,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

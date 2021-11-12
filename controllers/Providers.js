@@ -74,7 +74,11 @@ exports.update = async (req, res) => {
     const provider = await Providers.findByIdAndUpdate(providerId, req.body, {
       new: true,
     }); // Updating the provider
-    res.json({ success: true, provider }); // Success
+    res.json({
+      success: true,
+      message: "Provider updated successfully",
+      provider,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -91,7 +95,11 @@ exports.delete = async (req, res) => {
   try {
     const providerId = req.params.providerId; // Getting provider id from URL parameter
     const provider = await Providers.findByIdAndDelete(providerId); // Deleting the provider
-    res.json({ success: true, provider }); // Success
+    res.json({
+      success: true,
+      message: "Provider deleted successfully",
+      provider,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

@@ -73,7 +73,7 @@ exports.update = async (req, res) => {
     const vat = await VAT.findByIdAndUpdate(VATId, req.body, {
       new: true,
     }); // Updating the VAT
-    res.json({ success: true, vat }); // Success
+    res.json({ success: true, message: "VAT updated successfully", vat }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
