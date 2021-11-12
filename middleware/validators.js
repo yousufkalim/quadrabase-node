@@ -175,6 +175,10 @@ exports.validateAddWorkDetail = [
   check("workId", "workId is required.").notEmpty().trim(),
   check("workDetail", "workDetail is required.").notEmpty().trim(),
 ];
+// Edit WorkDetail in BookLibraries Create Validation
+exports.validateEditWorkDetail = [
+  check("name", "Work Detail is required.").notEmpty().trim(),
+];
 /*
 ======================
 Result

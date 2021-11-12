@@ -8,6 +8,7 @@ const {
   validateAddCategory,
   validateEditCategory,
   validateAddWorkDetail,
+  validateEditWorkDetail,
   isValidated,
 } = require("../middleware/validators");
 
@@ -49,6 +50,7 @@ router.put(
   isValidated,
   BookLibraries.editWork
 );
+
 // Add a work detail to specific BookLibrary by it's id
 router.post(
   "/addWorkDetail",
@@ -56,7 +58,14 @@ router.post(
   isValidated,
   BookLibraries.addWorkDetail
 );
+// Update a workDetail to specific BookLibrary by it's id
 
+router.put(
+  "/editWorkDetail/:workDetailId",
+  validateEditWorkDetail,
+  isValidated,
+  BookLibraries.editWorkDetail
+);
 // Read
 router.get("/", BookLibraries.getAll); // Get all BookLibraries at once
 router.get("/:BookLibraryId", BookLibraries.getById); // Get one BookLibrary by it's id
@@ -74,6 +83,11 @@ router.delete("/:BookLibraryId", BookLibraries.delete); // delete a specific Boo
 // Delete a category to specific BookLibrary by it's id
 router.delete("/deleteCategory/:categoryId", BookLibraries.deleteCategory);
 // Delete a work to specific BookLibrary by it's id
-router.delete("/deleteWork/:categoryId", BookLibraries.deleteWork);
+router.delete("/deleteWork/:workId", BookLibraries.deleteWork);
+// Delete a work detail to specific BookLibrary by it's id
+router.delete(
+  "/deleteWorkDetail/:workDetailId",
+  BookLibraries.deleteWorkDetail
+);
 // Export
 module.exports = router;

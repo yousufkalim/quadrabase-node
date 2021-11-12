@@ -97,6 +97,12 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
+    let BookLibrariesExist = await BookLibraries.findById({
+      _id: BookLibraryId,
+    });
+    if (!BookLibrariesExist) {
+      return res.status(404).json({ message: "BookLibraries  not found" });
+    } // double check if BookLibraries id is invalid
     const BookLibrary = await BookLibraries.findByIdAndDelete(BookLibraryId); // Deleting the BookLibrary
     res.json({ success: true, BookLibrary }); // Success
   } catch (err) {
@@ -230,6 +236,10 @@ exports.editCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
   try {
     const categoryId = req.params.categoryId; // Getting Category id from URL parameter
+    let categoryExist = await Categories.findById({ _id: categoryId });
+    if (!categoryExist) {
+      return res.status(404).json({ message: "Category  not found" });
+    } // double check if Category id is invalid
     const Category = await Categories.findByIdAndDelete(categoryId); // Deleting the Category
     let BookLibraryId = Category.book_library;
     await BookLibraries.findByIdAndUpdate(
@@ -338,8 +348,11 @@ exports.editWork = async (req, res) => {
 exports.deleteWork = async (req, res) => {
   try {
     const workId = req.params.workId; // Getting Category id from URL parameter
+    let workExist = await Works.findById({ _id: workId });
+    if (!workExist) {
+      return res.status(404).json({ message: "Work  not found" });
+    } // double check if work detail id is invalid
     const Work = await Works.findByIdAndDelete(workId); // Deleting the Work
-    console.log(Work, "work");
     let categoryId = Work.category;
     await Categories.findByIdAndUpdate(
       categoryId,
@@ -381,7 +394,7 @@ exports.addWorkDetail = async (req, res) => {
     let workDetails = await WorkDetails.create({ name: workDetail });
     const workDetailId = workDetails._id;
     works = await Works.findByIdAndUpdate(
-      workDetailId,
+      workId,
       { $push: { work_details: workDetailId } },
       {
         new: true,
@@ -390,7 +403,7 @@ exports.addWorkDetail = async (req, res) => {
 
     works = await WorkDetails.findByIdAndUpdate(
       workDetailId,
-      { $set: { work: workDetailId } },
+      { $set: { work: workId } },
       {
         new: true,
       }
@@ -399,6 +412,71 @@ exports.addWorkDetail = async (req, res) => {
       success: true,
       message: "Work Detail added Successfully",
       works,
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+/**
+ * Edit WorkDetail into BookLibrary
+ * @param {object} req
+ * @param {object} res
+ */
+exports.editWorkDetail = async (req, res) => {
+  try {
+    const workDetailId = req.params.workDetailId; // Getting Category id from URL parameter
+    let workDetailExist = await WorkDetails.findById({ _id: workDetailId });
+    if (!workDetailExist) {
+      return res.status(404).json({ message: "Work id not found" });
+    } // double check if work id exists
+    let WorkDetail = await WorkDetails.findByIdAndUpdate(
+      workDetailId,
+      { $set: req.body },
+      {
+        new: true,
+      }
+    );
+
+    res.json({
+      success: true,
+      message: "Work Detail updated Successfully",
+      WorkDetail,
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Delete WorkDetail from specific book library
+ * @param {object} req
+ * @param {object} res
+ */
+exports.deleteWorkDetail = async (req, res) => {
+  try {
+    const workDetailId = req.params.workDetailId; // Getting Category id from URL parameter
+    let workDetailExist = await WorkDetails.findById({ _id: workDetailId });
+    if (!workDetailExist) {
+      return res.status(404).json({ message: "Work Detail  not found" });
+    } // double check if work detail id is invalid
+    const WorkDetail = await WorkDetails.findByIdAndDelete(workDetailId); // Deleting the Work
+    let workId = WorkDetail.work;
+    await Works.findByIdAndUpdate(
+      workId,
+      { $pull: { work_details: workDetailId } },
+      {
+        new: true,
+      }
+    ); // Updating the Category
+
+    res.json({
+      success: true,
+      message: "WorkDetail deleted successfully",
+      WorkDetail,
     }); // Success
   } catch (err) {
     // Error handling
