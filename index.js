@@ -11,7 +11,7 @@ require("./database");
 require("./middleware/common")(app);
 
 // API Routes
-app.use("/api", require("./routes"));
+app.use("/api/v1", require("./routes"));
 
 // Server
 app.listen(port, () => {

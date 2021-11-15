@@ -1,18 +1,14 @@
-/**
- * User schema
- * @author Yousuf Kalim
- */
 const mongoose = require("mongoose");
 
 // Schema
-const userSchema = new mongoose.Schema(
+const adminsSchema = new mongoose.Schema(
   {
-    name: {
+    first_name: {
       type: String,
       required: true,
     },
-    cnic: {
-      type: Number,
+    last_name: {
+      type: String,
       required: true,
     },
     email: {
@@ -26,18 +22,17 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
     },
-    gender: {
+    profile_pic: {
       type: String,
-      enum: ["male", "female"],
     },
     role: {
       type: String,
       required: true,
-      enum: ["admin", "user"],
-      default: "user",
+      enum: ["admin", "super_admin"],
+      default: "admin",
     },
-    photo: String,
-    number: String,
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: String },
   },
   {
     timestamps: true,
@@ -45,4 +40,4 @@ const userSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model("Admins", adminsSchema);
