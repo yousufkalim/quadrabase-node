@@ -1,9 +1,13 @@
 const router = require("express").Router();
 const Admins = require("../controllers/Admins");
 const { upload } = require("../middleware/multer");
+const Auth = require("../middleware/auth");
+
 const {
   validateAdmin,
   validateAdminUpdate,
+  validateForgotPassword,
+  validateResetPassword,
   isValidated,
 } = require("../middleware/validators");
 
@@ -19,28 +23,44 @@ const {
 // register - Admin Signup
 router.post(
   "/register",
-  upload.single("profile_picture"),
+  upload.single("profile_pic"),
   validateAdmin,
   isValidated,
   Admins.register
 );
+// login - Admin Login
+router.post("/login", Admins.login);
+// forgot password
+router.post(
+  "/forgotPassword",
+  validateForgotPassword,
+  isValidated,
+  Admins.forgotPassword
+);
+// reset password
+router.post(
+  "/resetPassword",
+  validateResetPassword,
+  isValidated,
+  Admins.resetPassword
+);
 
 // Read
-router.get("/", Admins.getAll); // Get all Admins at once
-router.get("/:userId", Admins.getById); // Get one admin by it's id
+router.get("/", Auth(), Admins.getAll); // Get all Admins at once
+router.get("/:adminId", Auth(), Admins.getById); // Get one admin by it's id
 
 // Update
 router.put(
-  "/:userId",
-  upload.single("profile_picture"),
-
+  "/:adminId",
+  upload.single("profile_pic"),
   validateAdminUpdate,
   isValidated,
+  Auth(),
   Admins.update
 ); // Update a specific admin by it's id
 
 // Delete
-router.delete("/:userId", Admins.delete); // delete a specific admin by it's id
+router.delete("/:adminId", Auth(), Admins.delete); // delete a specific admin by it's id
 
 // Export
 module.exports = router;
