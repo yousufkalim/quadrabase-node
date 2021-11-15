@@ -3,7 +3,32 @@ const Families = require("../models/Families");
 const Categories = require("../models/Categories");
 const Works = require("../models/Works");
 const WorkDetails = require("../models/WorkDetails");
-
+const populateQuery = [
+  {
+    path: "families",
+    populate: [
+      {
+        path: "Families",
+      },
+    ],
+  },
+  {
+    path: "categories",
+    populate: [
+      {
+        path: "Categories",
+      },
+    ],
+  },
+  {
+    path: "works",
+    populate: [
+      {
+        path: "Works",
+      },
+    ],
+  },
+];
 //BookLibrary create
 exports.create = async (req, res) => {
   try {
@@ -52,7 +77,9 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
-    const BookLibrary = await BookLibraries.findById(BookLibraryId); // Finding BookLibrary by id
+    const BookLibrary = await BookLibraries.findById(BookLibraryId).populate(
+      populateQuery
+    ); // Finding BookLibrary by id
     res.json({ success: true, BookLibrary }); // Success
   } catch (err) {
     // Error handling
@@ -288,7 +315,7 @@ exports.addWork = async (req, res) => {
       {
         new: true,
       }
-    ); // Updating the category
+    ).populate(populateQuery); // Updating the category
 
     work = await Works.findByIdAndUpdate(
       workId,

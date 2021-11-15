@@ -69,7 +69,7 @@ exports.validateProvider = [
 
   check("url", " Telephone No. is required.").notEmpty(),
 ];
-// Provider Signup Validation
+// Provider Update Validation
 exports.validateProviderUpdate = [
   check("name", " Name is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
@@ -81,12 +81,77 @@ exports.validateProviderUpdate = [
   check("telephone_no", " Telephone No. is required.").notEmpty().trim(),
   check("url", " Telephone No. is required.").notEmpty().trim(),
 ];
+
+// Architect Register Validation
+exports.validateArchitect = [
+  check("first_name", "First Name is required.").notEmpty().trim(),
+  check("last_name", "Last Name is required.").notEmpty().trim(),
+  check("email", "Email is required.").notEmpty().isEmail().trim(),
+  check("password", "Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage(" Password min length must be 6 characters"),
+  check("confirm_password", "Confirm Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage("Confirm Password min length must be 6 characters")
+    .custom(async (confirm_password, { req }) => {
+      const password = req.body.password;
+      if (password !== confirm_password) {
+        throw new Error("Password and Confirm Password must be same");
+      }
+    }),
+  check("establishment", "Establishment is required.").notEmpty().trim(),
+  check("service", "Service is required.").notEmpty().trim(),
+];
+// Architect Update Validation
+
+exports.validateArchitectUpdate = [
+  check("first_name", "First Name is required.").notEmpty().trim(),
+  check("last_name", "Last Name is required.").notEmpty().trim(),
+  check("email", "Email is required.").notEmpty().isEmail().trim(),
+  check("password", "Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage(" Password min length must be 6 characters"),
+  check("confirm_password", "Confirm Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage("Confirm Password min length must be 6 characters")
+    .custom(async (confirm_password, { req }) => {
+      const password = req.body.password;
+      if (password !== confirm_password) {
+        throw new Error("Password and Confirm Password must be same");
+      }
+    }),
+  check("establishment", "Establishment is required.").notEmpty().trim(),
+  check("service", "Service is required.").notEmpty().trim(),
+];
+
+// Subscription Create Validation
+exports.validateSubscription = [
+  check("name", "Name is required.").notEmpty().trim(),
+  check("type", "Type is required.").notEmpty().trim(),
+  check("duration", "Duration is required.").notEmpty().trim(),
+  check("price", "Price is required.").notEmpty().trim(),
+];
+// Subscription Update Validation
+exports.validateSubscriptionUpdate = [
+  check("name", "Name is required.").notEmpty().trim(),
+  check("type", "Type is required.").notEmpty().trim(),
+  check("duration", "Duration is required.").notEmpty().trim(),
+  check("price", "Price is required.").notEmpty().trim(),
+];
 // Chap0 Create Validation
 exports.validateChap0 = [
   check("title", "Title is required.").notEmpty().trim(),
   check("text", "Text is required.").notEmpty().trim(),
 ];
-// Chap0 Signup Validation
+// Chap0 Update Validation
 exports.validateChap0Update = [
   check("title", " Title is required.").notEmpty().trim(),
   check("text", "Text is required.").notEmpty().trim(),
@@ -96,7 +161,7 @@ exports.validateVAT = [
   check("value", "Value is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// VAT Signup Validation
+// VAT Update Validation
 exports.validateVATUpdate = [
   check("value", "Value is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
@@ -107,7 +172,7 @@ exports.validateUnits = [
   check("symbol", "Symbol is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// Units Signup Validation
+// Units Update Validation
 exports.validateUnitsUpdate = [
   check("name", "Name is required.").notEmpty().trim(),
   check("symbol", "Symbol is required.").notEmpty().trim(),
@@ -119,7 +184,7 @@ exports.validateCCTP = [
   check("type", "Type is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// CCTP Signup Validation
+// CCTP Update Validation
 exports.validateCCTPUpdate = [
   check("name", "Name is required.").notEmpty().trim(),
   check("type", "Type is required.").notEmpty().trim(),
@@ -130,7 +195,7 @@ exports.validateFamily = [
   check("name", "Name is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// Family Signup Validation
+// Family Update Validation
 exports.validateFamilyUpdate = [
   check("name", "Name is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
@@ -141,7 +206,7 @@ exports.validateBookLibrary = [
   check("ranking", "Ranking is required.").notEmpty().trim(),
   check("type", "Type is required.").notEmpty().trim(),
 ];
-// BookLibraries Signup Validation
+// BookLibraries Update Validation
 exports.validateBookLibraryUpdate = [
   check("name", "Name is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
@@ -178,6 +243,33 @@ exports.validateAddWorkDetail = [
 // Edit WorkDetail in BookLibraries Create Validation
 exports.validateEditWorkDetail = [
   check("name", "Work Detail is required.").notEmpty().trim(),
+];
+
+// Forgot Password Validation
+
+exports.validateForgotPassword = [
+  check("email", "Email is required.").notEmpty().trim(),
+];
+exports.validateResetPassword = [
+  check("password", "Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage("Password min length must be 6 characters"),
+  check("confirm_password", "Confirm Password is required.")
+    .notEmpty()
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage("Confirm Password min length must be 6 characters")
+    .custom(async (confirm_password, { req }) => {
+      const password = req.body.password;
+      if (password !== confirm_password) {
+        throw new Error("Password and Confirm Password must be same");
+      }
+    }),
+  check("resetPasswordToken", "Reset Password Token is required.")
+    .notEmpty()
+    .trim(),
 ];
 /*
 ======================

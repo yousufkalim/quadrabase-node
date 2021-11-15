@@ -6,6 +6,8 @@ const router = require("express").Router();
 
 // Parent Routes
 router.use("/Admins", require("./Admins")); // All the Admins routes
+router.use("/Architects", require("./Architects")); // All the Architects routes
+router.use("/Subscriptions", require("./Subscriptions")); // All the Subscriptions routes
 router.use("/Providers", require("./Providers")); // All the Providers routes
 router.use("/Chap0", require("./Chap0")); // All the Chaps routes
 router.use("/VAT", require("./VAT")); // All the VAT routes

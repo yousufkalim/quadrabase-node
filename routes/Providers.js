@@ -6,6 +6,7 @@ const {
   validateProviderUpdate,
   isValidated,
 } = require("../middleware/validators");
+const Auth = require("../middleware/auth");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -22,25 +23,26 @@ router.post(
   upload.single("logo"),
   validateProvider,
   isValidated,
+  Auth(),
   Providers.create
 );
 
 // Read
-router.get("/", Providers.getAll); // Get all Providers at once
-router.get("/:providerId", Providers.getById); // Get one Provider by it's id
+router.get("/", Auth(), Providers.getAll); // Get all Providers at once
+router.get("/:providerId", Auth(), Providers.getById); // Get one Provider by it's id
 
 // Update
 router.put(
   "/:providerId",
   upload.single("logo"),
-
   validateProviderUpdate,
   isValidated,
+  Auth(),
   Providers.update
 ); // Update a specific Provider by it's id
 
 // Delete
-router.delete("/:providerId", Providers.delete); // delete a specific Provider by it's id
+router.delete("/:providerId", Auth(), Providers.delete); // delete a specific Provider by it's id
 
 // Export
 module.exports = router;

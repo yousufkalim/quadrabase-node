@@ -5,6 +5,7 @@ const {
   validateCCTPUpdate,
   isValidated,
 } = require("../middleware/validators");
+const Auth = require("../middleware/auth");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -16,17 +17,17 @@ const {
  */
 
 // create - CCTP Signup
-router.post("/create", validateCCTP, isValidated, CCTP.create);
+router.post("/create", validateCCTP, isValidated, Auth(), CCTP.create);
 
 // Read
-router.get("/", CCTP.getAll); // Get all CCTP at once
-router.get("/:CCTPId", CCTP.getById); // Get one CCTP by it's id
+router.get("/", Auth(), CCTP.getAll); // Get all CCTP at once
+router.get("/:CCTPId", Auth(), CCTP.getById); // Get one CCTP by it's id
 
 // Update
-router.put("/:CCTPId", validateCCTPUpdate, isValidated, CCTP.update); // Update a specific CCTP by it's id
+router.put("/:CCTPId", validateCCTPUpdate, isValidated, Auth(), CCTP.update); // Update a specific CCTP by it's id
 
 // Delete
-router.delete("/:CCTPId", CCTP.delete); // delete a specific CCTP by it's id
+router.delete("/:CCTPId", Auth(), CCTP.delete); // delete a specific CCTP by it's id
 
 // Export
 module.exports = router;

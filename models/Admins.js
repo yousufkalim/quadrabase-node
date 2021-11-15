@@ -22,7 +22,7 @@ const adminsSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
     },
-    profile_picture: {
+    profile_pic: {
       type: String,
     },
     role: {
@@ -31,6 +31,8 @@ const adminsSchema = new mongoose.Schema(
       enum: ["admin", "super_admin"],
       default: "admin",
     },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: String },
   },
   {
     timestamps: true,

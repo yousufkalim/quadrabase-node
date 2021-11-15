@@ -5,6 +5,7 @@ const {
   validateVATUpdate,
   isValidated,
 } = require("../middleware/validators");
+const Auth = require("../middleware/auth");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -16,23 +17,17 @@ const {
  */
 
 // create - VAT Signup
-router.post("/create", validateVAT, isValidated, VAT.create);
+router.post("/create", validateVAT, isValidated, Auth(), VAT.create);
 
 // Read
-router.get("/", VAT.getAll); // Get all VAT at once
-router.get("/:VATId", VAT.getById); // Get one VAT by it's id
+router.get("/", Auth(), VAT.getAll); // Get all VAT at once
+router.get("/:VATId", Auth(), VAT.getById); // Get one VAT by it's id
 
 // Update
-router.put(
-  "/:VATId",
-
-  validateVATUpdate,
-  isValidated,
-  VAT.update
-); // Update a specific VAT by it's id
+router.put("/:VATId", validateVATUpdate, isValidated, Auth(), VAT.update); // Update a specific VAT by it's id
 
 // Delete
-router.delete("/:VATId", VAT.delete); // delete a specific VAT by it's id
+router.delete("/:VATId", Auth(), VAT.delete); // delete a specific VAT by it's id
 
 // Export
 module.exports = router;

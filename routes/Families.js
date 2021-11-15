@@ -6,6 +6,7 @@ const {
   validateFamilyUpdate,
   isValidated,
 } = require("../middleware/validators");
+const Auth = require("../middleware/auth");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -22,25 +23,26 @@ router.post(
   upload.single("logo"),
   validateFamily,
   isValidated,
+  Auth(),
   Families.create
 );
 
 // Read
-router.get("/", Families.getAll); // Get all Families at once
-router.get("/:familyId", Families.getById); // Get one family by it's id
+router.get("/", Auth(), Families.getAll); // Get all Families at once
+router.get("/:familyId", Auth(), Families.getById); // Get one family by it's id
 
 // Update
 router.put(
   "/:familyId",
   upload.single("logo"),
-
   validateFamilyUpdate,
   isValidated,
+  Auth(),
   Families.update
 ); // Update a specific family by it's id
 
 // Delete
-router.delete("/:familyId", Families.delete); // delete a specific family by it's id
+router.delete("/:familyId", Auth(), Families.delete); // delete a specific family by it's id
 
 // Export
 module.exports = router;

@@ -11,6 +11,7 @@ const {
   validateEditWorkDetail,
   isValidated,
 } = require("../middleware/validators");
+const Auth = require("../middleware/auth");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -22,14 +23,21 @@ const {
  */
 
 // create - BookLibrary Signup
-router.post("/create", validateBookLibrary, isValidated, BookLibraries.create);
+router.post(
+  "/create",
+  validateBookLibrary,
+  isValidated,
+  Auth(),
+  BookLibraries.create
+);
 // Add a family to specific BookLibrary by it's id
-router.post("/addFamily", BookLibraries.addFamily);
+router.post("/addFamily", Auth(), BookLibraries.addFamily);
 // Add a category to specific BookLibrary by it's id
 router.post(
   "/addCategory",
   validateAddCategory,
   isValidated,
+  Auth(),
   BookLibraries.addCategory
 );
 // Update a category to specific BookLibrary by it's id
@@ -38,16 +46,24 @@ router.put(
   "/editCategory/:categoryId",
   validateEditCategory,
   isValidated,
+  Auth(),
   BookLibraries.editCategory
 );
 // Add a work to specific BookLibrary by it's id
-router.post("/addWork", validateAddWork, isValidated, BookLibraries.addWork);
+router.post(
+  "/addWork",
+  validateAddWork,
+  isValidated,
+  Auth(),
+  BookLibraries.addWork
+);
 // Update a work to specific BookLibrary by it's id
 
 router.put(
   "/editWork/:workId",
   validateEditWork,
   isValidated,
+  Auth(),
   BookLibraries.editWork
 );
 
@@ -56,6 +72,7 @@ router.post(
   "/addWorkDetail",
   validateAddWorkDetail,
   isValidated,
+  Auth(),
   BookLibraries.addWorkDetail
 );
 // Update a workDetail to specific BookLibrary by it's id
@@ -64,6 +81,7 @@ router.put(
   "/editWorkDetail/:workDetailId",
   validateEditWorkDetail,
   isValidated,
+  Auth(),
   BookLibraries.editWorkDetail
 );
 // Read
@@ -75,18 +93,24 @@ router.put(
   "/:BookLibraryId",
   validateBookLibraryUpdate,
   isValidated,
+  Auth(),
   BookLibraries.update
 ); // Update a specific BookLibrary by it's id
 
 // Delete
-router.delete("/:BookLibraryId", BookLibraries.delete); // delete a specific BookLibrary by it's id
+router.delete("/:BookLibraryId", Auth(), BookLibraries.delete); // delete a specific BookLibrary by it's id
 // Delete a category to specific BookLibrary by it's id
-router.delete("/deleteCategory/:categoryId", BookLibraries.deleteCategory);
+router.delete(
+  "/deleteCategory/:categoryId",
+  Auth(),
+  BookLibraries.deleteCategory
+);
 // Delete a work to specific BookLibrary by it's id
-router.delete("/deleteWork/:workId", BookLibraries.deleteWork);
+router.delete("/deleteWork/:workId", Auth(), BookLibraries.deleteWork);
 // Delete a work detail to specific BookLibrary by it's id
 router.delete(
   "/deleteWorkDetail/:workDetailId",
+  Auth(),
   BookLibraries.deleteWorkDetail
 );
 // Export

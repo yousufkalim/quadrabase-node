@@ -22,13 +22,17 @@ const architectsSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
     },
+    profile_pic: {
+      type: String,
+    },
     establishment: {
       type: String,
-      required: true,
     },
     service: {
       type: String,
-      required: true,
+    },
+    client_code: {
+      type: String,
     },
     authorized: {
       type: Boolean,
@@ -45,15 +49,13 @@ const architectsSchema = new mongoose.Schema(
       end_date: {
         type: Date,
       },
-      required: true,
     },
+
     start_date: {
       type: Date,
-      required: true,
     },
     end_date: {
       type: Date,
-      required: true,
     },
     projects: [
       {
