@@ -19,7 +19,7 @@ function Auth(MODEL = Admins) {
       });
     });
     const user = await MODEL.findOne({
-      id: decoded.email,
+      id: decoded._id,
     });
     if (!user)
       return res

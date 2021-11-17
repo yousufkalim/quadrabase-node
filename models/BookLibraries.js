@@ -5,7 +5,6 @@ const bookLibrariesSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     cctp_text: [
       {
@@ -14,11 +13,9 @@ const bookLibrariesSchema = new mongoose.Schema(
     ],
     ranking: {
       type: Number,
-      required: true,
     },
     type: {
       type: String,
-      required: true,
     },
 
     architect: {

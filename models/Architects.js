@@ -3,60 +3,40 @@ const mongoose = require("mongoose");
 // Schema
 const architectsSchema = new mongoose.Schema(
   {
-    first_name: {
-      type: String,
-      required: true,
-    },
-    last_name: {
-      type: String,
-      required: true,
-    },
+    first_name: String,
+    last_name: String,
     email: {
       type: String,
-      required: true,
       unique: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: true,
       minlength: 8,
     },
-    profile_pic: {
-      type: String,
-    },
-    establishment: {
-      type: String,
-    },
-    service: {
-      type: String,
-    },
-    client_code: {
-      type: String,
-    },
+    profile_pic: String,
+    establishment: String,
+    service: String,
+    client_code: String,
     authorized: {
       type: Boolean,
       default: false,
     },
-    subscription: {
-      id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Subscriptions",
+    subscriptions: [
+      {
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Subscriptions",
+        },
+        start_date: {
+          type: Date,
+        },
+        end_date: {
+          type: Date,
+        },
       },
-      start_date: {
-        type: Date,
-      },
-      end_date: {
-        type: Date,
-      },
-    },
+    ],
 
-    start_date: {
-      type: Date,
-    },
-    end_date: {
-      type: Date,
-    },
     projects: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -69,18 +49,20 @@ const architectsSchema = new mongoose.Schema(
         ref: "Stakeholders",
       },
     ],
-    Chapspart2: [
+    chap0part2: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Chapspart2",
+        ref: "ArchitectsChap0",
       },
     ],
     libraries: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Libraries",
+        ref: "BookLibraries",
       },
     ],
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: String },
   },
   {
     timestamps: true,

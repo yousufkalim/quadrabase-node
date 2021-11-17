@@ -41,11 +41,14 @@ exports.create = async (req, res) => {
         .json({ success: false, message: "BookLibrary already exists." });
     }
 
-    // Creating BookLibrary
+    //Creating BookLibrary
     const BookLibrary = await BookLibraries.create(req.body); // Adding BookLibrary in db
 
     // Done
-    res.json({ message: "BookLibrary created successfully", BookLibrary }); //Success
+    res.json({
+      message: "BookLibrary created successfully",
+      BookLibrary,
+    }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -124,14 +127,27 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
-    let BookLibrariesExist = await BookLibraries.findById({
-      _id: BookLibraryId,
-    });
-    if (!BookLibrariesExist) {
+    let bookLibrary = await BookLibraries.findById(BookLibraryId);
+    if (!bookLibrary) {
       return res.status(404).json({ message: "BookLibraries  not found" });
     } // double check if BookLibraries id is invalid
-    const BookLibrary = await BookLibraries.findByIdAndDelete(BookLibraryId); // Deleting the BookLibrary
-    res.json({ success: true, BookLibrary }); // Success
+    await BookLibraries.findByIdAndDelete(BookLibraryId); // Deleting the BookLibrary
+
+    let categories = await Categories.deleteMany({
+      book_library: BookLibraryId,
+    }); // Deleting from the Categories in BookLibraries
+    const works = await Works.deleteMany({
+      category: categories._id,
+    }); // Deleting the Works
+    await WorkDetails.deleteMany({
+      work: works._id,
+    }); // Deleting the WorkDetails
+
+    await Families.updateMany(
+      { _id: bookLibrary.families },
+      { $pull: { book_libraries: bookLibrary._id } }
+    ); // Deleting from the Families
+    res.json({ success: true, BookLibrary: bookLibrary }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -145,12 +161,17 @@ exports.delete = async (req, res) => {
  */
 exports.addFamily = async (req, res) => {
   try {
-    const BookLibraryId = req.body.BookLibraryId; // Getting BookLibrary id from URL parameter
+    const BookLibraryId = req.body.BookLibraryId; // Getting BookLibrary id from body
+    const familyId = req.body.familyId; // Getting familyId id from body
+
     let BookLibrary = await BookLibraries.findById({ _id: BookLibraryId });
     if (!BookLibrary) {
       return res.status(404).json({ message: "BookLibray id not found" });
     } // double check if bookLibrary id is invalid
-    const familyId = req.body.familyId;
+    let family = await Families.findById(familyId);
+    if (!family) {
+      return res.status(404).json({ message: "Family id not found" });
+    } // double check if bookLibrary id is invalid
     BookLibrary = await BookLibraries.findByIdAndUpdate(
       BookLibraryId,
       { $push: { families: familyId } },
@@ -160,7 +181,7 @@ exports.addFamily = async (req, res) => {
     ); // Updating the BookLibrary
     await Families.findByIdAndUpdate(
       familyId,
-      { $push: { book_library: BookLibraryId } },
+      { $push: { book_libraries: BookLibraryId } },
       {
         new: true,
       }
@@ -215,7 +236,7 @@ exports.addCategory = async (req, res) => {
     res.json({
       success: true,
       message: "Category added Successfully",
-      BookLibrary,
+      category,
     }); // Success
   } catch (err) {
     // Error handling
@@ -268,7 +289,7 @@ exports.deleteCategory = async (req, res) => {
       return res.status(404).json({ message: "Category  not found" });
     } // double check if Category id is invalid
     const Category = await Categories.findByIdAndDelete(categoryId); // Deleting the Category
-    let BookLibraryId = Category.book_library;
+    let BookLibraryId = Category.book_library; //bookLibraryId in Category collection
     await BookLibraries.findByIdAndUpdate(
       BookLibraryId,
       { $pull: { categories: categoryId } },
@@ -276,7 +297,8 @@ exports.deleteCategory = async (req, res) => {
         new: true,
       }
     ); // Updating the BookLibrary
-
+    let workList = await Works.findOneAndDelete({ category: categoryId }); // delete works
+    await WorkDetails.deleteOne({ work: workList._id }); // delete work details
     res.json({
       success: true,
       message: "Category deleted successfully",
@@ -327,7 +349,7 @@ exports.addWork = async (req, res) => {
     res.json({
       success: true,
       message: "Work added Successfully",
-      category,
+      work,
     }); // Success
   } catch (err) {
     // Error handling
@@ -388,7 +410,7 @@ exports.deleteWork = async (req, res) => {
         new: true,
       }
     ); // Updating the Category
-
+    await WorkDetails.deleteOne({ work: workId }); // delete work details
     res.json({
       success: true,
       message: "Work deleted successfully",
@@ -438,7 +460,7 @@ exports.addWorkDetail = async (req, res) => {
     res.json({
       success: true,
       message: "Work Detail added Successfully",
-      works,
+      workDetails,
     }); // Success
   } catch (err) {
     // Error handling

@@ -5,14 +5,12 @@ const familiesSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     ranking: {
       type: Number,
-      required: true,
     },
 
-    book_library: [
+    book_libraries: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "BookLibraries",

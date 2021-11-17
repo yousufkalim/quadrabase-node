@@ -3,7 +3,6 @@ const Subscriptions = require("../controllers/Subscriptions");
 const { upload } = require("../middleware/multer");
 const {
   validateSubscription,
-  validateSubscriptionUpdate,
   isValidated,
 } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
@@ -35,7 +34,7 @@ router.get("/:subscriptionId", Auth(), Subscriptions.getById); // Get one subscr
 router.put(
   "/:subscriptionId",
   upload.single("logo"),
-  validateSubscriptionUpdate,
+  validateSubscription,
   isValidated,
   Auth(),
   Subscriptions.update

@@ -1,3 +1,4 @@
+const BookLibraries = require("../models/BookLibraries");
 const Families = require("../models/Families");
 
 //family create
@@ -90,7 +91,16 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const familyId = req.params.familyId; // Getting family id from URL parameter
+    let familyExist = await Families.findById(familyId);
+    if (!familyExist) {
+      return res.status(404).json({ message: "Family  not found" });
+    } // double check if family id is invalid
     const family = await Families.findByIdAndDelete(familyId); // Deleting the family
+    await BookLibraries.updateMany(
+      { _id: family.book_libraries },
+      { $pull: { families: family._id } }
+    ); // Deleting from the Families
+
     res.json({ success: true, family }); // Success
   } catch (err) {
     // Error handling

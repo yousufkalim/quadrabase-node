@@ -5,16 +5,13 @@ const architectChap0Schema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
     },
     text: {
       type: String,
-      required: true,
     },
     architect: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Architects",
-      required: true,
     },
   },
   {

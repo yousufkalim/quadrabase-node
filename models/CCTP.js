@@ -5,15 +5,12 @@ const cctpSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     type: {
       type: String,
-      required: true,
     },
     ranking: {
       type: Number,
-      required: true,
     },
   },
   {

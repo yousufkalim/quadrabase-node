@@ -1,11 +1,7 @@
 const router = require("express").Router();
 const Providers = require("../controllers/Providers");
 const { upload } = require("../middleware/multer");
-const {
-  validateProvider,
-  validateProviderUpdate,
-  isValidated,
-} = require("../middleware/validators");
+const { validateProvider, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
 
 /**
@@ -35,7 +31,7 @@ router.get("/:providerId", Auth(), Providers.getById); // Get one Provider by it
 router.put(
   "/:providerId",
   upload.single("logo"),
-  validateProviderUpdate,
+  validateProvider,
   isValidated,
   Auth(),
   Providers.update

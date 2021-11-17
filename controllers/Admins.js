@@ -62,21 +62,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-/**
- * Get all admins
- * @param {object} req
- * @param {object} res
- */
-exports.getAll = async (req, res) => {
-  try {
-    const admins = await Admins.find(); // Finding all the admins from db
-    res.json({ success: true, admins }); // Success
-  } catch (err) {
-    // Error handling
-    console.log("Error ----> ", err.message);
-    res.status(500).json({ message: err.message });
-  }
-};
+
 /**
  * Forgot Password
  * @param {object} req
@@ -149,6 +135,21 @@ exports.resetPassword = async (req, res) => {
     );
     // Done
     res.json({ message: "Password Updated successfully", user }); //Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+/**
+ * Get all admins
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getAll = async (req, res) => {
+  try {
+    const admins = await Admins.find(); // Finding all the admins from db
+    res.json({ success: true, admins }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

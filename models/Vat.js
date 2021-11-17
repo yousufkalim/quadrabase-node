@@ -5,11 +5,9 @@ const vatSchema = new mongoose.Schema(
   {
     value: {
       type: Number,
-      required: true,
     },
     ranking: {
       type: Number,
-      required: true,
     },
   },
   {

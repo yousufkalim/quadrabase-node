@@ -1,10 +1,6 @@
 const router = require("express").Router();
 const Units = require("../controllers/Units");
-const {
-  validateUnits,
-  validateUnitsUpdate,
-  isValidated,
-} = require("../middleware/validators");
+const { validateUnits, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
 
 /**
@@ -24,7 +20,7 @@ router.get("/", Auth(), Units.getAll); // Get all Units at once
 router.get("/:unitsId", Auth(), Units.getById); // Get one Units by it's id
 
 // Update
-router.put("/:unitsId", validateUnitsUpdate, isValidated, Auth(), Units.update); // Update a specific Units by it's id
+router.put("/:unitsId", validateUnits, isValidated, Auth(), Units.update); // Update a specific Units by it's id
 
 // Delete
 router.delete("/:unitsId", Auth(), Units.delete); // delete a specific Units by it's id
