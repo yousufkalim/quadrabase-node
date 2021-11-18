@@ -5,7 +5,6 @@ const worksSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     cctp_text: [
       {
@@ -19,17 +18,11 @@ const worksSchema = new mongoose.Schema(
     ],
     ranking: {
       type: Number,
-      required: false,
     },
-    documents: [
-      {
-        type: String,
-      },
-    ],
+
     unit: { type: String },
     unit_price: { type: Number },
     quantity: { type: Number },
-
     providers: [
       {
         provider: {

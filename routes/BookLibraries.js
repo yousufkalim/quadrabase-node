@@ -2,7 +2,6 @@ const router = require("express").Router();
 const BookLibraries = require("../controllers/BookLibraries");
 const {
   validateBookLibrary,
-  validateBookLibraryUpdate,
   validateAddWork,
   validateEditWork,
   validateAddCategory,
@@ -91,7 +90,7 @@ router.get("/:BookLibraryId", BookLibraries.getById); // Get one BookLibrary by 
 // Update
 router.put(
   "/:BookLibraryId",
-  validateBookLibraryUpdate,
+  validateBookLibrary,
   isValidated,
   Auth(),
   BookLibraries.update

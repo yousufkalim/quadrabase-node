@@ -1,11 +1,7 @@
 const router = require("express").Router();
 const Families = require("../controllers/Families");
 const { upload } = require("../middleware/multer");
-const {
-  validateFamily,
-  validateFamilyUpdate,
-  isValidated,
-} = require("../middleware/validators");
+const { validateFamily, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
 
 /**
@@ -35,7 +31,7 @@ router.get("/:familyId", Auth(), Families.getById); // Get one family by it's id
 router.put(
   "/:familyId",
   upload.single("logo"),
-  validateFamilyUpdate,
+  validateFamily,
   isValidated,
   Auth(),
   Families.update

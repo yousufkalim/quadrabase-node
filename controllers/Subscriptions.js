@@ -1,4 +1,5 @@
 const Subscriptions = require("../models/Subscriptions");
+const Architects = require("../models/Architects");
 
 //subscription create
 exports.create = async (req, res) => {
@@ -92,6 +93,10 @@ exports.delete = async (req, res) => {
   try {
     const subscriptionId = req.params.subscriptionId; // Getting subscription id from URL parameter
     const subscription = await Subscriptions.findByIdAndDelete(subscriptionId); // Deleting the subscription
+    await Architects.updateMany(
+      { _id: subscription.architects },
+      { $pull: { subscriptions: subscription._id } }
+    ); // Deleting from the Architects
     res.json({ success: true, subscription }); // Success
   } catch (err) {
     // Error handling

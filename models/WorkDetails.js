@@ -5,27 +5,13 @@ const workDetailsSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
     },
-
     ranking: {
       type: Number,
-      required: false,
     },
-
     unit: { type: String },
     unit_price: { type: Number },
     quantity: { type: Number },
-
-    providers: [
-      {
-        provider: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Providers",
-        },
-        documents: [{ type: String }],
-      },
-    ],
     work: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Work",

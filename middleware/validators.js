@@ -1,6 +1,6 @@
 /**
  * All the validation
- * @author Yousuf Kalim
+ * @author Shehzad Ahmed
  */
 const { check, validationResult } = require("express-validator");
 
@@ -33,29 +33,17 @@ exports.validateAdmin = [
       }
     }),
 ];
-
-// Admin Signup Validation
+// Admin Update Validation
 exports.validateAdminUpdate = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("password", "Password is required.")
-    .notEmpty()
-    .trim()
-    .isLength({ min: 8 })
-    .withMessage(" Password min length must be 6 characters"),
-  check("confirm_password", "Confirm Password is required.")
-    .notEmpty()
-    .trim()
-    .isLength({ min: 8 })
-    .withMessage("Confirm Password min length must be 6 characters")
-    .custom(async (confirm_password, { req }) => {
-      const password = req.body.password;
-      if (password !== confirm_password) {
-        throw new Error("Password and Confirm Password must be same");
-      }
-    }),
+  check("password", "Password is not allowed.").isEmpty().trim(),
+  check("confirm_password", "Confirm Password is not allowed.")
+    .isEmpty()
+    .trim(),
 ];
+
 // Provider Register Validation
 exports.validateProvider = [
   check("name", " Name is required.").notEmpty().trim(),
@@ -68,18 +56,6 @@ exports.validateProvider = [
   check("telephone_no", " Telephone No. is required.").notEmpty(),
 
   check("url", " Telephone No. is required.").notEmpty(),
-];
-// Provider Update Validation
-exports.validateProviderUpdate = [
-  check("name", " Name is required.").notEmpty().trim(),
-  check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("address1", " Address1 is required.").notEmpty().trim(),
-  check("address2", " Address2 is required.").notEmpty().trim(),
-  check("zipcode", " ZipCode is required.").notEmpty().trim(),
-  check("city", " City is required.").notEmpty().trim(),
-  check("contact_no", " Contact No. is required.").notEmpty().trim(),
-  check("telephone_no", " Telephone No. is required.").notEmpty().trim(),
-  check("url", " Telephone No. is required.").notEmpty().trim(),
 ];
 
 // Architect Register Validation
@@ -106,32 +82,19 @@ exports.validateArchitect = [
   check("establishment", "Establishment is required.").notEmpty().trim(),
   check("service", "Service is required.").notEmpty().trim(),
 ];
-// Architect Update Validation
 
-exports.validateArchitectUpdate = [
+// Architect Update Validation
+exports.validateUpdateArchitect = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("password", "Password is required.")
-    .notEmpty()
-    .trim()
-    .isLength({ min: 8 })
-    .withMessage(" Password min length must be 6 characters"),
-  check("confirm_password", "Confirm Password is required.")
-    .notEmpty()
-    .trim()
-    .isLength({ min: 8 })
-    .withMessage("Confirm Password min length must be 6 characters")
-    .custom(async (confirm_password, { req }) => {
-      const password = req.body.password;
-      if (password !== confirm_password) {
-        throw new Error("Password and Confirm Password must be same");
-      }
-    }),
   check("establishment", "Establishment is required.").notEmpty().trim(),
   check("service", "Service is required.").notEmpty().trim(),
+  check("password", "Password is not allowed.").isEmpty().trim(),
+  check("confirm_password", "Confirm Password is not allowed.")
+    .isEmpty()
+    .trim(),
 ];
-
 // Subscription Create Validation
 exports.validateSubscription = [
   check("name", "Name is required.").notEmpty().trim(),
@@ -139,79 +102,46 @@ exports.validateSubscription = [
   check("duration", "Duration is required.").notEmpty().trim(),
   check("price", "Price is required.").notEmpty().trim(),
 ];
-// Subscription Update Validation
-exports.validateSubscriptionUpdate = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("type", "Type is required.").notEmpty().trim(),
-  check("duration", "Duration is required.").notEmpty().trim(),
-  check("price", "Price is required.").notEmpty().trim(),
-];
+
 // Chap0 Create Validation
 exports.validateChap0 = [
   check("title", "Title is required.").notEmpty().trim(),
   check("text", "Text is required.").notEmpty().trim(),
 ];
-// Chap0 Update Validation
-exports.validateChap0Update = [
-  check("title", " Title is required.").notEmpty().trim(),
-  check("text", "Text is required.").notEmpty().trim(),
-];
+
 // VAT Create Validation
 exports.validateVAT = [
   check("value", "Value is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// VAT Update Validation
-exports.validateVATUpdate = [
-  check("value", "Value is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-];
+
 // Units Create Validation
 exports.validateUnits = [
   check("name", "Name is required.").notEmpty().trim(),
   check("symbol", "Symbol is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// Units Update Validation
-exports.validateUnitsUpdate = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("symbol", "Symbol is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-];
+
 // CCTP Create Validation
 exports.validateCCTP = [
   check("name", "Name is required.").notEmpty().trim(),
   check("type", "Type is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// CCTP Update Validation
-exports.validateCCTPUpdate = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("type", "Type is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-];
+
 // Family Create Validation
 exports.validateFamily = [
   check("name", "Name is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
-// Family Update Validation
-exports.validateFamilyUpdate = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-];
+
 // BookLibraries Create Validation
 exports.validateBookLibrary = [
   check("name", "Name is required.").notEmpty().trim(),
   check("ranking", "Ranking is required.").notEmpty().trim(),
   check("type", "Type is required.").notEmpty().trim(),
 ];
-// BookLibraries Update Validation
-exports.validateBookLibraryUpdate = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-  check("type", "Type is required.").notEmpty().trim(),
-];
+
 // Add Category in BookLibraries Create Validation
 exports.validateAddCategory = [
   check("BookLibraryId", "BookLibraryId is required.").notEmpty().trim(),

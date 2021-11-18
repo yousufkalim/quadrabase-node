@@ -1,4 +1,5 @@
 const Providers = require("../models/Providers");
+const Works = require("../models/Works");
 
 //provider create
 exports.create = async (req, res) => {
@@ -95,6 +96,10 @@ exports.delete = async (req, res) => {
   try {
     const providerId = req.params.providerId; // Getting provider id from URL parameter
     const provider = await Providers.findByIdAndDelete(providerId); // Deleting the provider
+    await Works.updateMany(
+      { _id: provider.providers },
+      { $pull: { providers: providerId } }
+    ); // Deleting from the Architects
     res.json({
       success: true,
       message: "Provider deleted successfully",

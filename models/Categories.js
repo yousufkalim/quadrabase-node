@@ -5,7 +5,6 @@ const categoriesSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     cctp_text: [
       {
@@ -14,14 +13,7 @@ const categoriesSchema = new mongoose.Schema(
     ],
     ranking: {
       type: Number,
-      required: false,
     },
-    documents: [
-      {
-        type: String,
-      },
-    ],
-
     book_library: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "BookLibraries",

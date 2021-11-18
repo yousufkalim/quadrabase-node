@@ -6,56 +6,47 @@ const projectsSchema = new mongoose.Schema(
     client: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Stakeholders",
-      required: true,
     },
     architect: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Architects",
-      required: true,
     },
     prescriber: {
       type: String,
-      required: true,
     },
     name: {
       type: String,
-      required: true,
     },
     vat: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "VAT",
     },
     market_type: {
       type: String,
-      required: true,
+      enum: ["Simple", "Trades", "TradesAndTranches", "PurchaseOrder"],
     },
     structure: {
       type: String,
-      required: true,
+      enum: ["DQEAndBPU", "DPGF"],
     },
     reference: {
       type: String,
-      required: false,
     },
     description: {
       type: String,
-      required: true,
     },
     chapter: {
       type: String,
-      required: false,
     },
     trades: {
       type: String,
-      required: false,
     },
     tranche: {
       type: String,
-      required: false,
     },
-    Chapspart2: {
+    chap0part2: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Chapspart2",
+      ref: "ArchitectsChap0",
     },
     stakeholders: [
       {
@@ -65,13 +56,9 @@ const projectsSchema = new mongoose.Schema(
     ],
     work: {
       name: { type: String },
-      cctp: {
-        name: { type: String },
-        type: { type: String },
-        ranking: { type: String },
-      },
+      cctp_text: [String],
+      btu_text: [String],
       ranking: { type: Number },
-      documents: [{ type: String }],
       unit: { type: String },
       unit_price: { type: Number },
       quantity: { type: Number },
@@ -86,7 +73,6 @@ const projectsSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["ongoing", "completed", "archived"],
-      required: true,
     },
   },
   {
