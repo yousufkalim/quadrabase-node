@@ -1,4 +1,4 @@
-const VAT = require("../models/VAT");
+const VAT = require("../models/Vat");
 
 //VAT create
 exports.create = async (req, res) => {
