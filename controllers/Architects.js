@@ -287,18 +287,22 @@ exports.delete = async (req, res) => {
       architect: architectId,
     }); // Deleting from the Projects
 
-    const bookLibraries = await BookLibraries.findOneAndDelete({
+    let bookLibraries = await BookLibraries.findOneAndDelete({
       architect: architectId,
     }); // Deleting the BookLibraries
+    bookLibraries = await BookLibraries.find({});
+    if (bookLibraries.length == 0) {
+      return res.json({ success: true, architect }); // Success
+    }
     await Families.updateMany(
       { _id: bookLibraries.families },
       { $pull: { book_libraries: bookLibraries._id } }
     ); // Deleting from the Families
 
-    const categories = await Categories.findOneAndDelete({
+    let categories = await Categories.findOneAndDelete({
       book_library: bookLibraries._id,
     }); // Deleting the Categories
-    const works = await Works.findOneAndDelete({
+    let works = await Works.findOneAndDelete({
       category: categories._id,
     }); // Deleting the Works
     await WorkDetails.findOneAndDelete({

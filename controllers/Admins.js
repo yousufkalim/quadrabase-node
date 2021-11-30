@@ -51,11 +51,11 @@ exports.login = async (req, res) => {
     if (!isCorrect)
       return res.status(404).json({ message: "Invalid Password" });
     const token = JWT.sign({ email }, process.env.JWT_SECRET, {
-      expiresIn: 60 * 60,
+      expiresIn: 60 * 60 * 60,
     });
     const result = { user, token };
     // Done
-    res.json({ success: true, result }); //Success
+    res.json({ success: true, message: "User login successfully", result }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
