@@ -35,7 +35,7 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const vat = await VAT.find(); // Finding all the VAT from db
+    const vat = await VAT.find().sort([["createdAt", -1]]); // Finding all the VAT from db
     res.json({ success: true, vat }); // Success
   } catch (err) {
     // Error handling

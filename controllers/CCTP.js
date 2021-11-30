@@ -31,7 +31,7 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const cctp = await CCTP.find(); // Finding all the CCTP from db
+    const cctp = await CCTP.find().sort([["createdAt", -1]]); // Finding all the CCTP from db
     res.json({ success: true, cctp }); // Success
   } catch (err) {
     // Error handling

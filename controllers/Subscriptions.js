@@ -31,7 +31,7 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const subscription = await Subscriptions.find(); // Finding all the Subscriptions from db
+    const subscription = await Subscriptions.find().sort([["createdAt", -1]]); // Finding all the Subscriptions from db
     res.json({ success: true, subscription }); // Success
   } catch (err) {
     // Error handling

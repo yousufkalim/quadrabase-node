@@ -79,8 +79,8 @@ exports.validateArchitect = [
         throw new Error("Password and Confirm Password must be same");
       }
     }),
-  check("establishment", "Establishment is required.").notEmpty().trim(),
-  check("service", "Service is required.").notEmpty().trim(),
+  // check("establishment", "Establishment is required.").notEmpty().trim(),
+  // check("service", "Service is required.").notEmpty().trim(),
 ];
 
 // Architect Update Validation
@@ -88,8 +88,8 @@ exports.validateUpdateArchitect = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("establishment", "Establishment is required.").notEmpty().trim(),
-  check("service", "Service is required.").notEmpty().trim(),
+  // check("establishment", "Establishment is required.").notEmpty().trim(),
+  // check("service", "Service is required.").notEmpty().trim(),
   check("password", "Password is not allowed.").isEmpty().trim(),
   check("confirm_password", "Confirm Password is not allowed.")
     .isEmpty()
