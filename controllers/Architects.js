@@ -201,8 +201,8 @@ exports.resetPassword = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const architect = await Architects.find(); // Finding all the Architects from db
-    res.json({ success: true, architect }); // Success
+    const architects = await Architects.find().sort([["createdAt", -1]]); // Finding all the Architects from db
+    res.json({ success: true, architects }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -265,7 +265,16 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const architectId = req.params.architectId; // Getting architect id from URL parameter
-    const architect = await Architects.findByIdAndDelete(architectId); // Deleting the architect
+    let architect = await Architects.findOne({ _id: architectId }); // Finding already existing Architect
+    if (!architect) {
+      // If we not found existing architect in db
+      return res
+        .status(401)
+        .json({ success: false, message: "Architect not found" });
+    }
+
+    architect = await Architects.findByIdAndDelete(architectId); // Deleting the architect
+
     await Stakeholders.findOneAndDelete({
       architect: architectId,
     }); // Deleting the Stakeholders

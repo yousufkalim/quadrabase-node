@@ -35,7 +35,7 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const family = await Families.find(); // Finding all the Families from db
+    const family = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
     res.json({ success: true, family }); // Success
   } catch (err) {
     // Error handling

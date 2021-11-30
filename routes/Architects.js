@@ -57,7 +57,7 @@ router.post(
   Architects.resetPassword
 );
 // Read
-router.get("/", Auth(ArchitectsModel), Architects.getAll); // Get all Architects at once
+router.get("/", Auth(), Architects.getAll); // Get all Architects at once
 router.get("/:architectId", Auth(ArchitectsModel), Architects.getById); // Get one architect by it's id
 
 // Update

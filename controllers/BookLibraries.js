@@ -63,7 +63,7 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const BookLibrary = await BookLibraries.find(); // Finding all the BookLibraries from db
+    const BookLibrary = await BookLibraries.find().sort([["createdAt", -1]]); // Finding all the BookLibraries from db
     res.json({ success: true, BookLibrary }); // Success
   } catch (err) {
     // Error handling

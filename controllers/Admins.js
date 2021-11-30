@@ -148,7 +148,7 @@ exports.resetPassword = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const admins = await Admins.find(); // Finding all the admins from db
+    const admins = await Admins.find().sort([["createdAt", -1]]); // Finding all the admins from db
     res.json({ success: true, admins }); // Success
   } catch (err) {
     // Error handling
@@ -164,8 +164,8 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     const adminId = req.params.adminId; // Getting user id from URL parameter
-    const user = await Admins.findById(adminId); // Finding user by id
-    res.json({ success: true, user }); // Success
+    const admin = await Admins.findById(adminId); // Finding user by id
+    res.json({ success: true, admin }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
