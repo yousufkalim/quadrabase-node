@@ -63,8 +63,8 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const BookLibrary = await BookLibraries.find().sort([["createdAt", -1]]); // Finding all the BookLibraries from db
-    res.json({ success: true, BookLibrary }); // Success
+    const bookLibraries = await BookLibraries.find().sort([["createdAt", -1]]); // Finding all the BookLibraries from db
+    res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -80,10 +80,10 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
-    const BookLibrary = await BookLibraries.findById(BookLibraryId).populate(
+    const bookLibrary = await BookLibraries.findById(BookLibraryId).populate(
       populateQuery
     ); // Finding BookLibrary by id
-    res.json({ success: true, BookLibrary }); // Success
+    res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
@@ -147,7 +147,11 @@ exports.delete = async (req, res) => {
       { _id: bookLibrary.families },
       { $pull: { book_libraries: bookLibrary._id } }
     ); // Deleting from the Families
-    res.json({ success: true, BookLibrary: bookLibrary }); // Success
+    res.json({
+      success: true,
+      message: "BookLibrary deleted successfully",
+      BookLibrary: bookLibrary,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
