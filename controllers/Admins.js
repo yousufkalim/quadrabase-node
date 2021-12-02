@@ -46,7 +46,6 @@ exports.login = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found!" });
     }
-
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
     if (!isCorrect)
       return res.status(404).json({ message: "Invalid Password" });
@@ -184,10 +183,12 @@ exports.update = async (req, res) => {
     if (req.file) {
       req.body.profile_pic = req.file.path;
     }
-    const user = await Admins.findByIdAndUpdate(adminId, req.body, {
+    delete req.body.password; //delete password
+    delete req.body.confirm_password; //delete confirm_password
+    const admin = await Admins.findByIdAndUpdate(adminId, req.body, {
       new: true,
     }); // Updating the admin
-    res.json({ success: true, message: "Admin updated successfully", user }); // Success
+    res.json({ success: true, message: "Admin updated successfully", admin }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
