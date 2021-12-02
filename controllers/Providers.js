@@ -35,8 +35,8 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const Providers = await Providers.find().sort([["createdAt", -1]]); // Finding all the Providers from db
-    res.json({ success: true, Providers }); // Success
+    const providers = await Providers.find().sort([["createdAt", -1]]); // Finding all the Providers from db
+    res.json({ success: true, providers }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
