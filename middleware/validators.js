@@ -140,8 +140,8 @@ exports.validateBookLibrary = [
 
 // Add Category in BookLibraries Create Validation
 exports.validateAddCategory = [
-  check("BookLibraryId", "BookLibraryId is required.").notEmpty().trim(),
-  check("categoryName", "categoryName is required.").notEmpty().trim(),
+  check("libraryId", "libraryId is required.").notEmpty().trim(),
+  check("name", "Category Name is required.").notEmpty().trim(),
 ];
 // Add Category in BookLibraries Create Validation
 exports.validateEditCategory = [

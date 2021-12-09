@@ -39,6 +39,8 @@ exports.create = async (req, res) => {
     if (req.file) {
       req.body.profile_pic = req.file.path;
     }
+    let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
+    req.body.client_code = client_code;
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt));
     // Creating architect
     const architect = await Architects.create(req.body); // Adding architect in db
@@ -292,7 +294,11 @@ exports.delete = async (req, res) => {
     }); // Deleting the BookLibraries
     bookLibraries = await BookLibraries.find({});
     if (bookLibraries.length == 0) {
-      return res.json({ success: true, architect }); // Success
+      return res.json({
+        success: true,
+        message: "Architect Deleted Successfully",
+        architect,
+      }); // Success
     }
     await Families.updateMany(
       { _id: bookLibraries.families },
@@ -302,6 +308,14 @@ exports.delete = async (req, res) => {
     let categories = await Categories.findOneAndDelete({
       book_library: bookLibraries._id,
     }); // Deleting the Categories
+    categories = await Categories.find({});
+    if (categories.length == 0) {
+      return res.json({
+        success: true,
+        message: "Architect Deleted Successfully",
+        architect,
+      }); // Success
+    }
     let works = await Works.findOneAndDelete({
       category: categories._id,
     }); // Deleting the Works
@@ -309,7 +323,11 @@ exports.delete = async (req, res) => {
       work: works._id,
     }); // Deleting the WorkDetails
 
-    res.json({ success: true, architect }); // Success
+    res.json({
+      success: true,
+      message: "Architect Deleted Successfully",
+      architect,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

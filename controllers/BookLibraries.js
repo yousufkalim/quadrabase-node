@@ -63,7 +63,35 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const bookLibraries = await BookLibraries.find().sort([["createdAt", -1]]); // Finding all the BookLibraries from db
+    let bookLibraries = await BookLibraries.aggregate([
+      // Finding all the BookLibraries from db
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "book_library",
+          as: "categories",
+        },
+      },
+      {
+        $lookup: {
+          from: "works",
+          localField: "categories._id",
+          foreignField: "category",
+          as: "works",
+        },
+      },
+      {
+        $lookup: {
+          from: "workdetails",
+          localField: "works._id",
+          foreignField: "work",
+          as: "work_details",
+        },
+      },
+      { $sort: { createdAt: -1 } },
+    ]);
+
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
@@ -209,18 +237,18 @@ exports.addFamily = async (req, res) => {
  */
 exports.addCategory = async (req, res) => {
   try {
-    const BookLibraryId = req.body.BookLibraryId; // Getting BookLibrary id from URL parameter
-    const categoryName = req.body.categoryName;
+    const BookLibraryId = req.body.libraryId; // Getting BookLibrary id from URL parameter
+    const name = req.body.name;
 
     let BookLibrary = await BookLibraries.findById({ _id: BookLibraryId });
     if (!BookLibrary) {
       return res.status(404).json({ message: "BookLibray id not found" });
     } // double check if bookLibrary id is invalid
-    let categoryExist = await Categories.findOne({ name: categoryName });
+    let categoryExist = await Categories.findOne({ name: name });
     if (categoryExist) {
       return res.status(400).json({ message: "Category name exists" });
     } // double check if category name exists
-    let category = await Categories.create({ name: categoryName });
+    let category = await Categories.create(req.body);
     const categoryId = category._id;
     BookLibrary = await BookLibraries.findByIdAndUpdate(
       BookLibraryId,

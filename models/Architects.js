@@ -19,8 +19,8 @@ const architectsSchema = new mongoose.Schema(
     service: String,
     client_code: String,
     authorized: {
-      type: Boolean,
-      default: false,
+      type: String,
+      default: "No",
     },
     subscriptions: [
       {
