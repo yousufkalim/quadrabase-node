@@ -31,8 +31,8 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const Units = await Units.find().sort([["createdAt", -1]]); // Finding all the Units from db
-    res.json({ success: true, Units }); // Success
+    const units = await Units.find().sort([["createdAt", -1]]); // Finding all the Units from db
+    res.json({ success: true, units }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

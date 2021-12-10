@@ -31,8 +31,8 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const Chap0 = await Chap0.find().sort([["createdAt", -1]]); // Finding all the Chap0 from db
-    res.json({ success: true, Chap0 }); // Success
+    const chap0 = await Chap0.find().sort([["createdAt", -1]]); // Finding all the Chap0 from db
+    res.json({ success: true, chap0 }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
