@@ -11,6 +11,9 @@ const BookLibraries = require("../models/BookLibraries");
 const WorkDetails = require("../models/WorkDetails");
 const Stakeholders = require("../models/Stakeholders");
 
+const Subscriptions = require("../models/Subscriptions");
+const moment = require("moment");
+
 const bcrypt = require("bcryptjs");
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 const JWT = require("jsonwebtoken");
@@ -203,7 +206,9 @@ exports.resetPassword = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const architects = await Architects.find().sort([["createdAt", -1]]); // Finding all the Architects from db
+    const architects = await Architects.find()
+      .sort([["createdAt", -1]])
+      .populate("subscriptions.id"); // Finding all the Architects from db
     res.json({ success: true, architects }); // Success
   } catch (err) {
     // Error handling
@@ -367,6 +372,44 @@ exports.deleteBookLibrary = async (req, res) => {
     }); // Deleting the WorkDetails
 
     res.json({ success: true, BookLibrary: bookLibrary }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// addSubscription
+exports.addSubscription = async (req, res) => {
+  try {
+    if (!req.body.subscriptionId) {
+      await Architects.findByIdAndUpdate(req.params.architectId, {
+        subscriptions: [],
+      });
+      res.json({ success: true, message: "Subscription Removed!" });
+    } else {
+      const subscription = await Subscriptions.findById(
+        req.body.subscriptionId
+      );
+      const data = {
+        id: subscription._id,
+        start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
+        end_date: moment(
+          moment(new Date())
+            .add(subscription.duration, "months")
+            .add(1, "days")
+            .calendar()
+        ).format("YYYY/MM/DD"),
+      };
+      await Architects.findByIdAndUpdate(
+        req.params.architectId,
+        {
+          subscriptions: data,
+        },
+        { new: true }
+      );
+      res.json({ success: true, message: "Subscription Updated!" });
+    }
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

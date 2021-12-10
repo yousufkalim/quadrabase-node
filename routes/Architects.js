@@ -79,5 +79,7 @@ router.delete(
   Architects.deleteBookLibrary
 ); // delete a specific architect by it's id
 
+router.put("/addsubscription/:architectId", Auth(), Architects.addSubscription); // delete a specific architect by it's id
+
 // Export
 module.exports = router;

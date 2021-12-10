@@ -22,20 +22,18 @@ const architectsSchema = new mongoose.Schema(
       type: String,
       default: "No",
     },
-    subscriptions: [
-      {
-        id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Subscriptions",
-        },
-        start_date: {
-          type: Date,
-        },
-        end_date: {
-          type: Date,
-        },
+    subscriptions: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subscriptions",
       },
-    ],
+      start_date: {
+        type: Date,
+      },
+      end_date: {
+        type: Date,
+      },
+    },
 
     projects: [
       {

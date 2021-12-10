@@ -10,7 +10,7 @@ const subscriptionsSchema = new mongoose.Schema(
       type: String,
     },
     duration: {
-      type: String,
+      type: Number, ////Number of months
     },
     price: {
       type: Number,
