@@ -329,7 +329,15 @@ exports.deleteCategory = async (req, res) => {
         new: true,
       }
     ); // Updating the BookLibrary
+
     let workList = await Works.findOneAndDelete({ category: categoryId }); // delete works
+
+    if (!workList) {
+      return res.json({
+        success: true,
+        message: "Category deleted successfully",
+      }); // Success
+    }
     await WorkDetails.deleteOne({ work: workList._id }); // delete work details
     res.json({
       success: true,
@@ -351,7 +359,7 @@ exports.deleteCategory = async (req, res) => {
 exports.addWork = async (req, res) => {
   try {
     const categoryId = req.body.categoryId; // Getting BookLibrary id from URL parameter
-    const workName = req.body.workName;
+    const workName = req.body.name;
 
     let category = await Categories.findById({ _id: categoryId });
     if (!category) {
@@ -361,7 +369,7 @@ exports.addWork = async (req, res) => {
     if (workExist) {
       return res.status(400).json({ message: "Work name exists" });
     } // double check if work name exists
-    let work = await Works.create({ name: workName });
+    let work = await Works.create(req.body);
     const workId = work._id;
     category = await Categories.findByIdAndUpdate(
       categoryId,
@@ -462,7 +470,7 @@ exports.deleteWork = async (req, res) => {
 exports.addWorkDetail = async (req, res) => {
   try {
     const workId = req.body.workId; // Getting BookLibrary id from URL parameter
-    const workDetail = req.body.workDetail;
+    const workDetail = req.body.name;
 
     let works = await Works.findById({ _id: workId });
     if (!works) {
@@ -472,7 +480,7 @@ exports.addWorkDetail = async (req, res) => {
     if (workDetailExist) {
       return res.status(400).json({ message: "Work Detail  exists" });
     } // double check if work detail  exists
-    let workDetails = await WorkDetails.create({ name: workDetail });
+    let workDetails = await WorkDetails.create(req.body);
     const workDetailId = workDetails._id;
     works = await Works.findByIdAndUpdate(
       workId,

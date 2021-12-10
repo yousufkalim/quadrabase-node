@@ -155,7 +155,7 @@ exports.validateAddFamily = [
 // Add Work in BookLibraries Create Validation
 exports.validateAddWork = [
   check("categoryId", "categoryId is required.").notEmpty().trim(),
-  check("workName", "workName is required.").notEmpty().trim(),
+  check("name", "Name is required.").notEmpty().trim(),
 ];
 // Add Work in BookLibraries Create Validation
 exports.validateEditWork = [
@@ -164,7 +164,7 @@ exports.validateEditWork = [
 // Add WorkDetail in BookLibraries Create Validation
 exports.validateAddWorkDetail = [
   check("workId", "workId is required.").notEmpty().trim(),
-  check("workDetail", "workDetail is required.").notEmpty().trim(),
+  check("name", "Name is required.").notEmpty().trim(),
 ];
 // Edit WorkDetail in BookLibraries Create Validation
 exports.validateEditWorkDetail = [
