@@ -29,7 +29,7 @@ router.post(
   upload.single("logo"),
   validateArchitect,
   isValidated,
-  Auth(ArchitectsModel),
+  Auth(),
   Architects.create
 );
 // create - BookLibrary
@@ -58,20 +58,20 @@ router.post(
 );
 // Read
 router.get("/", Auth(), Architects.getAll); // Get all Architects at once
-router.get("/:architectId", Auth(ArchitectsModel), Architects.getById); // Get one architect by it's id
+router.get("/:architectId", Auth(), Architects.getById); // Get one architect by it's id
 
 // Update
 router.put(
   "/:architectId",
   upload.single("logo"),
-  Auth(ArchitectsModel),
+  Auth(),
   validateUpdateArchitect,
   isValidated,
   Architects.update
 ); // Update a specific architect by it's id
 
 // Delete
-router.delete("/:architectId", Auth(ArchitectsModel), Architects.delete); // delete a specific architect by it's id
+router.delete("/:architectId", Auth(), Architects.delete); // delete a specific architect by it's id
 // Delete
 router.delete(
   "/BookLibraries/:BookLibraryId",
