@@ -134,8 +134,6 @@ exports.validateFamily = [
 // BookLibraries Create Validation
 exports.validateBookLibrary = [
   check("name", "Name is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-  check("type", "Type is required.").notEmpty().trim(),
 ];
 
 // Add Category in BookLibraries Create Validation
@@ -147,11 +145,7 @@ exports.validateAddCategory = [
 exports.validateEditCategory = [
   check("name", "Category Name is required.").notEmpty().trim(),
 ];
-// Add Family in BookLibraries Create Validation
-exports.validateAddFamily = [
-  check("BookLibraryId", "BookLibraryId is required.").notEmpty().trim(),
-  check("categoryName", "categoryName is required.").notEmpty().trim(),
-];
+
 // Add Work in BookLibraries Create Validation
 exports.validateAddWork = [
   check("categoryId", "categoryId is required.").notEmpty().trim(),

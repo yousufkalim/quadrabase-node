@@ -20,7 +20,7 @@ const architectsSchema = new mongoose.Schema(
     client_code: String,
     authorized: {
       type: String,
-      default: "No",
+      default: "Yes",
     },
     subscriptions: {
       id: {
