@@ -90,7 +90,7 @@ exports.delete = async (req, res) => {
   try {
     const VATId = req.params.VATId; // Getting VAT id from URL parameter
     const vat = await VAT.findByIdAndDelete(VATId); // Deleting the VAT
-    res.json({ success: true, vat }); // Success
+    res.json({ success: true,message:"VAT deleted successfully" , vat }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

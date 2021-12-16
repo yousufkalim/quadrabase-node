@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
       // If we found existing family in db
       return res
         .status(404)
-        .json({ success: false, message: "Family already exists." });
+        .json({ success: false, message: "Family already exists" });
     }
     if (req.file) {
       req.body.logo = req.file.path;
@@ -101,7 +101,7 @@ exports.delete = async (req, res) => {
       { $pull: { families: family._id } }
     ); // Deleting from the Families
 
-    res.json({ success: true, family }); // Success
+    res.json({ success: true,message: "Family deleted successfully" , family }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

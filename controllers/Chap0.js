@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
       // If we found existing Chap0 in db
       return res
         .status(404)
-        .json({ success: false, message: "Chap already exists." });
+        .json({ success: false, message: "Chap already exists" });
     }
 
     // Creating Chap0
@@ -71,7 +71,7 @@ exports.update = async (req, res) => {
     }); // Updating the chap0
     res.json({ success: true, message: "Chap0 updated successfully", chap0 }); // Success
   } catch (err) {
-    // Error handling
+    // Error handlings
     console.log("Error ----> ", err.message);
     res.status(500).json({ success: false, message: err.message });
   }
@@ -86,7 +86,7 @@ exports.delete = async (req, res) => {
   try {
     const Chap0Id = req.params.Chap0Id; // Getting chap0 id from URL parameter
     const chap0 = await Chap0.findByIdAndDelete(Chap0Id); // Deleting the chap0
-    res.json({ success: true, chap0 }); // Success
+    res.json({ success: true,message: "Chap0 deleted successfully" , chap0 }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

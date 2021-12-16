@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
       // If we found existing subscription in db
       return res
         .status(404)
-        .json({ success: false, message: "Subscription already exists." });
+        .json({ success: false, message: "Subscription already exists" });
     }
     // Creating subscription
     const subscription = await Subscriptions.create(req.body); // Adding subscription in db
@@ -97,7 +97,7 @@ exports.delete = async (req, res) => {
       { _id: subscription.architects },
       { $pull: { subscriptions: subscription._id } }
     ); // Deleting from the Architects
-    res.json({ success: true, subscription }); // Success
+    res.json({ success: true,message: "Subscription deleted successfully" , subscription }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
