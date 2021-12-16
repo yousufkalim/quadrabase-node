@@ -75,7 +75,14 @@ exports.update = async (req, res) => {
     const family = await Families.findByIdAndUpdate(familyId, req.body, {
       new: true,
     }); // Updating the family
-    res.json({ success: true, message: "Family updated successfully", family }); // Success
+
+    const families = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
+
+    res.json({
+      success: true,
+      message: "Family updated successfully",
+      families,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
