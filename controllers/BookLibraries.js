@@ -89,7 +89,7 @@ exports.getAll = async (req, res) => {
           as: "work_details",
         },
       },
-      { $sort: { createdAt: -1 } },
+      { $sort: { ranking: 1 } },
     ]);
 
     res.json({ success: true, bookLibraries }); // Success
@@ -409,6 +409,7 @@ exports.editWork = async (req, res) => {
     if (!workExist) {
       return res.status(404).json({ message: "Work id not found" });
     } // double check if work id exists
+    console.log(req.body);
     let Work = await Works.findByIdAndUpdate(
       workId,
       { $set: req.body },

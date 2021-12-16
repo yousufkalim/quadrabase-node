@@ -20,9 +20,8 @@ const worksSchema = new mongoose.Schema(
       type: Number,
     },
 
-    unit: { type: String },
-    unit_price: { type: Number },
-    quantity: { type: Number },
+    unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
+
     providers: [
       {
         provider: {

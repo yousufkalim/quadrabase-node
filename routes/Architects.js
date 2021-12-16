@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Architects = require("../controllers/Architects");
 const ArchitectsModel = require("../models/Architects");
 
-const { upload } = require("../middleware/multer");
+const upload = require("../middleware/multer");
 const Auth = require("../middleware/auth");
 
 const {
@@ -26,7 +26,8 @@ const {
 // create - architect Signup
 router.post(
   "/create",
-  upload.single("logo"),
+  upload("/", "logo", "single"),
+
   validateArchitect,
   isValidated,
   Auth(),
@@ -63,7 +64,8 @@ router.get("/:architectId", Auth(), Architects.getById); // Get one architect by
 // Update
 router.put(
   "/:architectId",
-  upload.single("logo"),
+  upload("/", "logo", "single"),
+
   Auth(),
   validateUpdateArchitect,
   isValidated,
