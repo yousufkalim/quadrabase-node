@@ -385,6 +385,7 @@ exports.addSubscription = async (req, res) => {
     if (!req.body.subscriptionId) {
       await Architects.findByIdAndUpdate(req.params.architectId, {
         subscriptions: [],
+        authorized: "No",
       });
       res.json({ success: true, message: "Subscription Removed!" });
     } else {
@@ -405,6 +406,7 @@ exports.addSubscription = async (req, res) => {
         req.params.architectId,
         {
           subscriptions: data,
+          authorized: "Yes",
         },
         { new: true }
       );
