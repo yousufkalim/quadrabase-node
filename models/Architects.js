@@ -18,6 +18,7 @@ const architectsSchema = new mongoose.Schema(
     establishment: String,
     service: String,
     client_code: String,
+    credit: { type: Number, default: 1 },
     authorized: {
       type: String,
       default: "Yes",

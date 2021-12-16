@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Admins = require("../controllers/Admins");
-const { upload } = require("../middleware/multer");
+const upload = require("../middleware/multer");
 const Auth = require("../middleware/auth");
 
 const {
@@ -23,7 +23,8 @@ const {
 // register - Admin Signup
 router.post(
   "/register",
-  upload.single("profile_pic"),
+  upload("/", "profile_pic", "single"),
+
   validateAdmin,
   isValidated,
   Admins.register
@@ -52,7 +53,8 @@ router.get("/:adminId", Auth(), Admins.getById); // Get one admin by it's id
 // Update
 router.put(
   "/:adminId",
-  upload.single("profile_pic"),
+
+  upload("/", "profile_pic", "single"),
   validateAdminUpdate,
   isValidated,
   Auth(),

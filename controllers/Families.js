@@ -12,9 +12,6 @@ exports.create = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Family already exists." });
     }
-    if (req.file) {
-      req.body.logo = req.file.path;
-    }
 
     // Creating family
     const family = await Families.create(req.body); // Adding family in db
@@ -69,9 +66,7 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const familyId = req.params.familyId; // Getting family id from URL parameter
-    if (req.file) {
-      req.body.logo = req.file.path;
-    }
+
     const family = await Families.findByIdAndUpdate(familyId, req.body, {
       new: true,
     }); // Updating the family

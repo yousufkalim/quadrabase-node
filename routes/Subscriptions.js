@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const Subscriptions = require("../controllers/Subscriptions");
-const { upload } = require("../middleware/multer");
 const {
   validateSubscription,
   isValidated,
@@ -19,7 +18,6 @@ const Auth = require("../middleware/auth");
 // create - subscription Signup
 router.post(
   "/create",
-  upload.single("logo"),
   validateSubscription,
   isValidated,
   Auth(),
@@ -33,7 +31,6 @@ router.get("/:subscriptionId", Auth(), Subscriptions.getById); // Get one subscr
 // Update
 router.put(
   "/:subscriptionId",
-  upload.single("logo"),
   validateSubscription,
   isValidated,
   Auth(),

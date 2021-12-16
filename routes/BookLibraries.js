@@ -88,13 +88,7 @@ router.get("/", BookLibraries.getAll); // Get all BookLibraries at once
 router.get("/:BookLibraryId", BookLibraries.getById); // Get one BookLibrary by it's id
 
 // Update
-router.put(
-  "/:BookLibraryId",
-  validateBookLibrary,
-  isValidated,
-  Auth(),
-  BookLibraries.update
-); // Update a specific BookLibrary by it's id
+router.put("/:BookLibraryId", Auth(), BookLibraries.update); // Update a specific BookLibrary by it's id
 
 // Delete
 router.delete("/:BookLibraryId", Auth(), BookLibraries.delete); // delete a specific BookLibrary by it's id

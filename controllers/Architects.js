@@ -405,6 +405,7 @@ exports.addSubscription = async (req, res) => {
         req.params.architectId,
         {
           subscriptions: data,
+          credit: req.body.credit,
         },
         { new: true }
       );
