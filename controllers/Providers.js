@@ -12,9 +12,6 @@ exports.create = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Provider already exists" });
     }
-    if (req.file) {
-      req.body.logo = req.file.path;
-    }
 
     // Creating provider
     const provider = await Providers.create(req.body); // Adding provider in db
@@ -69,9 +66,7 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const providerId = req.params.providerId; // Getting provider id from URL parameter
-    if (req.file) {
-      req.body.logo = req.file.path;
-    }
+
     const provider = await Providers.findByIdAndUpdate(providerId, req.body, {
       new: true,
     }); // Updating the provider

@@ -12,15 +12,12 @@ exports.create = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Family already exists" });
     }
-    if (req.file) {
-      req.body.logo = req.file.path;
-    }
 
     // Creating family
     const family = await Families.create(req.body); // Adding family in db
-
+    const families = await Families.find().sort([["createdAt", -1]]);
     // Done
-    res.json({ message: "Family created successfully", family }); //Success
+    res.json({ message: "Family created successfully", families }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -35,8 +32,8 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const family = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
-    res.json({ success: true, family }); // Success
+    const families = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
+    res.json({ success: true, families }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -69,13 +66,18 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const familyId = req.params.familyId; // Getting family id from URL parameter
-    if (req.file) {
-      req.body.logo = req.file.path;
-    }
+
     const family = await Families.findByIdAndUpdate(familyId, req.body, {
       new: true,
     }); // Updating the family
-    res.json({ success: true, message: "Family updated successfully", family }); // Success
+
+    const families = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
+
+    res.json({
+      success: true,
+      message: "Family updated successfully",
+      families,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -100,8 +102,13 @@ exports.delete = async (req, res) => {
       { _id: family.book_libraries },
       { $pull: { families: family._id } }
     ); // Deleting from the Families
+    const families = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
 
-    res.json({ success: true,message: "Family deleted successfully" , family }); // Success
+    res.json({
+      success: true,
+      families,
+      message: "Family deleted successfully",
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
