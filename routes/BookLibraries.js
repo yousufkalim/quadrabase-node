@@ -43,8 +43,7 @@ router.post(
 
 router.put(
   "/editCategory/:categoryId",
-  validateEditCategory,
-  isValidated,
+
   Auth(),
   BookLibraries.editCategory
 );
@@ -60,8 +59,7 @@ router.post(
 
 router.put(
   "/editWork/:workId",
-  validateEditWork,
-  isValidated,
+
   Auth(),
   BookLibraries.editWork
 );
@@ -78,8 +76,7 @@ router.post(
 
 router.put(
   "/editWorkDetail/:workDetailId",
-  validateEditWorkDetail,
-  isValidated,
+
   Auth(),
   BookLibraries.editWorkDetail
 );
