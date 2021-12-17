@@ -3,6 +3,8 @@ const Families = require("../models/Families");
 const Categories = require("../models/Categories");
 const Works = require("../models/Works");
 const WorkDetails = require("../models/WorkDetails");
+const Providers = require("../models/Providers");
+
 const populateQuery = [
   {
     path: "families",
@@ -33,6 +35,8 @@ const populateQuery = [
 exports.create = async (req, res) => {
   try {
     let name = req.body.name; //name
+    const familyId = req.body.familyId; // Getting familyId id from body
+
     const existingBookLibrary = await BookLibraries.findOne({ name }); // Finding already existing BookLibrary
     if (existingBookLibrary) {
       // If we found existing BookLibrary in db
@@ -43,7 +47,16 @@ exports.create = async (req, res) => {
 
     //Creating BookLibrary
     const BookLibrary = await BookLibraries.create(req.body); // Adding BookLibrary in db
-
+    let BookLibraryId = BookLibrary._id;
+    if (familyId) {
+      await BookLibraries.findByIdAndUpdate(
+        BookLibraryId,
+        { $push: { families: familyId } },
+        {
+          new: true,
+        }
+      );
+    }
     // Done
     res.json({
       message: "BookLibrary created successfully",
@@ -69,10 +82,12 @@ exports.getAll = async (req, res) => {
         $lookup: {
           from: "categories",
           localField: "_id",
+
           foreignField: "book_library",
           as: "categories",
         },
       },
+
       {
         $lookup: {
           from: "works",
@@ -89,6 +104,7 @@ exports.getAll = async (req, res) => {
           as: "work_details",
         },
       },
+
       { $sort: { ranking: 1 } },
     ]);
 
@@ -386,6 +402,14 @@ exports.addWork = async (req, res) => {
         new: true,
       }
     ); // Updating the Families Schema
+    await Promise.all(
+      req.body.providers.map(async (dt) => {
+        await Providers.findByIdAndUpdate(
+          { _id: dt.provider },
+          { $push: { works: work._id } }
+        ); // Deleting from the Families
+      })
+    );
     res.json({
       success: true,
       message: "Work added Successfully",
@@ -409,7 +433,7 @@ exports.editWork = async (req, res) => {
     if (!workExist) {
       return res.status(404).json({ message: "Work id not found" });
     } // double check if work id exists
-    console.log(req.body);
+
     let Work = await Works.findByIdAndUpdate(
       workId,
       { $set: req.body },
