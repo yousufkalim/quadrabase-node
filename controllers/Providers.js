@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
       // If we found existing provider in db
       return res
         .status(404)
-        .json({ success: false, message: "Provider already exists." });
+        .json({ success: false, message: "Provider already exists" });
     }
 
     // Creating provider

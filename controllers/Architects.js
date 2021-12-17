@@ -31,13 +31,13 @@ exports.create = async (req, res) => {
       // If we found existing architect in db
       return res
         .status(404)
-        .json({ success: false, message: "Architect already exists." });
+        .json({ success: false, message: "Architect already exists" });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res
         .status(404)
-        .json({ success: false, message: "Architect already exists." });
+        .json({ success: false, message: "Admin already exists" });
     }
     if (req.file) {
       req.body.profile_pic = req.file.path;
@@ -67,7 +67,7 @@ exports.createBookLibrary = async (req, res) => {
       // If we found existing BookLibrary in db
       return res
         .status(404)
-        .json({ success: false, message: "BookLibrary already exists." });
+        .json({ success: false, message: "BookLibrary already exists" });
     }
 
     // Creating BookLibrary
@@ -113,7 +113,7 @@ exports.login = async (req, res) => {
     });
     const result = { user, token };
     // Done
-    res.json({ success: true, result }); //Success
+    res.json({ success: true,message: "User login successfully" , result }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -371,7 +371,7 @@ exports.deleteBookLibrary = async (req, res) => {
       work: works._id,
     }); // Deleting the WorkDetails
 
-    res.json({ success: true, BookLibrary: bookLibrary }); // Success
+    res.json({ success: true,message: "BookLibrary deleted successfully" , BookLibrary: bookLibrary }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

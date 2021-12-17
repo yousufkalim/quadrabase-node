@@ -84,7 +84,7 @@ exports.delete = async (req, res) => {
   try {
     const unitsId = req.params.unitsId; // Getting unit id from URL parameter
     const unit = await Units.findByIdAndDelete(unitsId); // Deleting the unit
-    res.json({ success: true, unit }); // Success
+    res.json({ success: true, message: "Unit deleted successfully" , unit }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

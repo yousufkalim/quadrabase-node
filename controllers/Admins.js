@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
       // If we found existing user in db
       return res
         .status(401)
-        .json({ success: false, message: "Admin already exists." });
+        .json({ success: false, message: "Admin already exists" });
     }
 
     // Getting url of the image
