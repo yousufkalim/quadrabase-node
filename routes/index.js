@@ -16,6 +16,7 @@ router.use("/Units", require("./Units")); // All the Units routes
 router.use("/CCTP", require("./CCTP")); // All the CCTP routes
 router.use("/Families", require("./Families")); // All the Families routes
 router.use("/fileUploader", require("./fileUploader")); // All the Families routes
+router.use("/stakeholder", require("./Stakeholders")); // All the Families routes
 
 // Export
 module.exports = router;

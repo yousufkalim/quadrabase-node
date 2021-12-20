@@ -99,6 +99,13 @@ exports.validateSubscription = [
   check("price", "Price is required.").notEmpty().trim(),
 ];
 
+// Stakeholder Create Validation
+exports.validateStakeholder = [
+  check("email", "Email is required.").notEmpty().isEmail().trim(),
+  check("title", "Title is required.").notEmpty().trim(),
+  check("contact_no", "Contact number is required.").notEmpty().trim(),
+];
+
 // Chap0 Create Validation
 exports.validateChap0 = [
   check("title", "Title is required.").notEmpty().trim(),
