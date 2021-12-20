@@ -1,7 +1,7 @@
 const Stakeholders = require("../models/Stakeholders");
 const Architects = require("../models/Architects");
 
-//CCTP create
+//stakeholders create
 exports.create = async (req, res) => {
   try {
     const existingStakeholder = await Stakeholders.findOne({
@@ -32,7 +32,7 @@ exports.create = async (req, res) => {
 };
 
 /**
- * Get all CCTP
+ * Get all stakeholders
  * @param {object} req
  * @param {object} res
  */
@@ -48,7 +48,7 @@ exports.getAll = async (req, res) => {
 };
 
 /**
- * Get CCTP by id
+ * Get stakeholders by id
  * @param {object} req
  * @param {object} res
  */
@@ -65,7 +65,7 @@ exports.getById = async (req, res) => {
 };
 
 /**
- * Update CCTP
+ * Update stakeholders
  * @param {object} req
  * @param {object} res
  */
@@ -79,7 +79,7 @@ exports.update = async (req, res) => {
       {
         new: true,
       }
-    ); // Updating the CCTP
+    ); // Updating the stakeholders
     res.json({
       success: true,
       message: "Stakeholder updated successfully",
