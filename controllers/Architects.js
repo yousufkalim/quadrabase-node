@@ -113,7 +113,7 @@ exports.login = async (req, res) => {
     });
     const result = { user, token };
     // Done
-    res.json({ success: true,message: "User login successfully" , result }); //Success
+    res.json({ success: true, message: "User login successfully", result }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -371,7 +371,11 @@ exports.deleteBookLibrary = async (req, res) => {
       work: works._id,
     }); // Deleting the WorkDetails
 
-    res.json({ success: true,message: "BookLibrary deleted successfully" , BookLibrary: bookLibrary }); // Success
+    res.json({
+      success: true,
+      message: "BookLibrary deleted successfully",
+      BookLibrary: bookLibrary,
+    }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -406,7 +410,7 @@ exports.addSubscription = async (req, res) => {
         req.params.architectId,
         {
           subscriptions: data,
-          credit: req.body.credit,
+          credit: subscription.credit,
         },
         { new: true }
       );
