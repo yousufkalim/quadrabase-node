@@ -107,6 +107,12 @@ exports.validateProjects = [
   check("structure", "Structure type is required.").notEmpty().trim(),
 ];
 
+// add work to project validation
+exports.validateAddWorkToProject = [
+  check("workId", "Work ID is required.").notEmpty().trim(),
+  check("workDetailId", "Work detail ID is required.").notEmpty().trim(),
+];
+
 // Stakeholder Create Validation
 exports.validateStakeholder = [
   check("email", "Email is required.").notEmpty().isEmail().trim(),

@@ -1,6 +1,10 @@
 const router = require("express").Router();
 const Projects = require("../controllers/Projects");
-const { validateProjects, isValidated } = require("../middleware/validators");
+const {
+  validateProjects,
+  validateAddWorkToProject,
+  isValidated,
+} = require("../middleware/validators");
 const Auth = require("../middleware/auth");
 
 /**
@@ -24,6 +28,14 @@ router.put("/:projectId", validateProjects, isValidated, Projects.update); // Up
 
 // Delete
 router.delete("/:projectId", Projects.delete); // delete a specific Projects by it's id
+
+// add work to project
+router.post(
+  "/addWork/:projectId",
+  validateAddWorkToProject,
+  isValidated,
+  Projects.addWork
+);
 
 // Export
 module.exports = router;

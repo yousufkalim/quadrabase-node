@@ -1,5 +1,7 @@
 const Projects = require("../models/Projects");
 const Architects = require("../models/Architects");
+const Works = require("../models/Works");
+const mongoose = require("mongoose");
 
 //Projects create
 exports.create = async (req, res) => {
@@ -114,5 +116,74 @@ exports.delete = async (req, res) => {
     // Error handling
     console.log("Error ----> ", err.message);
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+//Add work to project
+exports.addWork = async (req, res) => {
+  try {
+    const work = await Works.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(req.body.workId),
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_details",
+        },
+      },
+      {
+        $match: {
+          work_details: mongoose.Types.ObjectId(req.body.workDetailId),
+        },
+      },
+      {
+        $lookup: {
+          from: "workdetails",
+          localField: "work_details",
+          foreignField: "_id",
+          as: "workDetail",
+        },
+      },
+      {
+        $unwind: {
+          path: "$workDetail",
+        },
+      },
+    ]);
+
+    const workData = {
+      name: work[0].name,
+      cctp_text: work[0].cctp_text,
+      btu_text: work[0].btu_text,
+      ranking: req.body.workRanking,
+      unit: req.body.workUnit,
+      unit_price: req.body.workUnitPrice,
+      quantity: req.body.workQuantity,
+      work_details: {
+        name: work[0].workDetail.name,
+        ranking: req.body.workDetailRanking,
+        unit: req.body.workDetailUnit,
+        unit_price: req.body.workDetailUnitPrice,
+        quantity: req.body.workDetailQuantity,
+      },
+    };
+
+    const project = await Projects.findByIdAndUpdate(
+      req.params.projectId,
+      { $push: { works: workData } },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Work added to project",
+      project,
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
   }
 };
