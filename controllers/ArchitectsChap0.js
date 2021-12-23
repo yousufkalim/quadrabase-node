@@ -16,9 +16,11 @@ exports.create = async (req, res) => {
 
     const architectsChap0 = await ArchitectsChap0.create(req.body);
 
-    let architect = await Architects.findById(req.body.architect);
-    architect.chap0part2.push(architectsChap0._id);
-    await architect.save();
+    let architect = await Architects.findByIdAndUpdate(
+      req.body.architect,
+      { $push: { chap0part2: architectsChap0._id } },
+      { new: true }
+    );
 
     res.json({
       message: "ArchitectsChap0 created successfully",
@@ -104,12 +106,11 @@ exports.delete = async (req, res) => {
       architectsChap0Id
     ); // Deleting the architectsChap0
 
-    let architect = await Architects.findById(architectsChap0.architect); // finding architect
-    let architectsChap0Ids = architect.chap0part2.filter(
-      (item) => item != architectsChap0Id
-    ); //// filtering out deleted architectsChap0
-    architect.chap0part2 = architectsChap0Ids;
-    await architect.save();
+    await Architects.findByIdAndUpdate(
+      architectsChap0.architect,
+      { $pull: { chap0part2: architectsChap0Id } },
+      { new: true }
+    );
 
     res.json({
       success: true,

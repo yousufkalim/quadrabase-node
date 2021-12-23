@@ -16,9 +16,11 @@ exports.create = async (req, res) => {
 
     const stakeholder = await Stakeholders.create(req.body);
 
-    let architect = await Architects.findById(req.params.architectId);
-    architect.stakeholders.push(stakeholder._id);
-    await architect.save();
+    await Architects.findByIdAndUpdate(
+      req.params.architectId,
+      { $push: { stakeholders: stakeholder._id } },
+      { new: true }
+    );
 
     res.json({
       message: "Stakeholder created successfully",
@@ -103,17 +105,15 @@ exports.delete = async (req, res) => {
     await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
 
     const architectId = req.params.architectId; // Getting architectId from URL parameter
-    let architect = await Architects.findById(architectId); // finding architect
-    let stakeholderIDs = architect.stakeholders.filter(
-      (item) => item != stakeholderID
-    ); //// filtering out deleted stakeholder
-    architect.stakeholders = stakeholderIDs;
-    await architect.save();
+    await Architects.findByIdAndUpdate(
+      architectId,
+      { $pull: { stakeholders: stakeholderID } },
+      { new: true }
+    );
 
     res.json({
       success: true,
       message: "Stakeholder deleted successfully",
-      architect,
     }); // Success
   } catch (err) {
     // Error handling
