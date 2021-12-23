@@ -136,6 +136,26 @@ exports.getById = async (req, res) => {
 };
 
 /**
+ * Get BookLibrary by id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByArchitectId = async (req, res) => {
+  try {
+    const ArchitectId = req.params.ArchitectId; // Getting BookLibrary id from URL parameter
+    const bookLibrary = await BookLibraries.findOne({
+      architect: ArchitectId,
+      type: "private",
+    }).populate(populateQuery); // Finding BookLibrary by id
+    res.json({ success: true, bookLibrary }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
  * Update BookLibrary
  * @param {object} req
  * @param {object} res
