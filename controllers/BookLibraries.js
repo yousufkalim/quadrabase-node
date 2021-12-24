@@ -135,6 +135,30 @@ exports.getById = async (req, res) => {
   }
 };
 
+// search bookLibrary by name
+exports.search = async (req, res) => {
+  try {
+    if (!req.query.q) {
+      // if search query is empty
+      return res
+        .status(500)
+        .json({ success: false, message: "Search is Empty" });
+    }
+
+    // using RegExp for search
+    const regex = new RegExp(req.query.q, "i");
+    const bookLibraries = await BookLibraries.find({
+      name: { $regex: regex }, //// find where name matches with regex
+    });
+
+    res.json({ success: true, bookLibraries }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Get BookLibrary by id
  * @param {object} req

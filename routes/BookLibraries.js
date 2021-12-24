@@ -83,7 +83,9 @@ router.put(
 // Read
 router.get("/", BookLibraries.getAll); // Get all BookLibraries at once
 router.get("/:BookLibraryId", BookLibraries.getById); // Get one BookLibrary by it's id
+router.get("/search/getlibraries", BookLibraries.search);
 router.get("/getByArchitectId/:ArchitectId", BookLibraries.getByArchitectId); // Get one BookLibrary by it's id
+
 
 // Update
 router.put("/:BookLibraryId", Auth(), BookLibraries.update); // Update a specific BookLibrary by it's id
