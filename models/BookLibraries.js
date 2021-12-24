@@ -16,6 +16,8 @@ const bookLibrariesSchema = new mongoose.Schema(
     },
     type: {
       type: String,
+      enum: ["public", "private"],
+      default: "public",
     },
 
     architect: {
