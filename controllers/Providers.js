@@ -108,3 +108,33 @@ exports.delete = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+/**
+ * Get all works attached to Provider by it's id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getWorksByProviderId = async (req, res) => {
+  try {
+    const providerId = req.params.providerId; // Getting provider id from URL parameter
+    const populateQuery = [
+      {
+        path: "providers",
+        populate: [
+          {
+            path: "provider",
+          },
+        ],
+      },
+    ];
+    let works = await Works.find({
+      "providers.provider": providerId,
+    }).populate(populateQuery);
+    console.log(works, "works");
+    res.json({ success: true, works }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
