@@ -1,6 +1,24 @@
 const mongoose = require("mongoose");
 
-// Schema
+// Work Schema
+const workSchema = new mongoose.Schema({
+  name: { type: String },
+  cctp_text: [String],
+  btu_text: [String],
+  ranking: { type: Number },
+  unit: { type: String },
+  unit_price: { type: Number },
+  quantity: { type: Number },
+  work_details: {
+    name: { type: String },
+    ranking: { type: Number },
+    unit: { type: String },
+    unit_price: { type: Number },
+    quantity: { type: Number },
+  },
+});
+
+// Project Schema
 const projectsSchema = new mongoose.Schema(
   {
     client: {
@@ -54,22 +72,7 @@ const projectsSchema = new mongoose.Schema(
         ref: "Stakeholders",
       },
     ],
-    work: {
-      name: { type: String },
-      cctp_text: [String],
-      btu_text: [String],
-      ranking: { type: Number },
-      unit: { type: String },
-      unit_price: { type: Number },
-      quantity: { type: Number },
-    },
-    work_details: {
-      name: { type: String },
-      ranking: { type: Number },
-      unit: { type: String },
-      unit_price: { type: Number },
-      quantity: { type: Number },
-    },
+    works: [workSchema],
     status: {
       type: String,
       enum: ["ongoing", "completed", "archived"],
