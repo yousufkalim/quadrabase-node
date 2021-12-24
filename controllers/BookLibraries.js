@@ -160,6 +160,26 @@ exports.search = async (req, res) => {
 };
 
 /**
+ * Get BookLibrary by id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByArchitectId = async (req, res) => {
+  try {
+    const ArchitectId = req.params.ArchitectId; // Getting BookLibrary id from URL parameter
+    const bookLibrary = await BookLibraries.findOne({
+      architect: ArchitectId,
+      type: "private",
+    }).populate(populateQuery); // Finding BookLibrary by id
+    res.json({ success: true, bookLibrary }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
  * Update BookLibrary
  * @param {object} req
  * @param {object} res
@@ -426,14 +446,17 @@ exports.addWork = async (req, res) => {
         new: true,
       }
     ); // Updating the Families Schema
-    await Promise.all(
-      req.body.providers.map(async (dt) => {
-        await Providers.findByIdAndUpdate(
-          { _id: dt.provider },
-          { $push: { works: work._id } }
-        ); // Deleting from the Families
-      })
-    );
+    if (req.body.providers) {
+      await Promise.all(
+        req.body.providers.map(async (dt) => {
+          await Providers.findByIdAndUpdate(
+            { _id: dt.provider },
+            { $push: { works: work._id } }
+          ); // Deleting from the Families
+        })
+      );
+    }
+
     res.json({
       success: true,
       message: "Work added Successfully",
