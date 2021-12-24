@@ -234,6 +234,17 @@ exports.getById = async (req, res) => {
   }
 };
 
+// get logged In user
+exports.loggedIn = async (req, res) => {
+  try {
+    res.status(200).json({ success: true, user: req.user });
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Update architect
  * @param {object} req
