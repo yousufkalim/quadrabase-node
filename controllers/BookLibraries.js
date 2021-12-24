@@ -143,7 +143,6 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
-
     const BookLibrary = await BookLibraries.findByIdAndUpdate(
       BookLibraryId,
       req.body,
@@ -402,14 +401,7 @@ exports.addWork = async (req, res) => {
         new: true,
       }
     ); // Updating the Families Schema
-    await Promise.all(
-      req.body.providers.map(async (dt) => {
-        await Providers.findByIdAndUpdate(
-          { _id: dt.provider },
-          { $push: { works: work._id } }
-        ); // Deleting from the Families
-      })
-    );
+
     res.json({
       success: true,
       message: "Work added Successfully",
