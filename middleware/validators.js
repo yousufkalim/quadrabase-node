@@ -99,6 +99,33 @@ exports.validateSubscription = [
   check("price", "Price is required.").notEmpty().trim(),
 ];
 
+// Subscription Create Validation
+exports.validateProjects = [
+  check("name", "Name is required.").notEmpty().trim(),
+  check("architect", "Architect is required.").notEmpty().trim(),
+  check("market_type", "Market type is required.").notEmpty().trim(),
+  check("structure", "Structure type is required.").notEmpty().trim(),
+];
+
+// add work to project validation
+exports.validateAddWorkToProject = [
+  check("workId", "Work ID is required.").notEmpty().trim(),
+  check("workDetailId", "Work detail ID is required.").notEmpty().trim(),
+];
+
+// Stakeholder Create Validation
+exports.validateStakeholder = [
+  check("email", "Email is required.").notEmpty().isEmail().trim(),
+  check("title", "Title is required.").notEmpty().trim(),
+  check("contact_no", "Contact number is required.").notEmpty().trim(),
+];
+
+// ArchitectsChap0 Create Validation
+exports.validateArchitectsChap0 = [
+  check("title", "Title is required.").notEmpty().trim(),
+  check("text", "Text is required.").notEmpty().trim(),
+];
+
 // Chap0 Create Validation
 exports.validateChap0 = [
   check("title", "Title is required.").notEmpty().trim(),

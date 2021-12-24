@@ -135,6 +135,50 @@ exports.getById = async (req, res) => {
   }
 };
 
+// search bookLibrary by name
+exports.search = async (req, res) => {
+  try {
+    if (!req.query.q) {
+      // if search query is empty
+      return res
+        .status(500)
+        .json({ success: false, message: "Search is Empty" });
+    }
+
+    // using RegExp for search
+    const regex = new RegExp(req.query.q, "i");
+    const bookLibraries = await BookLibraries.find({
+      name: { $regex: regex }, //// find where name matches with regex
+    });
+
+    res.json({ success: true, bookLibraries }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Get BookLibrary by id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByArchitectId = async (req, res) => {
+  try {
+    const ArchitectId = req.params.ArchitectId; // Getting BookLibrary id from URL parameter
+    const bookLibrary = await BookLibraries.findOne({
+      architect: ArchitectId,
+      type: "private",
+    }).populate(populateQuery); // Finding BookLibrary by id
+    res.json({ success: true, bookLibrary }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Update BookLibrary
  * @param {object} req
