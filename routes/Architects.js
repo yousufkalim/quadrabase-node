@@ -60,6 +60,7 @@ router.post(
 // Read
 router.get("/", Auth(), Architects.getAll); // Get all Architects at once
 router.get("/:architectId", Auth(), Architects.getById); // Get one architect by it's id
+router.get("/current/loggedIn", Auth(ArchitectsModel), Architects.loggedIn);
 
 // Update
 router.put(
