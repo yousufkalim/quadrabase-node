@@ -28,7 +28,7 @@ const worksSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Providers",
         },
-        documents: [{ type: String }],
+        documents: [{ uri: String }],
       },
     ],
     work_details: [

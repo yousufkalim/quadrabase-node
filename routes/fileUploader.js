@@ -7,7 +7,9 @@ router.post("/", upload("/", "file", "array"), async (req, res) => {
   try {
     let files = req.files;
     let array = [];
-    files.map((dt) => array.push(dt.path));
+    files.map((dt) =>
+      array.push({ uri: process.env.BASE_URL + "/" + dt.path })
+    );
     res.json({ files: array });
   } catch (error) {
     console.log("error message----->", error.message);
