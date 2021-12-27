@@ -37,6 +37,42 @@ exports.buy = async (req, res) => {
   }
 };
 
+//buy credits
+exports.buycredits = async (req, res) => {
+  try {
+    const subscription = await Subscriptions.findById(req.body.subscription);
+
+    const license = await Licenses.findById(req.params.licenseId);
+    license.credit = license.credit + subscription.credit;
+    await license.save();
+
+    res.json({ success: true, message: "Success!", license });
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//buy credits
+exports.renew = async (req, res) => {
+  try {
+    const subscription = await Subscriptions.findById(req.body.subscription);
+
+    const license = await Licenses.findById(req.params.licenseId);
+    license.end_date = moment(
+      moment(license.end_date).add(subscription.duration, "months").calendar()
+    ).format("YYYY/MM/DD");
+    await license.save();
+
+    res.json({ success: true, message: "Success!", license });
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // get by architect id
 exports.getByArchitectId = async (req, res) => {
   try {

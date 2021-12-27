@@ -13,26 +13,25 @@ function Auth(MODEL = Admins) {
     const decoded = new Promise((resolve, reject) => {
       JWT.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-          return res.status(404).json({ message: "Session Expired!" });
+          return res.status(404).json({ message: err.message });
         }
         resolve(decoded);
       });
     });
-    const user = await MODEL.findOne({
-      id: decoded._id,
-    });
-    if (!user)
-      return res
-        .status(404)
-        .json({ message: "Unauthorized access: User does not exist" });
+    decoded.then(async ({ email }) => {
+      const user = await MODEL.findOne({
+        email: email,
+      });
+      if (!user)
+        return res
+          .status(404)
+          .json({ message: "Unauthorized access: User does not exist" });
 
-    req.user = user;
-    req.userId = user.id;
-    res.set(
-      "cache-control",
-      "no-cache, no-store, private, must-revalidate, post-check=0, pre-check=0"
-    );
-    next();
+      req.user = user;
+      req.userId = user.id;
+
+      next();
+    });
   };
 }
 
