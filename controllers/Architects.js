@@ -108,8 +108,8 @@ exports.login = async (req, res) => {
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
     if (!isCorrect)
       return res.status(401).json({ message: "Invalid Password" });
-    const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: 60 * 60,
+    const token = JWT.sign({ email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60 * 60,
     });
     const result = { user, token };
     // Done

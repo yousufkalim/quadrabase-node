@@ -34,8 +34,17 @@ const architectsSchema = new mongoose.Schema(
       end_date: {
         type: Date,
       },
+      license: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Licenses",
+      },
     },
-
+    myLicenses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Licenses",
+      },
+    ],
     projects: [
       {
         type: mongoose.Schema.Types.ObjectId,
