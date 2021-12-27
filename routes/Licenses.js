@@ -3,6 +3,7 @@ const Lincenses = require("../controllers/Lincenses");
 const { validateLincese, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
 const ArchitectsModel = require("../models/Architects");
+const express = require("express");
 
 // post - buy subscription
 router.post(
@@ -11,6 +12,15 @@ router.post(
   isValidated,
   Auth(ArchitectsModel),
   Lincenses.buy
+);
+// post - checkout
+router.post("/checkout", Auth(ArchitectsModel), Lincenses.checkout);
+
+// post - webhook
+router.post(
+  "/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  Lincenses.Webhook
 );
 
 // get - get licenses by architectId
