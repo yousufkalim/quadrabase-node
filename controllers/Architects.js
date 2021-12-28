@@ -404,9 +404,15 @@ exports.addSubscription = async (req, res) => {
       });
       res.json({ success: true, message: "Subscription Removed!" });
     } else {
+
+      console.log(`THIS IS THE req.body: ${JSON.stringify(req.body)}`);
+
       const subscription = await Subscriptions.findById(
         req.body.subscriptionId
       );
+
+      console.log(`THIS IS THE subscription: ${JSON.stringify(subscription)}`);
+
       const data = {
         id: subscription._id,
         start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
@@ -416,7 +422,9 @@ exports.addSubscription = async (req, res) => {
             .add(1, "days")
             .calendar()
         ).format("YYYY/MM/DD"),
+        projects: subscription.projects
       };
+
       await Architects.findByIdAndUpdate(
         req.params.architectId,
         {
