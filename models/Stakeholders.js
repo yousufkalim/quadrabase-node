@@ -6,11 +6,14 @@ const stakeholdersSchema = new mongoose.Schema(
     email: {
       type: String,
 
-      unique: true,
-      lowercase: true,
+      // unique: true,
+      // lowercase: true,
     },
-    title: {
+    name: {
       type: String,
+    },
+    ranking: {
+      type: Number,
     },
     contact_no: {
       type: String,
