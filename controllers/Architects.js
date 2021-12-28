@@ -108,8 +108,8 @@ exports.login = async (req, res) => {
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
     if (!isCorrect)
       return res.status(401).json({ message: "Invalid Password" });
-    const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: 60 * 60,
+    const token = JWT.sign({ email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60 * 60,
     });
     const result = { user, token };
     // Done
@@ -227,6 +227,17 @@ exports.getById = async (req, res) => {
     const architectId = req.params.architectId; // Getting architect id from URL parameter
     const architect = await Architects.findById(architectId); // Finding architect by id
     res.json({ success: true, architect }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// get logged In user
+exports.loggedIn = async (req, res) => {
+  try {
+    res.status(200).json({ success: true, user: req.user });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);

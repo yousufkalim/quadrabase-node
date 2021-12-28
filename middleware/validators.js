@@ -91,6 +91,12 @@ exports.validateUpdateArchitect = [
     .isEmpty()
     .trim(),
 ];
+
+// Lincese Validation
+exports.validateLincese = [
+  check("subscription", "Subscription is required.").notEmpty().trim(),
+];
+
 // Subscription Create Validation
 exports.validateSubscription = [
   check("name", "Name is required.").notEmpty().trim(),

@@ -5,6 +5,7 @@ const {
   isValidated,
 } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
+const ArchitectsModel = require("../models/Architects");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -26,6 +27,7 @@ router.post(
 
 // Read
 router.get("/", Auth(), Subscriptions.getAll); // Get all Subscriptions at once
+router.get("/getAll/architect", Auth(ArchitectsModel), Subscriptions.getAll); // Get all Subscriptions at once
 router.get("/:subscriptionId", Auth(), Subscriptions.getById); // Get one subscription by it's id
 
 // Update
