@@ -16,7 +16,7 @@ router.use("/Units", require("./Units")); // All the Units routes
 router.use("/CCTP", require("./CCTP")); // All the CCTP routes
 router.use("/Families", require("./Families")); // All the Families routes
 router.use("/fileUploader", require("./fileUploader")); // All the Families routes
-router.use("/stakeholder", require("./Stakeholders")); // All the stakeholder routes
+router.use("/Stakeholders", require("./Stakeholders")); // All the stakeholder routes
 router.use("/ArchitectsChap0", require("./ArchitectsChap0")); // All the ArchitectsChap0 routes
 router.use("/project", require("./Projects")); // All the ArchitectsChap0 routes
 router.use("/licenses", require("./Licenses")); // All the ArchitectsChap0 routes

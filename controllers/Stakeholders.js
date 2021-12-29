@@ -1,11 +1,10 @@
 const Stakeholders = require("../models/Stakeholders");
-const Architects = require("../models/Architects");
 
 //stakeholders create
 exports.create = async (req, res) => {
   try {
     const existingStakeholder = await Stakeholders.findOne({
-      email: req.body.email,
+      name: req.body.name,
     }); // Finding already existing stakeholder
     if (existingStakeholder) {
       // If we found existing stakeholder in db
@@ -14,17 +13,10 @@ exports.create = async (req, res) => {
         .json({ success: false, message: "stakeholder already exists" });
     }
 
-    const stakeholder = await Stakeholders.create(req.body);
-
-    await Architects.findByIdAndUpdate(
-      req.params.architectId,
-      { $push: { stakeholders: stakeholder._id } },
-      { new: true }
-    );
+    await Stakeholders.create(req.body); //stakeholder create
 
     res.json({
       message: "Stakeholder created successfully",
-      stakeholder,
     }); //Success
   } catch (err) {
     // Error handling
@@ -40,8 +32,8 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const stakeholder = await Stakeholders.find(); // Finding all the Stakeholders from db
-    res.json({ success: true, stakeholder }); // Success
+    const stakeholders = await Stakeholders.find().sort({ ranking: 1 }); // Finding all the Stakeholders from db
+    res.json({ success: true, stakeholders }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -95,7 +87,7 @@ exports.update = async (req, res) => {
 };
 
 /**
- * Delete user
+ * Delete stakeholder
  * @param {object} req
  * @param {object} res
  */
@@ -103,13 +95,6 @@ exports.delete = async (req, res) => {
   try {
     const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
     await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
-
-    const architectId = req.params.architectId; // Getting architectId from URL parameter
-    await Architects.findByIdAndUpdate(
-      architectId,
-      { $pull: { stakeholders: stakeholderID } },
-      { new: true }
-    );
 
     res.json({
       success: true,

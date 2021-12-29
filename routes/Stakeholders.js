@@ -17,9 +17,10 @@ const Auth = require("../middleware/auth");
 
 // create stakeholder
 router.post(
-  "/create/:architectId",
+  "/create",
   validateStakeholder,
   isValidated,
+  Auth(),
   Stakeholders.create
 );
 
@@ -36,7 +37,7 @@ router.put(
 ); // Update a specific stakeholder by it's id
 
 // Delete
-router.delete("/:stakeholderID/:architectId", Stakeholders.delete); // delete a specific stakeholder by it's id
+router.delete("/:stakeholderID", Stakeholders.delete); // delete a specific stakeholder by it's id
 
 // Export
 module.exports = router;
