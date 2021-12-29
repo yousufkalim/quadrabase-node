@@ -6,6 +6,7 @@ exports.create = async (req, res) => {
   try {
     const existingTitle = await ArchitectsChap0.findOne({
       title: req.body.title,
+      architect: req.body.architect,
     }); // Finding already existing ArchitectsChap0
     if (existingTitle) {
       // If we found existing ArchitectsChap0 in db
@@ -58,6 +59,24 @@ exports.getById = async (req, res) => {
   try {
     const architectsChap0Id = req.params.architectsChap0Id; // Getting architectsChap0Id from URL parameter
     const architectsChap0 = await ArchitectsChap0.findById(architectsChap0Id); // Finding architectsChap0 by id
+    res.json({ success: true, architectsChap0 }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Get ArchitectsChap0 by architect id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByIdArchitectId = async (req, res) => {
+  try {
+    const architectsChap0 = await ArchitectsChap0.find({
+      architect: req.userId,
+    }); // Finding architectsChap0 by architectId
     res.json({ success: true, architectsChap0 }); // Success
   } catch (err) {
     // Error handling

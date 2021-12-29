@@ -61,6 +61,11 @@ router.post(
 router.get("/", Auth(), Architects.getAll); // Get all Architects at once
 router.get("/:architectId", Auth(), Architects.getById); // Get one architect by it's id
 router.get("/current/loggedIn", Auth(ArchitectsModel), Architects.loggedIn);
+router.get(
+  "/current/getStakeholders",
+  Auth(ArchitectsModel),
+  Architects.getStakeholders
+); ////// get stakholders of current architect
 
 // Update
 router.put(
