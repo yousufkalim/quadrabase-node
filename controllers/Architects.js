@@ -245,6 +245,22 @@ exports.loggedIn = async (req, res) => {
   }
 };
 
+// get Stakeholders of current architect
+exports.getStakeholders = async (req, res) => {
+  try {
+    const architect = await Architects.findById(req.userId).populate(
+      "stakeholders"
+    );
+    res
+      .status(200)
+      .json({ success: true, stakeholders: architect.stakeholders });
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Update architect
  * @param {object} req
