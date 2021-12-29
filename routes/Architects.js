@@ -76,7 +76,15 @@ router.put(
   validateUpdateArchitect,
   isValidated,
   Architects.update
-); // Update a specific architect by it's id
+); // Update a specific architect by it's id by admin
+
+// Update
+router.put(
+  "/update/:architectId",
+  upload("/", "logo", "single"),
+  Auth(ArchitectsModel),
+  Architects.updateByArchitect
+); // Update a specific architect by it's id by architect
 
 // Delete
 router.delete("/:architectId", Auth(), Architects.delete); // delete a specific architect by it's id
