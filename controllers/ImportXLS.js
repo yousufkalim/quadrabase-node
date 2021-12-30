@@ -151,17 +151,19 @@ exports.import = async (req, res) => {
 
         for( let j = 0; j < cctps.length; j++ ){
 
+          let cctp;
+
           const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type, }); // Finding already existing CCTP
           if (existingCCTP) {
-            continue;
+            cctp = existingCCTP;
+          } else {
+            // Creating CCTP
+            cctp = await CCTP.create({
+              name: cctps[j].name,
+              type: cctps[j].type,
+              ranking: cctps[j].ranking
+            }); // Adding CCTP in db
           }
-
-          // Creating CCTP
-          const cctp = await CCTP.create({
-            name: cctps[j].name,
-            type: cctps[j].type,
-            ranking: cctps[j].ranking
-          }); // Adding CCTP in db
 
           const cctpId = cctp._id;
 
@@ -214,17 +216,19 @@ exports.import = async (req, res) => {
 
         for( let j = 0; j < cctps.length; j++ ){
 
+          let cctp;
+
           const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type }); // Finding already existing CCTP
           if (existingCCTP) {
-            continue;
+            cctp = existingCCTP;
+          } else {
+            // Creating CCTP
+            cctp = await CCTP.create({
+              name: cctps[j].name,
+              type: cctps[j].type,
+              ranking: cctps[j].ranking
+            }); // Adding CCTP in db
           }
-
-          // Creating CCTP
-          const cctp = await CCTP.create({
-            name: cctps[j].name,
-            type: cctps[j].type,
-            ranking: cctps[j].ranking
-          }); // Adding CCTP in db
 
           const cctpId = cctp._id;
 
@@ -277,17 +281,19 @@ exports.import = async (req, res) => {
 
         for( let j = 0; j < cctps.length; j++ ){
 
+          let cctp;
+
           const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type }); // Finding already existing CCTP
           if (existingCCTP) {
-            continue;
+            cctp = existingCCTP;
+          } else {
+            // Creating CCTP
+            cctp = await CCTP.create({
+              name: cctps[j].name,
+              type: cctps[j].type,
+              ranking: cctps[j].ranking
+            }); // Adding CCTP in db
           }
-
-          // Creating CCTP
-          const cctp = await CCTP.create({
-            name: cctps[j].name,
-            type: cctps[j].type,
-            ranking: cctps[j].ranking
-          }); // Adding CCTP in db
 
           const cctpId = cctp._id;
 

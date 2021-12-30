@@ -8,7 +8,9 @@ const categoriesSchema = new mongoose.Schema(
     },
     cctp_text: [
       {
-        type: String,
+        // type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CCTP"
       },
     ],
     ranking: {
