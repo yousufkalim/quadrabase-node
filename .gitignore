@@ -11,6 +11,8 @@
 # cache
 .eslintcache
 .cache
+package-lock.json
+.vscode
 
 
 # production
