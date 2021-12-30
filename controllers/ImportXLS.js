@@ -35,7 +35,7 @@ const populateQuery = [
   },
 ];
 
-//CCTP create
+// XLS import
 exports.import = async (req, res) => {
 
   try {
@@ -54,15 +54,14 @@ exports.import = async (req, res) => {
     let jsonData = xlsx.utils.sheet_to_json(xlData);
 
     let activeRow;
+    let nextRow;
 
-    let lastRow;
     let lastCreatedID;
 
     for(let i = 0; i < jsonData.length - 1; i++){
 
       activeRow = jsonData[i];
-
-      console.log(`THIS IS THE i: ${i}, activeRow.Libellé: ${activeRow.Libellé}`);
+      nextRow = jsonData[i+1];
 
       if(activeRow.Niveau == 1){
 
@@ -78,8 +77,6 @@ exports.import = async (req, res) => {
           ranking: 10
         });
 
-        let xyz = await Families.find().sort([["createdAt", -1]]);
-
         lastCreatedID = (await Families.find().sort([["createdAt", -1]]))[0]._id;
 
       } else if(activeRow.Niveau == 2){
@@ -91,7 +88,9 @@ exports.import = async (req, res) => {
 
         const existingBookLibrary = await BookLibraries.findOne({name: activeRow.Libellé}); // Finding already existing BookLibrary
         if (existingBookLibrary) {
-          lastCreatedID = existingBookLibrary._id;
+          if(nextRow.Niveau == 3){
+            lastCreatedID = existingBookLibrary._id;
+          }
           continue;
         }
 
@@ -105,7 +104,9 @@ exports.import = async (req, res) => {
           ]
         }); // Adding BookLibrary in db
 
-        lastCreatedID = (await BookLibraries.find().sort([["createdAt", -1]]))[0]._id;
+        if(nextRow.Niveau == 3){
+          lastCreatedID = (await BookLibraries.find().sort([["createdAt", -1]]))[0]._id;
+        }
 
       } else if(activeRow.Niveau == 3){
 
@@ -116,13 +117,16 @@ exports.import = async (req, res) => {
 
         let categoryExist = await Categories.findOne({name: activeRow.Libellé});
         if (categoryExist) {
-          lastCreatedID = categoryExist._id;;
+          if(nextRow.Niveau == 4){
+            lastCreatedID = categoryExist._id;
+          }
           continue;
         } // double check if category name exists
 
         let category = await Categories.create({
           "BookLibraryId": lastCreatedID,
-          "categoryName": activeRow.Libellé
+          // "categoryName": activeRow.Libellé
+          "name": activeRow.Libellé
         });
 
         const categoryId = category._id;
@@ -142,7 +146,9 @@ exports.import = async (req, res) => {
           }
         ); // Updating the Families Schema
 
-        lastCreatedID = (await Categories.find().sort([["createdAt", -1]]))[0]._id;
+        if(nextRow.Niveau == 4){
+          lastCreatedID = (await Categories.find().sort([["createdAt", -1]]))[0]._id;
+        }
 
       } else if(activeRow.Niveau == 4){
 
@@ -153,13 +159,13 @@ exports.import = async (req, res) => {
 
         let workExist = await Works.findOne({name: activeRow.Libellé});
         if (workExist) {
-          lastCreatedID = workExist._id;
           continue;
         } // double check if work name exists
         
         let work = await Works.create({
           "categoryId": lastCreatedID,
-          "workName": activeRow.Libellé
+          // "workName": activeRow.Libellé
+          "name": activeRow.Libellé
         });
 
         const workId = work._id;
@@ -182,11 +188,6 @@ exports.import = async (req, res) => {
       }
 
       console.log(`THIS IS THE i: ${i}, lastCreatedID: ${lastCreatedID}`);
-
-      // Set lastRow
-      lastRow = activeRow;
-
-      console.log(`THIS IS THE lastRow: ${lastRow}`);
 
     }
 

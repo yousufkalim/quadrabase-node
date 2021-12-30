@@ -6,10 +6,6 @@ const upload = require("../middleware/multer.js");
 /**
  * ////////////////////////// Routes /////////////////////////
  * @method import Import XLS
- * @method get get all CCTP
- * @method get get CCTP by id
- * @method put update CCTP
- * @method delete delete CCTP
  */
 
 // import - XLS
