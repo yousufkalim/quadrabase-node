@@ -54,43 +54,37 @@ exports.import = async (req, res) => {
     let jsonData = xlsx.utils.sheet_to_json(xlData);
 
     let activeRow;
-    let nextRow;
 
-    let lastCreatedID;
+    let lastCreatedIDFamily;
+    let lastCreatedIDBookLibrary;
+    let lastCreatedIDCategory;
+    let lastCreatedIDWork;
+    // let lastCreatedIDWorkDetail; // Don't need this, as its the last link in the hierarchy
+
+    const existingfamily = await Families.findOne({name: jsonData[0].Domaine}); // Finding already existing family
+    if (existingfamily) {
+      lastCreatedIDFamily = existingfamily._id;
+    } else {
+      // Creating family
+      const family = await Families.create({
+        name: jsonData[0].Domaine,
+        ranking: 1
+      });
+
+      lastCreatedIDFamily = (await Families.find().sort([["createdAt", -1]]))[0]._id;
+    }
 
     for(let i = 0; i < jsonData.length - 1; i++){
 
       activeRow = jsonData[i];
-      nextRow = jsonData[i+1];
 
       if(activeRow.Niveau == 1){
 
-        const existingfamily = await Families.findOne({name: activeRow.Libellé}); // Finding already existing family
-        if (existingfamily) {
-          lastCreatedID = existingfamily._id;
-          continue;
-        }
-
-        // Creating family
-        const family = await Families.create({
-          name: activeRow.Libellé,
-          ranking: 10
-        });
-
-        lastCreatedID = (await Families.find().sort([["createdAt", -1]]))[0]._id;
-
-      } else if(activeRow.Niveau == 2){
-
-        // For 2,3,4 lastCreatedID can't be null 
-        if(!lastCreatedID){
-          continue;
-        }
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDFamily: ${lastCreatedIDFamily}, activeRow.Libellé: ${activeRow.Libellé}`);
 
         const existingBookLibrary = await BookLibraries.findOne({name: activeRow.Libellé}); // Finding already existing BookLibrary
         if (existingBookLibrary) {
-          if(nextRow.Niveau == 3){
-            lastCreatedID = existingBookLibrary._id;
-          }
+          lastCreatedIDBookLibrary = existingBookLibrary._id;
           continue;
         }
 
@@ -100,38 +94,30 @@ exports.import = async (req, res) => {
           "type": "public",
           "ranking": 10,
           "families": [
-            lastCreatedID
+            lastCreatedIDFamily
           ]
         }); // Adding BookLibrary in db
 
-        if(nextRow.Niveau == 3){
-          lastCreatedID = (await BookLibraries.find().sort([["createdAt", -1]]))[0]._id;
-        }
+        lastCreatedIDBookLibrary = (await BookLibraries.find().sort([["createdAt", -1]]))[0]._id;
 
-      } else if(activeRow.Niveau == 3){
+      } else if(activeRow.Niveau == 2){
 
-        // For 2,3,4 lastCreatedID can't be null 
-        if(!lastCreatedID){
-          continue;
-        }
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDBookLibrary: ${lastCreatedIDBookLibrary}, activeRow.Libellé: ${activeRow.Libellé}`);
 
         let categoryExist = await Categories.findOne({name: activeRow.Libellé});
         if (categoryExist) {
-          if(nextRow.Niveau == 4){
-            lastCreatedID = categoryExist._id;
-          }
+          lastCreatedIDCategory = categoryExist._id;
           continue;
         } // double check if category name exists
 
         let category = await Categories.create({
-          "BookLibraryId": lastCreatedID,
-          // "categoryName": activeRow.Libellé
+          "BookLibraryId": lastCreatedIDBookLibrary,
           "name": activeRow.Libellé
         });
 
         const categoryId = category._id;
         BookLibrary = await BookLibraries.findByIdAndUpdate(
-          lastCreatedID,
+          lastCreatedIDBookLibrary,
           { $push: { categories: categoryId } },
           {
             new: true,
@@ -140,37 +126,32 @@ exports.import = async (req, res) => {
 
         category = await Categories.findByIdAndUpdate(
           categoryId,
-          { $set: { book_library: lastCreatedID } },
+          { $set: { book_library: lastCreatedIDBookLibrary } },
           {
             new: true,
           }
         ); // Updating the Families Schema
 
-        if(nextRow.Niveau == 4){
-          lastCreatedID = (await Categories.find().sort([["createdAt", -1]]))[0]._id;
-        }
+        lastCreatedIDCategory = (await Categories.find().sort([["createdAt", -1]]))[0]._id;
 
-      } else if(activeRow.Niveau == 4){
+      } else if(activeRow.Niveau == 3){
 
-        // For 2,3,4 lastCreatedID can't be null 
-        if(!lastCreatedID){
-          continue;
-        }
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDCategory: ${lastCreatedIDCategory}, activeRow.Libellé: ${activeRow.Libellé}`);
 
         let workExist = await Works.findOne({name: activeRow.Libellé});
         if (workExist) {
+          lastCreatedIDWork = workExist._id;
           continue;
         } // double check if work name exists
         
         let work = await Works.create({
-          "categoryId": lastCreatedID,
-          // "workName": activeRow.Libellé
+          "categoryId": lastCreatedIDCategory,
           "name": activeRow.Libellé
         });
 
         const workId = work._id;
         category = await Categories.findByIdAndUpdate(
-          lastCreatedID,
+          lastCreatedIDCategory,
           { $push: { works: workId } },
           {
             new: true,
@@ -179,15 +160,48 @@ exports.import = async (req, res) => {
 
         work = await Works.findByIdAndUpdate(
           workId,
-          { $set: { category: lastCreatedID } },
+          { $set: { category: lastCreatedIDCategory } },
+          {
+            new: true,
+          }
+        ); // Updating the Works Schema
+
+        lastCreatedIDWork = (await Works.find().sort([["createdAt", -1]]))[0]._id;
+
+      } else if(activeRow.Niveau == 4){
+
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDWork: ${lastCreatedIDWork}, activeRow.Libellé: ${activeRow.Libellé}`);
+
+        let works = await Works.findById({ _id: lastCreatedIDWork });
+        if (!works) {
+          continue;
+        } // double check if works id is valid
+        let workDetailExist = await WorkDetails.findOne({ name: activeRow.Libellé });
+        if (workDetailExist) {
+          continue;
+        } // double check if work detail exists
+        let workDetails = await WorkDetails.create({
+          "workId": lastCreatedIDWork,
+          "name": activeRow.Libellé
+        });
+        const workDetailId = workDetails._id;
+        works = await Works.findByIdAndUpdate(
+          lastCreatedIDWork,
+          { $push: { work_details: workDetailId } },
+          {
+            new: true,
+          }
+        ); // Updating the works
+
+        works = await WorkDetails.findByIdAndUpdate(
+          workDetailId,
+          { $set: { work: lastCreatedIDWork } },
           {
             new: true,
           }
         ); // Updating the Families Schema
 
       }
-
-      console.log(`THIS IS THE i: ${i}, lastCreatedID: ${lastCreatedID}`);
 
     }
 
