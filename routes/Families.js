@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Families = require("../controllers/Families");
 const Auth = require("../middleware/auth");
+const ArchitectsModel = require("../models/Architects");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -13,9 +14,11 @@ const Auth = require("../middleware/auth");
 
 // create - family Signup
 router.post("/create", Auth(), Families.create);
+router.post("/architect/create", Auth(ArchitectsModel), Families.create);
 
 // Read
 router.get("/", Auth(), Families.getAll); // Get all Families at once
+router.get("/architect/getAll", Auth(ArchitectsModel), Families.getAll); // Get all Families at once
 router.get("/:familyId", Auth(), Families.getById); // Get one family by it's id
 
 // Update
