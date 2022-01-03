@@ -51,12 +51,12 @@ const architectsSchema = new mongoose.Schema(
         ref: "Projects",
       },
     ],
-    // stakeholders: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Stakeholders",
-    //   },
-    // ],
+    stakeholders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Stakeholders",
+      },
+    ],
     chap0part2: [
       {
         type: mongoose.Schema.Types.ObjectId,

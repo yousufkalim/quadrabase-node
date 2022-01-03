@@ -1,4 +1,5 @@
 const Stakeholders = require("../models/Stakeholders");
+const Architects = require("../models/Architects");
 
 //stakeholders create
 exports.create = async (req, res) => {
@@ -17,6 +18,37 @@ exports.create = async (req, res) => {
 
     res.json({
       message: "Stakeholder created successfully",
+    }); //Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.createByArchitect = async (req, res) => {
+  try {
+    const existingStakeholder = await Stakeholders.findOne({
+      name: req.body.name,
+    }); // Finding already existing stakeholder
+    if (existingStakeholder) {
+      // If we found existing stakeholder in db
+      return res
+        .status(401)
+        .json({ success: false, message: "stakeholder already exists" });
+    }
+
+    const stakeholder = await Stakeholders.create(req.body);
+
+    await Architects.findByIdAndUpdate(
+      req.params.architectId,
+      { $push: { stakeholders: stakeholder._id } },
+      { new: true }
+    );
+
+    res.json({
+      message: "Stakeholder created successfully",
+      stakeholder,
     }); //Success
   } catch (err) {
     // Error handling
@@ -95,6 +127,29 @@ exports.delete = async (req, res) => {
   try {
     const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
     await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
+
+    res.json({
+      success: true,
+      message: "Stakeholder deleted successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.deleteByArchitect = async (req, res) => {
+  try {
+    const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
+    await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
+
+    const architectId = req.params.architectId; // Getting architectId from URL parameter
+    await Architects.findByIdAndUpdate(
+      architectId,
+      { $pull: { stakeholders: stakeholderID } },
+      { new: true }
+    );
 
     res.json({
       success: true,
