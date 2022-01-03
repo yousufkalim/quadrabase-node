@@ -23,9 +23,11 @@ router.get("/:familyId", Auth(), Families.getById); // Get one family by it's id
 
 // Update
 router.put("/:familyId", Auth(), Families.update); // Update a specific family by it's id
+router.put("/update/:familyId", Auth(ArchitectsModel), Families.update); // Update a specific family by it's id
 
 // Delete
 router.delete("/:familyId", Auth(), Families.delete); // delete a specific family by it's id
+router.delete("/delete/:familyId", Auth(ArchitectsModel), Families.delete); // delete a specific family by it's id
 
 // Export
 module.exports = router;

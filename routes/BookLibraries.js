@@ -109,12 +109,27 @@ router.post(
   Auth(),
   BookLibraries.addWorkDetail
 );
+
+router.post(
+  "/add/WorkDetail",
+  validateAddWorkDetail,
+  isValidated,
+  Auth(ArchitectsModal),
+  BookLibraries.addWorkDetail
+);
 // Update a workDetail to specific BookLibrary by it's id
 
 router.put(
   "/editWorkDetail/:workDetailId",
 
   Auth(),
+  BookLibraries.editWorkDetail
+);
+
+router.put(
+  "/edit/WorkDetail/:workDetailId",
+
+  Auth(ArchitectsModal),
   BookLibraries.editWorkDetail
 );
 // Read
@@ -160,6 +175,12 @@ router.delete(
 router.delete(
   "/deleteWorkDetail/:workDetailId",
   Auth(),
+  BookLibraries.deleteWorkDetail
+);
+
+router.delete(
+  "/delete/WorkDetail/:workDetailId",
+  Auth(ArchitectsModal),
   BookLibraries.deleteWorkDetail
 );
 // Export
