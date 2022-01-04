@@ -10,6 +10,7 @@ const workDetailsSchema = new mongoose.Schema(
       type: Number,
     },
     unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
+    unit_price: { type: Number, default: 0 },
 
     work: {
       type: mongoose.Schema.Types.ObjectId,

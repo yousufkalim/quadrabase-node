@@ -11,7 +11,7 @@ const worksSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    btu_text: [
+    bpu_text: [
       {
         type: String,
       },
@@ -21,6 +21,7 @@ const worksSchema = new mongoose.Schema(
     },
 
     unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
+    unit_price: { type: Number, default: 0 },
 
     providers: [
       {
