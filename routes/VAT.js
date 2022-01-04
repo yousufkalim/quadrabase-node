@@ -2,6 +2,7 @@ const router = require("express").Router();
 const VAT = require("../controllers/VAT");
 const { validateVAT, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
+const ArchitectsModel = require("../models/Architects");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -17,6 +18,7 @@ router.post("/create", validateVAT, isValidated, Auth(), VAT.create);
 
 // Read
 router.get("/", Auth(), VAT.getAll); // Get all VAT at once
+router.get("/getAll", Auth(ArchitectsModel), VAT.getAll); // Get all VAT at once
 router.get("/:VATId", Auth(), VAT.getById); // Get one VAT by it's id
 
 // Update

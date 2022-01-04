@@ -93,6 +93,11 @@ exports.getAll = async (req, res) => {
     let bookLibraries = await BookLibraries.aggregate([
       // Finding all the BookLibraries from db
       {
+        $match: {
+          type: "public",
+        },
+      },
+      {
         $lookup: {
           from: "categories",
           localField: "_id",

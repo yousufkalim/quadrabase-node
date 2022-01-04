@@ -52,6 +52,23 @@ exports.getAll = async (req, res) => {
 };
 
 /**
+ * Get all Projects by architectId
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByArchitect = async (req, res) => {
+  try {
+    const project = await Projects.find({
+      architect: req.params.architectId,
+    }).populate("vat"); // Finding all the Project from db
+    res.json({ success: true, project }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+/**
  * Get project by id
  * @param {object} req
  * @param {object} res

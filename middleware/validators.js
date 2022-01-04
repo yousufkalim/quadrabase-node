@@ -109,6 +109,7 @@ exports.validateSubscription = [
 exports.validateProjects = [
   check("name", "Name is required.").notEmpty().trim(),
   check("architect", "Architect is required.").notEmpty().trim(),
+  check("prescriber", "Prescriber is required.").notEmpty().trim(),
   check("market_type", "Market type is required.").notEmpty().trim(),
   check("structure", "Structure type is required.").notEmpty().trim(),
 ];
