@@ -5,7 +5,31 @@ const Architects = require("../models/Architects");
 exports.create = async (req, res) => {
   try {
     const existingStakeholder = await Stakeholders.findOne({
-      email: req.body.email,
+      name: req.body.name,
+    }); // Finding already existing stakeholder
+    if (existingStakeholder) {
+      // If we found existing stakeholder in db
+      return res
+        .status(401)
+        .json({ success: false, message: "stakeholder already exists" });
+    }
+
+    await Stakeholders.create(req.body); //stakeholder create
+
+    res.json({
+      message: "Stakeholder created successfully",
+    }); //Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.createByArchitect = async (req, res) => {
+  try {
+    const existingStakeholder = await Stakeholders.findOne({
+      name: req.body.name,
     }); // Finding already existing stakeholder
     if (existingStakeholder) {
       // If we found existing stakeholder in db
@@ -40,8 +64,8 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const stakeholder = await Stakeholders.find(); // Finding all the Stakeholders from db
-    res.json({ success: true, stakeholder }); // Success
+    const stakeholders = await Stakeholders.find().sort({ ranking: 1 }); // Finding all the Stakeholders from db
+    res.json({ success: true, stakeholders }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -95,11 +119,27 @@ exports.update = async (req, res) => {
 };
 
 /**
- * Delete user
+ * Delete stakeholder
  * @param {object} req
  * @param {object} res
  */
 exports.delete = async (req, res) => {
+  try {
+    const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
+    await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
+
+    res.json({
+      success: true,
+      message: "Stakeholder deleted successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.deleteByArchitect = async (req, res) => {
   try {
     const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
     await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder

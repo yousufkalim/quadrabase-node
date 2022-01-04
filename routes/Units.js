@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Units = require("../controllers/Units");
 const { validateUnits, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
+const ArchitectsModal = require("../models/Architects");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -17,6 +18,7 @@ router.post("/create", validateUnits, isValidated, Auth(), Units.create);
 
 // Read
 router.get("/", Auth(), Units.getAll); // Get all Units at once
+router.get("/get", Auth(ArchitectsModal), Units.getAll); // Get all Units at once
 router.get("/:unitsId", Auth(), Units.getById); // Get one Units by it's id
 
 // Update

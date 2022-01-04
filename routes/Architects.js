@@ -61,6 +61,11 @@ router.post(
 router.get("/", Auth(), Architects.getAll); // Get all Architects at once
 router.get("/:architectId", Auth(), Architects.getById); // Get one architect by it's id
 router.get("/current/loggedIn", Auth(ArchitectsModel), Architects.loggedIn);
+router.get(
+  "/current/getStakeholders",
+  Auth(ArchitectsModel),
+  Architects.getStakeholders
+); ////// get stakholders of current architect
 
 // Update
 router.put(
@@ -71,7 +76,15 @@ router.put(
   validateUpdateArchitect,
   isValidated,
   Architects.update
-); // Update a specific architect by it's id
+); // Update a specific architect by it's id by admin
+
+// Update
+router.put(
+  "/update/:architectId",
+  upload("/", "logo", "single"),
+  Auth(ArchitectsModel),
+  Architects.updateByArchitect
+); // Update a specific architect by it's id by architect
 
 // Delete
 router.delete("/:architectId", Auth(), Architects.delete); // delete a specific architect by it's id

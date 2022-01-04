@@ -121,9 +121,7 @@ exports.validateAddWorkToProject = [
 
 // Stakeholder Create Validation
 exports.validateStakeholder = [
-  check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("title", "Title is required.").notEmpty().trim(),
-  check("contact_no", "Contact number is required.").notEmpty().trim(),
+  check("name", "Name is required.").notEmpty().trim(),
 ];
 
 // ArchitectsChap0 Create Validation
@@ -139,30 +137,19 @@ exports.validateChap0 = [
 ];
 
 // VAT Create Validation
-exports.validateVAT = [
-  check("value", "Value is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-];
+exports.validateVAT = [check("value", "Value is required.").notEmpty().trim()];
 
 // Units Create Validation
-exports.validateUnits = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("symbol", "Symbol is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-];
+exports.validateUnits = [check("name", "Name is required.").notEmpty().trim()];
 
 // CCTP Create Validation
 exports.validateCCTP = [
   check("name", "Name is required.").notEmpty().trim(),
   check("type", "Type is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
 ];
 
 // Family Create Validation
-exports.validateFamily = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
-];
+exports.validateFamily = [check("name", "Name is required.").notEmpty().trim()];
 
 // BookLibraries Create Validation
 exports.validateBookLibrary = [

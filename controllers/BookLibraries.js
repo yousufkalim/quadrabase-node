@@ -4,6 +4,7 @@ const Categories = require("../models/Categories");
 const Works = require("../models/Works");
 const WorkDetails = require("../models/WorkDetails");
 const Providers = require("../models/Providers");
+const mongoose = require("mongoose");
 
 const populateQuery = [
   {
@@ -37,12 +38,25 @@ exports.create = async (req, res) => {
     let name = req.body.name; //name
     const familyId = req.body.familyId; // Getting familyId id from body
 
-    const existingBookLibrary = await BookLibraries.findOne({ name }); // Finding already existing BookLibrary
-    if (existingBookLibrary) {
-      // If we found existing BookLibrary in db
-      return res
-        .status(404)
-        .json({ success: false, message: "BookLibrary already exists" });
+    if (req.body.type !== "private") {
+      const existingBookLibrary = await BookLibraries.findOne({ name }); // Finding already existing BookLibrary
+      if (existingBookLibrary) {
+        // If we found existing BookLibrary in db
+        return res
+          .status(404)
+          .json({ success: false, message: "BookLibrary already exists" });
+      }
+    } else {
+      const existingBookLibrary = await BookLibraries.findOne({
+        name,
+        architect: req.body.architect,
+      }); // Finding already existing BookLibrary
+      if (existingBookLibrary) {
+        // If we found existing BookLibrary in db
+        return res
+          .status(404)
+          .json({ success: false, message: "BookLibrary already exists" });
+      }
     }
 
     //Creating BookLibrary
@@ -166,14 +180,46 @@ exports.search = async (req, res) => {
 exports.getByArchitectId = async (req, res) => {
   try {
     const ArchitectId = req.params.ArchitectId; // Getting BookLibrary id from URL parameter
-    const bookLibrary = await BookLibraries.findOne({
-      architect: ArchitectId,
-      type: "private",
-    }).populate(populateQuery); // Finding BookLibrary by id
+    let bookLibrary = await BookLibraries.aggregate([
+      // Finding all the BookLibraries from db
+      {
+        $match: {
+          architect: mongoose.Types.ObjectId(ArchitectId),
+          type: "private",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+
+          foreignField: "book_library",
+          as: "categories",
+        },
+      },
+      {
+        $lookup: {
+          from: "works",
+          localField: "categories._id",
+          foreignField: "category",
+          as: "works",
+        },
+      },
+      {
+        $lookup: {
+          from: "workdetails",
+          localField: "works._id",
+          foreignField: "work",
+          as: "work_details",
+        },
+      },
+
+      { $sort: { ranking: 1 } },
+    ]);
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log("Error ----> ", err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };

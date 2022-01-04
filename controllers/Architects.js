@@ -245,8 +245,24 @@ exports.loggedIn = async (req, res) => {
   }
 };
 
+// get Stakeholders of current architect
+exports.getStakeholders = async (req, res) => {
+  try {
+    const architect = await Architects.findById(req.userId).populate(
+      "stakeholders"
+    );
+    res
+      .status(200)
+      .json({ success: true, stakeholders: architect.stakeholders });
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
- * Update architect
+ * Update architect by admin
  * @param {object} req
  * @param {object} res
  */
@@ -268,6 +284,73 @@ exports.update = async (req, res) => {
       message: "Architect updated successfully",
       architect,
     }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Update architect by architect
+ * @param {object} req
+ * @param {object} res
+ */
+exports.updateByArchitect = async (req, res) => {
+  try {
+    if (req.body.oldPassword) {
+      if (!req.body.newPassword)
+        return res
+          .status(401)
+          .json({ message: "New Password Can't be Empty!" });
+      const isCorrect = bcrypt.compareSync(
+        req.body.oldPassword,
+        req.user.password
+      ); // Check if old password is correct
+      if (!isCorrect)
+        return res.status(401).json({ message: "Invalid Old Password" });
+
+      req.body.password = bcrypt.hashSync(
+        req.body.newPassword,
+        parseInt(bcryptSalt)
+      ); // setting new password
+      delete req.body.newPassword;
+      delete req.body.oldPassword;
+
+      if (req.file) {
+        req.body.profile_pic = req.file.path;
+      } // checking for file
+
+      const architect = await Architects.findByIdAndUpdate(
+        req.params.architectId,
+        req.body,
+        {
+          new: true,
+        }
+      ); // Updating the architect
+      res.json({
+        success: true,
+        message: "Updated successfully",
+        architect,
+      }); // Success
+    } else {
+      const architectId = req.params.architectId; // Getting architect id from URL parameter
+      if (req.file) {
+        req.body.profile_pic = req.file.path;
+      }
+      const architect = await Architects.findByIdAndUpdate(
+        architectId,
+        req.body,
+        {
+          new: true,
+        }
+      ); // Updating the architect
+      res.json({
+        success: true,
+        message: "Updated successfully",
+        architect,
+      }); // Success
+    }
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

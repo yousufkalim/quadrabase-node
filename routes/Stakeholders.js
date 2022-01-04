@@ -5,6 +5,7 @@ const {
   isValidated,
 } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
+const ArchitectsModal = require("../models/Architects");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -17,10 +18,19 @@ const Auth = require("../middleware/auth");
 
 // create stakeholder
 router.post(
+  "/create",
+  validateStakeholder,
+  isValidated,
+  Auth(),
+  Stakeholders.create
+);
+
+router.post(
   "/create/:architectId",
   validateStakeholder,
   isValidated,
-  Stakeholders.create
+  Auth(ArchitectsModal),
+  Stakeholders.createByArchitect
 );
 
 // Read
@@ -36,7 +46,8 @@ router.put(
 ); // Update a specific stakeholder by it's id
 
 // Delete
-router.delete("/:stakeholderID/:architectId", Stakeholders.delete); // delete a specific stakeholder by it's id
+router.delete("/:stakeholderID", Stakeholders.delete); // delete a specific stakeholder by it's id
+router.delete("/:stakeholderID/:architectId", Stakeholders.deleteByArchitect); // delete a specific stakeholder by it's id
 
 // Export
 module.exports = router;
