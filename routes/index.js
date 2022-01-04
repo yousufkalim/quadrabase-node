@@ -20,6 +20,7 @@ router.use("/Stakeholders", require("./Stakeholders")); // All the stakeholder r
 router.use("/ArchitectsChap0", require("./ArchitectsChap0")); // All the ArchitectsChap0 routes
 router.use("/project", require("./Projects")); // All the ArchitectsChap0 routes
 router.use("/licenses", require("./Licenses")); // All the ArchitectsChap0 routes
+router.use("/ImportXLS", require("./ImportXLS")); // All the ArchitectsChap0 routes
 
 // Export
 module.exports = router;

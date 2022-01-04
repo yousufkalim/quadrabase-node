@@ -101,7 +101,6 @@ exports.getAll = async (req, res) => {
           as: "categories",
         },
       },
-
       {
         $lookup: {
           from: "works",

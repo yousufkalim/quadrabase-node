@@ -10,7 +10,7 @@ const storage = (field) =>
       try {
         stat = fs.statSync(dest);
       } catch (err) {
-        fs.mkdirSync(dest);
+        fs.mkdirSync(dest, {recursive: true});
       }
       if (stat && !stat.isDirectory()) {
         throw new Error(

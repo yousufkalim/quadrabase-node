@@ -1,0 +1,365 @@
+const xlsx = require('xlsx');
+const fs = require("fs");
+
+// TODO import models
+const Families = require("../models/Families");
+const BookLibraries = require("../models/BookLibraries");
+const Categories = require("../models/Categories");
+const Works = require("../models/Works");
+const WorkDetails = require("../models/WorkDetails");
+const CCTP = require("../models/CCTP");
+
+const populateQuery = [
+  {
+    path: "families",
+    populate: [
+      {
+        path: "Families",
+      },
+    ],
+  },
+  {
+    path: "categories",
+    populate: [
+      {
+        path: "Categories",
+      },
+    ],
+  },
+  {
+    path: "works",
+    populate: [
+      {
+        path: "Works",
+      },
+    ],
+  },
+];
+
+function cctpsArr(
+  activeRow
+){
+
+  const cctps = [];
+
+  const cctp1 = activeRow.CCTP1;
+  if(cctp1){
+    cctps.push({
+      name: cctp1,
+      type: "cctp1",
+      ranking: 1
+    });
+  }
+
+  const cctp2 = activeRow.CCTP2;
+  if(cctp2){
+    cctps.push({
+      name: cctp2,
+      type: "cctp2",
+      ranking: 1
+    });
+  }
+
+  const cctp3 = activeRow.CCTP3;
+  if(cctp3){
+    cctps.push({
+      name: cctp3,
+      type: "cctp3",
+      ranking: 1
+    });
+  }
+
+  const cctp4 = activeRow.CCTP4;
+  if(cctp4){
+    cctps.push({
+      name: cctp4,
+      type: "cctp4",
+      ranking: 1
+    });
+  }
+
+  return cctps;
+
+}
+
+// XLS import
+exports.import = async (req, res) => {
+
+  try {
+
+    if(!req.file){
+      return res.status(400).send({ success: false, message: "file was not found." });
+    }
+
+    let file = req.file;
+
+    const workbook = xlsx.readFile(
+      file.path
+    );
+    const sheets = workbook.SheetNames;
+    var xlData = workbook.Sheets[sheets[0]];
+    let jsonData = xlsx.utils.sheet_to_json(xlData);
+
+    let activeRow;
+
+    let lastCreatedIDFamily;
+    let lastCreatedIDBookLibrary;
+    let lastCreatedIDCategory;
+    let lastCreatedIDWork;
+    // let lastCreatedIDWorkDetail; // Don't need this, as its the last link in the hierarchy
+
+    const existingfamily = await Families.findOne({name: jsonData[0].Domaine}); // Finding already existing family
+    if (existingfamily) {
+      lastCreatedIDFamily = existingfamily._id;
+    } else {
+      // Creating family
+      const family = await Families.create({
+        name: jsonData[0].Domaine,
+        ranking: 1
+      });
+
+      lastCreatedIDFamily = (await Families.find().sort([["createdAt", -1]]))[0]._id;
+    }
+
+    for(let i = 0; i < jsonData.length - 1; i++){
+
+      activeRow = jsonData[i];
+
+      if(activeRow.Niveau == 1){
+
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDFamily: ${lastCreatedIDFamily}, activeRow.Libellé: ${activeRow.Libellé}`);
+
+        const existingBookLibrary = await BookLibraries.findOne({name: activeRow.Libellé}); // Finding already existing BookLibrary
+        if (existingBookLibrary) {
+          lastCreatedIDBookLibrary = existingBookLibrary._id;
+          continue;
+        }
+
+        //Creating BookLibrary
+        let bookLibrary = await BookLibraries.create({
+          "name": activeRow.Libellé,
+          "type": "public",
+          "ranking": 1,
+          "families": [
+            lastCreatedIDFamily
+          ]
+        }); // Adding BookLibrary in db
+
+        const bookLibraryId = bookLibrary._id;
+
+        const cctps = cctpsArr(activeRow);
+
+        for( let j = 0; j < cctps.length; j++ ){
+
+          let cctp;
+
+          const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type, }); // Finding already existing CCTP
+          if (existingCCTP) {
+            cctp = existingCCTP;
+          } else {
+            // Creating CCTP
+            cctp = await CCTP.create({
+              name: cctps[j].name,
+              type: cctps[j].type,
+              ranking: cctps[j].ranking
+            }); // Adding CCTP in db
+          }
+
+          const cctpId = cctp._id;
+
+          // Update booklibrary
+          bookLibrary = await BookLibraries.findByIdAndUpdate(
+            bookLibraryId,
+            { $push: { cctp_text: cctpId } },
+            {
+              new: true,
+            }
+          ); // Updating the BookLibrary
+
+        }
+
+        lastCreatedIDBookLibrary = (await BookLibraries.find().sort([["createdAt", -1]]))[0]._id;
+
+      } else if(activeRow.Niveau == 2){
+
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDBookLibrary: ${lastCreatedIDBookLibrary}, activeRow.Libellé: ${activeRow.Libellé}`);
+
+        let categoryExist = await Categories.findOne({name: activeRow.Libellé});
+        if (categoryExist) {
+          lastCreatedIDCategory = categoryExist._id;
+          continue;
+        } // double check if category name exists
+
+        let category = await Categories.create({
+          "BookLibraryId": lastCreatedIDBookLibrary,
+          "name": activeRow.Libellé
+        });
+
+        const categoryId = category._id;
+        const bookLibrary = await BookLibraries.findByIdAndUpdate(
+          lastCreatedIDBookLibrary,
+          { $push: { categories: categoryId } },
+          {
+            new: true,
+          }
+        ); // Updating the BookLibrary
+
+        category = await Categories.findByIdAndUpdate(
+          categoryId,
+          { $set: { book_library: lastCreatedIDBookLibrary } },
+          {
+            new: true,
+          }
+        ); // Updating the Families Schema
+
+        const cctps = cctpsArr(activeRow);
+
+        for( let j = 0; j < cctps.length; j++ ){
+
+          let cctp;
+
+          const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type }); // Finding already existing CCTP
+          if (existingCCTP) {
+            cctp = existingCCTP;
+          } else {
+            // Creating CCTP
+            cctp = await CCTP.create({
+              name: cctps[j].name,
+              type: cctps[j].type,
+              ranking: cctps[j].ranking
+            }); // Adding CCTP in db
+          }
+
+          const cctpId = cctp._id;
+
+          // Update Categories
+          category = await Categories.findByIdAndUpdate(
+            categoryId,
+            { $push: { cctp_text: cctpId } },
+            {
+              new: true,
+            }
+          ); // Adding cctp in category
+
+        }
+
+        lastCreatedIDCategory = (await Categories.find().sort([["createdAt", -1]]))[0]._id;
+
+      } else if(activeRow.Niveau == 3){
+
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDCategory: ${lastCreatedIDCategory}, activeRow.Libellé: ${activeRow.Libellé}`);
+
+        let workExist = await Works.findOne({name: activeRow.Libellé});
+        if (workExist) {
+          lastCreatedIDWork = workExist._id;
+          continue;
+        } // double check if work name exists
+        
+        let work = await Works.create({
+          "categoryId": lastCreatedIDCategory,
+          "name": activeRow.Libellé
+        });
+
+        const workId = work._id;
+        category = await Categories.findByIdAndUpdate(
+          lastCreatedIDCategory,
+          { $push: { works: workId } },
+          {
+            new: true,
+          }
+        ).populate(populateQuery); // Updating the category
+
+        work = await Works.findByIdAndUpdate(
+          workId,
+          { $set: { category: lastCreatedIDCategory } },
+          {
+            new: true,
+          }
+        ); // Updating the Works Schema
+
+        const cctps = cctpsArr(activeRow);
+
+        for( let j = 0; j < cctps.length; j++ ){
+
+          let cctp;
+
+          const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type }); // Finding already existing CCTP
+          if (existingCCTP) {
+            cctp = existingCCTP;
+          } else {
+            // Creating CCTP
+            cctp = await CCTP.create({
+              name: cctps[j].name,
+              type: cctps[j].type,
+              ranking: cctps[j].ranking
+            }); // Adding CCTP in db
+          }
+
+          const cctpId = cctp._id;
+
+          // Update Works
+          work = await Works.findByIdAndUpdate(
+            workId,
+            { $push: { cctp_text: cctpId } },
+            {
+              new: true,
+            }
+          ); // Updating the Works for cctps.
+
+        }
+
+        lastCreatedIDWork = (await Works.find().sort([["createdAt", -1]]))[0]._id;
+
+      } else if(activeRow.Niveau == 4){
+
+        // console.log(`THIS IS THE i: ${i}, lastCreatedIDWork: ${lastCreatedIDWork}, activeRow.Libellé: ${activeRow.Libellé}`);
+
+        let works = await Works.findById({ _id: lastCreatedIDWork });
+        if (!works) {
+          continue;
+        } // double check if works id is valid
+        let workDetailExist = await WorkDetails.findOne({ name: activeRow.Libellé });
+        if (workDetailExist) {
+          continue;
+        } // double check if work detail exists
+        let workDetails = await WorkDetails.create({
+          "workId": lastCreatedIDWork,
+          "name": activeRow.Libellé
+        });
+        const workDetailId = workDetails._id;
+        works = await Works.findByIdAndUpdate(
+          lastCreatedIDWork,
+          { $push: { work_details: workDetailId } },
+          {
+            new: true,
+          }
+        ); // Updating the works
+
+        works = await WorkDetails.findByIdAndUpdate(
+          workDetailId,
+          { $set: { work: lastCreatedIDWork } },
+          {
+            new: true,
+          }
+        ); // Updating the Families Schema
+
+      }
+
+    }
+
+    // deleting Excel File after saving data to database
+    fs.unlinkSync(file.path, (err) => {
+      console.log(err);
+    });
+
+    res.status(200).send({
+      success: true,
+      message: "All good."
+    });
+    
+  } catch (error) {
+    console.log("Error ----> ", error);
+    res.status(500).send("Something Failed");
+  }
+};
+
