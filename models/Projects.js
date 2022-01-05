@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const workSchema = new mongoose.Schema({
   name: { type: String },
   ranking: { type: Number },
-  unit: { type: String },
+  unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
   unit_price: { type: Number },
   quantity: { type: Number },
   work_details: [

@@ -116,8 +116,11 @@ exports.validateProjects = [
 
 // add work to project validation
 exports.validateAddWorkToProject = [
-  check("workId", "Work ID is required.").notEmpty().trim(),
-  check("workDetailId", "Work detail ID is required.").notEmpty().trim(),
+  check("name", "Name is required.").notEmpty().trim(),
+  check("ranking", "Ranking is required.").notEmpty().trim(),
+  check("unit", "unit is required.").notEmpty().trim(),
+  check("unit_price", "Work ID is required.").notEmpty().trim(),
+  check("quantity", "Work ID is required.").notEmpty().trim(),
 ];
 
 // Stakeholder Create Validation
