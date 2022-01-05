@@ -8,9 +8,7 @@ const bookLibrariesSchema = new mongoose.Schema(
     },
     cctp_text: [
       {
-        // type: String,
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CCTP"
+        type: String,
       },
     ],
     ranking: {
