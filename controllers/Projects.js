@@ -113,23 +113,15 @@ exports.getWorks = async (req, res) => {
         },
       },
       {
-        $lookup: {
-          from: "workdetails",
-          localField: "works.work_details",
-          foreignField: "_id",
-          as: "work_details",
-        },
-      },
-      {
         $unwind: {
-          path: "$work_details",
+          path: "$works.work_details",
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
           from: "units",
-          localField: "work_details.unit",
+          localField: "works.work_details.unit",
           foreignField: "_id",
           as: "work_details_unit",
         },
@@ -144,9 +136,12 @@ exports.getWorks = async (req, res) => {
         $project: {
           work: "$works",
           workUnit: "$work_unit",
-          workDetails: "$work_details",
+          workDetails: "$works.work_details",
           workDetailsUnit: "$work_details_unit",
         },
+      },
+      {
+        $unset: ["work.work_details"],
       },
     ]); // Finding works project by id
     res.json({ success: true, works }); // Success
@@ -200,6 +195,51 @@ exports.delete = async (req, res) => {
     res.json({
       success: true,
       message: "Project deleted successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// delete work from project
+exports.deleteWork = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    await Projects.findByIdAndUpdate(
+      projectId,
+      { $pull: { works: { _id: workId } } },
+      { new: true }
+    );
+    res.json({
+      success: true,
+      message: "Work deleted successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// delete work from project
+exports.deleteWorkDetail = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      item1.work_details.pull({ _id: workDetailId });
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Work detail deleted successfully",
     }); // Success
   } catch (err) {
     // Error handling
