@@ -7,7 +7,6 @@ const BookLibraries = require("../models/BookLibraries");
 const Categories = require("../models/Categories");
 const Works = require("../models/Works");
 const WorkDetails = require("../models/WorkDetails");
-const CCTP = require("../models/CCTP");
 
 const populateQuery = [
   {
@@ -44,38 +43,22 @@ function cctpsArr(
 
   const cctp1 = activeRow.CCTP1;
   if(cctp1){
-    cctps.push({
-      name: cctp1,
-      type: "cctp1",
-      ranking: 1
-    });
+    cctps.push(cctp1);
   }
 
   const cctp2 = activeRow.CCTP2;
   if(cctp2){
-    cctps.push({
-      name: cctp2,
-      type: "cctp2",
-      ranking: 1
-    });
+    cctps.push(cctp2);
   }
 
   const cctp3 = activeRow.CCTP3;
   if(cctp3){
-    cctps.push({
-      name: cctp3,
-      type: "cctp3",
-      ranking: 1
-    });
+    cctps.push(cctp3);
   }
 
   const cctp4 = activeRow.CCTP4;
   if(cctp4){
-    cctps.push({
-      name: cctp4,
-      type: "cctp4",
-      ranking: 1
-    });
+    cctps.push(cctp4);
   }
 
   return cctps;
@@ -147,34 +130,35 @@ exports.import = async (req, res) => {
 
         const bookLibraryId = bookLibrary._id;
 
+        // Update family
+        const family = await Families.findByIdAndUpdate(
+          lastCreatedIDFamily,
+          { $push: { book_libraries: bookLibraryId } },
+          {
+            new: true,
+          }
+        ); // Updating the Family
+
         const cctps = cctpsArr(activeRow);
+        const objCctpsArr = bookLibrary.cctp_text;
 
         for( let j = 0; j < cctps.length; j++ ){
 
-          let cctp;
+          let cctp = cctps[j];
 
-          const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type, }); // Finding already existing CCTP
+          const existingCCTP = objCctpsArr.includes(cctp);
           if (existingCCTP) {
-            cctp = existingCCTP;
+            // do nothing
           } else {
-            // Creating CCTP
-            cctp = await CCTP.create({
-              name: cctps[j].name,
-              type: cctps[j].type,
-              ranking: cctps[j].ranking
-            }); // Adding CCTP in db
+            // Update booklibrary
+            bookLibrary = await BookLibraries.findByIdAndUpdate(
+              bookLibraryId,
+              { $push: { cctp_text: cctp } },
+              {
+                new: true,
+              }
+            ); // Updating the BookLibrary
           }
-
-          const cctpId = cctp._id;
-
-          // Update booklibrary
-          bookLibrary = await BookLibraries.findByIdAndUpdate(
-            bookLibraryId,
-            { $push: { cctp_text: cctpId } },
-            {
-              new: true,
-            }
-          ); // Updating the BookLibrary
 
         }
 
@@ -213,33 +197,25 @@ exports.import = async (req, res) => {
         ); // Updating the Families Schema
 
         const cctps = cctpsArr(activeRow);
+        const objCctpsArr = category.cctp_text;
 
         for( let j = 0; j < cctps.length; j++ ){
 
-          let cctp;
+          let cctp = cctps[j];
 
-          const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type }); // Finding already existing CCTP
+          const existingCCTP = objCctpsArr.includes(cctp);
           if (existingCCTP) {
-            cctp = existingCCTP;
+            // do nothing
           } else {
-            // Creating CCTP
-            cctp = await CCTP.create({
-              name: cctps[j].name,
-              type: cctps[j].type,
-              ranking: cctps[j].ranking
-            }); // Adding CCTP in db
+            // Update Categories
+            category = await Categories.findByIdAndUpdate(
+              categoryId,
+              { $push: { cctp_text: cctp } },
+              {
+                new: true,
+              }
+            ); // Adding cctp in category
           }
-
-          const cctpId = cctp._id;
-
-          // Update Categories
-          category = await Categories.findByIdAndUpdate(
-            categoryId,
-            { $push: { cctp_text: cctpId } },
-            {
-              new: true,
-            }
-          ); // Adding cctp in category
 
         }
 
@@ -278,33 +254,25 @@ exports.import = async (req, res) => {
         ); // Updating the Works Schema
 
         const cctps = cctpsArr(activeRow);
+        const objCctpsArr = work.cctp_text;
 
         for( let j = 0; j < cctps.length; j++ ){
 
-          let cctp;
+          let cctp = cctps[j];
 
-          const existingCCTP = await CCTP.findOne({ "name": cctps[j].name, "type": cctps[j].type }); // Finding already existing CCTP
+          const existingCCTP = objCctpsArr.includes(cctp);
           if (existingCCTP) {
-            cctp = existingCCTP;
+            // do nothing
           } else {
-            // Creating CCTP
-            cctp = await CCTP.create({
-              name: cctps[j].name,
-              type: cctps[j].type,
-              ranking: cctps[j].ranking
-            }); // Adding CCTP in db
+            // Update Works
+            work = await Works.findByIdAndUpdate(
+              workId,
+              { $push: { cctp_text: cctp } },
+              {
+                new: true,
+              }
+            ); // Updating the Works for cctps.
           }
-
-          const cctpId = cctp._id;
-
-          // Update Works
-          work = await Works.findByIdAndUpdate(
-            workId,
-            { $push: { cctp_text: cctpId } },
-            {
-              new: true,
-            }
-          ); // Updating the Works for cctps.
 
         }
 
@@ -358,7 +326,7 @@ exports.import = async (req, res) => {
     });
     
   } catch (error) {
-    console.log("Error ----> ", error);
+    console.trace("Error ----> ", error);
     res.status(500).send("Something Failed");
   }
 };
