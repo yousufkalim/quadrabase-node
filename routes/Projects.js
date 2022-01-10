@@ -40,6 +40,8 @@ router.get("/works/:projectId", Projects.getWorks); // get Projects by id
 
 // Update
 router.put("/:projectId", Projects.update); // Update a specific Projects by it's id
+router.put("/updateWork/:projectId", Projects.updateWork); // Update a specific work
+router.put("/updateWorkDetail/:projectId", Projects.updateWorkDetail); // Update a specific work detail
 
 // Delete
 router.delete("/:projectId", Projects.delete); // delete a specific Projects by it's id

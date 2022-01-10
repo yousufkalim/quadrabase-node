@@ -176,6 +176,66 @@ exports.update = async (req, res) => {
   }
 };
 
+exports.updateWork = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      if (item1._id == workId) {
+        item1.name = req.body.name;
+        item1.unit = req.body.unit;
+        item1.unit_price = req.body.unit_price;
+        item1.quantity = req.body.quantity;
+      }
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Work updated successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateWorkDetail = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      item1.work_details.map((item2) => {
+        if (item2._id == workDetailId) {
+          item2.name = req.body.name;
+          item2.unit = req.body.unit;
+          item2.unit_price = req.body.unit_price;
+          item2.quantity = req.body.quantity;
+          console.log(item2);
+        }
+        return item2;
+      });
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Work detail updated successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Delete project
  * @param {object} req
