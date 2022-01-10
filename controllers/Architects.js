@@ -501,7 +501,7 @@ exports.addSubscription = async (req, res) => {
             .add(1, "days")
             .calendar()
         ).format("YYYY/MM/DD"),
-        projects: subscription.projects
+        projects: req.body.projects
       };
 
       await Architects.findByIdAndUpdate(

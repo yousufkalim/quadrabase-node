@@ -3,6 +3,12 @@ const mongoose = require("mongoose");
 // Schema
 const architectsSchema = new mongoose.Schema(
   {
+    address_1: String,
+    address_2: String,
+    po_box: Number,
+    postal_code: Number,
+    city: String,
+    phone: String,
     first_name: String,
     last_name: String,
     email: {
