@@ -1,6 +1,6 @@
 const Projects = require("../models/Projects");
 const Architects = require("../models/Architects");
-const Works = require("../models/Works");
+const WorkDetails = require("../models/WorkDetails");
 const mongoose = require("mongoose");
 
 //Projects create
@@ -211,6 +211,22 @@ exports.delete = async (req, res) => {
 //Add work to project
 exports.addWork = async (req, res) => {
   try {
+    if (req.body.work_details) {
+      const work_details = await WorkDetails.find({
+        _id: { $in: req.body.work_details },
+      });
+      let temp = [];
+      work_details.map((item) => {
+        let data = {
+          name: item.name,
+          unit: item.unit,
+          unit_price: item.unit_price,
+          quantity: 1,
+        };
+        temp.push(data);
+        req.body.work_details = temp;
+      });
+    }
     const project = await Projects.findByIdAndUpdate(
       req.params.projectId,
       { $push: { works: req.body } },

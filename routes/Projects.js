@@ -33,7 +33,7 @@ router.get("/:projectId", Projects.getById); // get Projects by id
 router.get("/works/:projectId", Projects.getWorks); // get Projects by id
 
 // Update
-router.put("/:projectId", validateProjects, isValidated, Projects.update); // Update a specific Projects by it's id
+router.put("/:projectId", Projects.update); // Update a specific Projects by it's id
 
 // Delete
 router.delete("/:projectId", Projects.delete); // delete a specific Projects by it's id

@@ -157,18 +157,45 @@ exports.getById = async (req, res) => {
 // search bookLibrary by name
 exports.search = async (req, res) => {
   try {
-    if (!req.query.q) {
-      // if search query is empty
-      return res
-        .status(500)
-        .json({ success: false, message: "Search is Empty" });
-    }
-
     // using RegExp for search
     const regex = new RegExp(req.query.q, "i");
-    const bookLibraries = await BookLibraries.find({
-      name: { $regex: regex }, //// find where name matches with regex
-    });
+    let bookLibraries = await BookLibraries.aggregate([
+      // Finding all the BookLibraries from db
+      {
+        $match: {
+          name: { $regex: regex },
+          type: "public",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+
+          foreignField: "book_library",
+          as: "categories",
+        },
+      },
+
+      {
+        $lookup: {
+          from: "works",
+          localField: "categories._id",
+          foreignField: "category",
+          as: "works",
+        },
+      },
+      {
+        $lookup: {
+          from: "workdetails",
+          localField: "works._id",
+          foreignField: "work",
+          as: "work_details",
+        },
+      },
+
+      { $sort: { ranking: 1 } },
+    ]);
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {

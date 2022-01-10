@@ -3,14 +3,15 @@ const mongoose = require("mongoose");
 // Work Schema
 const workSchema = new mongoose.Schema({
   name: { type: String },
-  ranking: { type: Number },
   unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
   unit_price: { type: Number },
   quantity: { type: Number },
   work_details: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "WorkDetails",
+      name: { type: String },
+      unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
+      unit_price: { type: Number },
+      quantity: { type: Number },
     },
   ],
 });
@@ -73,6 +74,7 @@ const projectsSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["ongoing", "completed", "archived"],
+      default: "ongoing",
     },
   },
   {
