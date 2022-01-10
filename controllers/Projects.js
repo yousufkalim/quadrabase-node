@@ -52,6 +52,23 @@ exports.getAll = async (req, res) => {
 };
 
 /**
+ * Get all Projects by architectId
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByArchitect = async (req, res) => {
+  try {
+    const project = await Projects.find({
+      architect: req.params.architectId,
+    }).populate("vat"); // Finding all the Project from db
+    res.json({ success: true, project }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+/**
  * Get project by id
  * @param {object} req
  * @param {object} res
@@ -59,8 +76,80 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
-    const project = await Projects.findById(projectId); // Finding project by id
+    const project = await Projects.findById(projectId).populate("vat"); // Finding project by id
     res.json({ success: true, project }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.getWorks = async (req, res) => {
+  try {
+    const projectId = req.params.projectId; // Getting projectId from URL parameter
+    const works = await Projects.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(projectId),
+        },
+      },
+      {
+        $unwind: {
+          path: "$works",
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "works.unit",
+          foreignField: "_id",
+          as: "work_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_unit",
+        },
+      },
+      {
+        $lookup: {
+          from: "workdetails",
+          localField: "works.work_details",
+          foreignField: "_id",
+          as: "work_details",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_details",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "work_details.unit",
+          foreignField: "_id",
+          as: "work_details_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_details_unit",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          work: "$works",
+          workUnit: "$work_unit",
+          workDetails: "$work_details",
+          workDetailsUnit: "$work_details_unit",
+        },
+      },
+    ]); // Finding works project by id
+    res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
@@ -122,60 +211,11 @@ exports.delete = async (req, res) => {
 //Add work to project
 exports.addWork = async (req, res) => {
   try {
-    const work = await Works.aggregate([
-      {
-        $match: {
-          _id: mongoose.Types.ObjectId(req.body.workId),
-        },
-      },
-      {
-        $unwind: {
-          path: "$work_details",
-        },
-      },
-      {
-        $match: {
-          work_details: mongoose.Types.ObjectId(req.body.workDetailId),
-        },
-      },
-      {
-        $lookup: {
-          from: "workdetails",
-          localField: "work_details",
-          foreignField: "_id",
-          as: "workDetail",
-        },
-      },
-      {
-        $unwind: {
-          path: "$workDetail",
-        },
-      },
-    ]);
-
-    const workData = {
-      name: work[0].name,
-      cctp_text: work[0].cctp_text,
-      btu_text: work[0].btu_text,
-      ranking: req.body.workRanking,
-      unit: req.body.workUnit,
-      unit_price: req.body.workUnitPrice,
-      quantity: req.body.workQuantity,
-      work_details: {
-        name: work[0].workDetail.name,
-        ranking: req.body.workDetailRanking,
-        unit: req.body.workDetailUnit,
-        unit_price: req.body.workDetailUnitPrice,
-        quantity: req.body.workDetailQuantity,
-      },
-    };
-
     const project = await Projects.findByIdAndUpdate(
       req.params.projectId,
-      { $push: { works: workData } },
+      { $push: { works: req.body } },
       { new: true }
     );
-
     res.json({
       success: true,
       message: "Work added to project",

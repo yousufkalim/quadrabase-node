@@ -3,19 +3,16 @@ const mongoose = require("mongoose");
 // Work Schema
 const workSchema = new mongoose.Schema({
   name: { type: String },
-  cctp_text: [String],
-  btu_text: [String],
   ranking: { type: Number },
-  unit: { type: String },
+  unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
   unit_price: { type: Number },
   quantity: { type: Number },
-  work_details: {
-    name: { type: String },
-    ranking: { type: Number },
-    unit: { type: String },
-    unit_price: { type: Number },
-    quantity: { type: Number },
-  },
+  work_details: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "WorkDetails",
+    },
+  ],
 });
 
 // Project Schema

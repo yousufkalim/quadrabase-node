@@ -6,6 +6,7 @@ const {
   isValidated,
 } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
+const ArchitectsModel = require("../models/Architects");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -17,11 +18,19 @@ const Auth = require("../middleware/auth");
  */
 
 // create Project
-router.post("/create", validateProjects, isValidated, Projects.create);
+router.post(
+  "/create",
+  validateProjects,
+  isValidated,
+  Auth(ArchitectsModel),
+  Projects.create
+);
 
 // Read
 router.get("/", Projects.getAll); // get all Projects
+router.get("/byArchitect/:architectId", Projects.getByArchitect); // get all Projects
 router.get("/:projectId", Projects.getById); // get Projects by id
+router.get("/works/:projectId", Projects.getWorks); // get Projects by id
 
 // Update
 router.put("/:projectId", validateProjects, isValidated, Projects.update); // Update a specific Projects by it's id
