@@ -41,6 +41,18 @@ const providersSchema = new mongoose.Schema(
     url: {
       type: String,
     },
+    po_box: {
+      type: Number,
+    },
+    email_address_client: {
+      type: String,
+    },
+    client_code: {
+      type: String,
+    },
+    establishment: {
+      type: String,
+    }
   },
   {
     timestamps: true,

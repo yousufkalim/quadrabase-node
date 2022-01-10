@@ -6,6 +6,9 @@ const vatSchema = new mongoose.Schema(
     value: {
       type: Number,
     },
+    symbol: {
+      type: String,
+    },
     ranking: {
       type: Number,
     },
