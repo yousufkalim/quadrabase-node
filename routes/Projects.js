@@ -17,14 +17,20 @@ const ArchitectsModel = require("../models/Architects");
  * @method delete delete Projects
  */
 
-// create Project
+// post
 router.post(
   "/create",
   validateProjects,
   isValidated,
   Auth(ArchitectsModel),
   Projects.create
-);
+); // create Project
+router.post(
+  "/addWork/:projectId",
+  validateAddWorkToProject,
+  isValidated,
+  Projects.addWork
+); // add work to project
 
 // Read
 router.get("/", Projects.getAll); // get all Projects
@@ -33,18 +39,14 @@ router.get("/:projectId", Projects.getById); // get Projects by id
 router.get("/works/:projectId", Projects.getWorks); // get Projects by id
 
 // Update
-router.put("/:projectId", validateProjects, isValidated, Projects.update); // Update a specific Projects by it's id
+router.put("/:projectId", Projects.update); // Update a specific Projects by it's id
+router.put("/updateWork/:projectId", Projects.updateWork); // Update a specific work
+router.put("/updateWorkDetail/:projectId", Projects.updateWorkDetail); // Update a specific work detail
 
 // Delete
 router.delete("/:projectId", Projects.delete); // delete a specific Projects by it's id
-
-// add work to project
-router.post(
-  "/addWork/:projectId",
-  validateAddWorkToProject,
-  isValidated,
-  Projects.addWork
-);
+router.delete("/deleteWork/:projectId", Projects.deleteWork); // delete work added in project
+router.delete("/deleteWorkDetail/:projectId", Projects.deleteWorkDetail); // delete work added in project
 
 // Export
 module.exports = router;

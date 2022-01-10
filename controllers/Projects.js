@@ -1,6 +1,6 @@
 const Projects = require("../models/Projects");
 const Architects = require("../models/Architects");
-const Works = require("../models/Works");
+const WorkDetails = require("../models/WorkDetails");
 const mongoose = require("mongoose");
 
 //Projects create
@@ -113,23 +113,15 @@ exports.getWorks = async (req, res) => {
         },
       },
       {
-        $lookup: {
-          from: "workdetails",
-          localField: "works.work_details",
-          foreignField: "_id",
-          as: "work_details",
-        },
-      },
-      {
         $unwind: {
-          path: "$work_details",
+          path: "$works.work_details",
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
           from: "units",
-          localField: "work_details.unit",
+          localField: "works.work_details.unit",
           foreignField: "_id",
           as: "work_details_unit",
         },
@@ -144,9 +136,12 @@ exports.getWorks = async (req, res) => {
         $project: {
           work: "$works",
           workUnit: "$work_unit",
-          workDetails: "$work_details",
+          workDetails: "$works.work_details",
           workDetailsUnit: "$work_details_unit",
         },
+      },
+      {
+        $unset: ["work.work_details"],
       },
     ]); // Finding works project by id
     res.json({ success: true, works }); // Success
@@ -173,6 +168,66 @@ exports.update = async (req, res) => {
       success: true,
       message: "Project updated successfully",
       project,
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateWork = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      if (item1._id == workId) {
+        item1.name = req.body.name;
+        item1.unit = req.body.unit;
+        item1.unit_price = req.body.unit_price;
+        item1.quantity = req.body.quantity;
+      }
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Work updated successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateWorkDetail = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      item1.work_details.map((item2) => {
+        if (item2._id == workDetailId) {
+          item2.name = req.body.name;
+          item2.unit = req.body.unit;
+          item2.unit_price = req.body.unit_price;
+          item2.quantity = req.body.quantity;
+          console.log(item2);
+        }
+        return item2;
+      });
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Work detail updated successfully",
     }); // Success
   } catch (err) {
     // Error handling
@@ -208,9 +263,70 @@ exports.delete = async (req, res) => {
   }
 };
 
+// delete work from project
+exports.deleteWork = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    await Projects.findByIdAndUpdate(
+      projectId,
+      { $pull: { works: { _id: workId } } },
+      { new: true }
+    );
+    res.json({
+      success: true,
+      message: "Work deleted successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// delete work from project
+exports.deleteWorkDetail = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      item1.work_details.pull({ _id: workDetailId });
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Work detail deleted successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 //Add work to project
 exports.addWork = async (req, res) => {
   try {
+    if (req.body.work_details) {
+      const work_details = await WorkDetails.find({
+        _id: { $in: req.body.work_details },
+      });
+      let temp = [];
+      work_details.map((item) => {
+        let data = {
+          name: item.name,
+          unit: item.unit,
+          unit_price: item.unit_price,
+          quantity: 1,
+        };
+        temp.push(data);
+        req.body.work_details = temp;
+      });
+    }
     const project = await Projects.findByIdAndUpdate(
       req.params.projectId,
       { $push: { works: req.body } },

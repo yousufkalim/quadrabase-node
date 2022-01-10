@@ -105,7 +105,7 @@ exports.validateSubscription = [
   check("price", "Price is required.").notEmpty().trim(),
 ];
 
-// Subscription Create Validation
+// Project Create Validation
 exports.validateProjects = [
   check("name", "Name is required.").notEmpty().trim(),
   check("architect", "Architect is required.").notEmpty().trim(),
@@ -117,7 +117,6 @@ exports.validateProjects = [
 // add work to project validation
 exports.validateAddWorkToProject = [
   check("name", "Name is required.").notEmpty().trim(),
-  check("ranking", "Ranking is required.").notEmpty().trim(),
   check("unit", "unit is required.").notEmpty().trim(),
   check("unit_price", "Work ID is required.").notEmpty().trim(),
   check("quantity", "Work ID is required.").notEmpty().trim(),
