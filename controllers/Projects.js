@@ -370,12 +370,6 @@ exports.addWork = async (req, res) => {
       });
     }
 
-    const work = await Works.findById(req.body.workId);
-    req.body.cctp_text = work.cctp_text;
-    req.body.bpu_text = work.bpu_text;
-
-    console.log(req.body);
-
     const project = await Projects.findByIdAndUpdate(
       req.params.projectId,
       { $push: { works: req.body } },
