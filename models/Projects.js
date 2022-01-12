@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 // Work Schema
 const workSchema = new mongoose.Schema({
   name: { type: String },
+  cctp_text: [{ type: String }],
+  bpu_text: [{ type: String }],
   unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
   unit_price: { type: Number },
   quantity: { type: Number },
