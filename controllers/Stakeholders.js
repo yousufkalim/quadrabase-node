@@ -143,6 +143,17 @@ exports.delete = async (req, res) => {
 exports.deleteByArchitect = async (req, res) => {
   try {
     const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
+
+    const inUseStakholder = await Projects.findOne({
+      stakeholders: { $all: [stakeholderID] },
+    });
+    if (inUseStakholder) {
+      // If we found existing stakeholder in db
+      return res
+        .status(401)
+        .json({ success: false, message: "Stakeholder in use of a project" });
+    }
+
     await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
 
     const architectId = req.params.architectId; // Getting architectId from URL parameter

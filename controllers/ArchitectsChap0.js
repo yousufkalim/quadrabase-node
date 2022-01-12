@@ -199,6 +199,18 @@ exports.updateByProject = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const architectsChap0Id = req.params.architectsChap0Id; // Getting architectsChap0Id from URL parameter
+
+    const inUseChap0part2 = await Projects.findOne({
+      "chap0part2.id": architectsChap0Id,
+    });
+    if (inUseChap0part2) {
+      // If we found existing stakeholder in db
+      return res.status(401).json({
+        success: false,
+        message: "Chap. 0 part 2 in use of a project",
+      });
+    }
+
     const architectsChap0 = await ArchitectsChap0.findByIdAndDelete(
       architectsChap0Id
     ); // Deleting the architectsChap0
@@ -211,7 +223,7 @@ exports.delete = async (req, res) => {
 
     res.json({
       success: true,
-      message: "ArchitectsChap0 deleted successfully",
+      message: "Chap. 0 part 2 deleted successfully",
     }); // Success
   } catch (err) {
     // Error handling
