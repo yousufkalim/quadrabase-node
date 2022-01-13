@@ -1,6 +1,7 @@
 const Projects = require("../models/Projects");
 const Architects = require("../models/Architects");
 const WorkDetails = require("../models/WorkDetails");
+const Works = require("../models/Works");
 const mongoose = require("mongoose");
 const ArchitectsChap0 = require("../models/ArchitectsChap0");
 const Chap0 = require("../models/Chap0");
@@ -368,6 +369,7 @@ exports.addWork = async (req, res) => {
         req.body.work_details = temp;
       });
     }
+
     const project = await Projects.findByIdAndUpdate(
       req.params.projectId,
       { $push: { works: req.body } },

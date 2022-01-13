@@ -97,7 +97,9 @@ exports.login = async (req, res) => {
   try {
     let email = req.body.email; //email
     let password = req.body.password; //password
-    const user = await Architects.findOne({ email }); // Finding already existing Architect
+    const user = await Architects.findOne({ email }).populate(
+      "subscriptions.license"
+    ); // Finding already existing Architect
     if (!user) {
       // If we found existing user in db
       return res
@@ -487,7 +489,6 @@ exports.addSubscription = async (req, res) => {
       });
       res.json({ success: true, message: "Subscription Removed!" });
     } else {
-
       const subscription = await Subscriptions.findById(
         req.body.subscriptionId
       );
@@ -501,7 +502,7 @@ exports.addSubscription = async (req, res) => {
             .add(1, "days")
             .calendar()
         ).format("YYYY/MM/DD"),
-        projects: req.body.projects
+        projects: req.body.projects,
       };
 
       await Architects.findByIdAndUpdate(
