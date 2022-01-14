@@ -16,6 +16,10 @@ const LicensesSchema = new mongoose.Schema(
     credit: {
       type: Number,
     },
+    projects: {
+      type: Number,
+      default: 0,
+    },
     architect: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Architects",

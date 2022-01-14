@@ -23,7 +23,13 @@ function Auth(MODEL = Admins) {
       if (MODEL != Admins) {
         user = await MODEL.findOne({
           email: email,
-        }).populate("subscriptions.license");
+        }).populate({
+          path: "subscriptions",
+          populate: {
+            path: "subscription",
+            model: "Subscriptions",
+          },
+        });
       } else {
         user = await MODEL.findOne({
           email: email,

@@ -19,6 +19,7 @@ exports.buy = async (req, res) => {
           .calendar()
       ).format("YYYY/MM/DD"),
       credit: subscription.credit,
+      projects: subscription.projects,
       architect: req.params.architectId,
     };
 
@@ -39,12 +40,12 @@ exports.buy = async (req, res) => {
 };
 
 //buy credits
-exports.buycredits = async (req, res) => {
+exports.buyprojects = async (req, res) => {
   try {
     const subscription = await Subscriptions.findById(req.body.subscription);
 
     const license = await Licenses.findById(req.params.licenseId);
-    license.credit = license.credit + subscription.credit;
+    license.projects = license.projects + subscription.projects;
     await license.save();
 
     res.json({ success: true, message: "Success!", license });
@@ -119,7 +120,6 @@ exports.assign = async (req, res) => {
       const architect = await Architects.findOne({
         email: req.body.email,
       });
-      console.log("architectaa", architect);
       if (!architect) {
         return res
           .status(404)
@@ -133,13 +133,7 @@ exports.assign = async (req, res) => {
         { new: true }
       );
 
-      let data = {
-        id: license.subscription,
-        start_date: license.start_date,
-        end_date: license.end_date,
-        license: license._id,
-      };
-      architect.subscriptions = data;
+      architect.subscriptions = license._id;
       await architect.save();
 
       res.json({
@@ -210,6 +204,7 @@ exports.Webhook = async (req, res) => {
               .calendar()
           ).format("YYYY/MM/DD"),
           credit: subscription.credit,
+          projects: subscription.projects,
           architect: metaData.architectId,
         };
         const license = await Licenses.create(data);

@@ -24,29 +24,13 @@ const architectsSchema = new mongoose.Schema(
     establishment: String,
     service: String,
     client_code: String,
-    credit: { type: Number, default: 1 },
     authorized: {
       type: String,
       default: "Yes",
     },
     subscriptions: {
-      id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Subscriptions",
-      },
-      start_date: {
-        type: Date,
-      },
-      end_date: {
-        type: Date,
-      },
-      license: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Licenses",
-      },
-      projects: {
-        type: Number,
-      }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Licenses",
     },
     myLicenses: [
       {
