@@ -31,11 +31,11 @@ router.put("/:licenseId", Auth(ArchitectsModel), Lincenses.assign);
 
 // put - buy subscription
 router.put(
-  "/buycredits/:licenseId",
+  "/buyprojects/:licenseId",
   validateLincese,
   isValidated,
   Auth(ArchitectsModel),
-  Lincenses.buycredits
+  Lincenses.buyprojects
 );
 
 // put - renew subscription

@@ -12,6 +12,8 @@ const WorkDetails = require("../models/WorkDetails");
 const Stakeholders = require("../models/Stakeholders");
 
 const Subscriptions = require("../models/Subscriptions");
+const Licenses = require("../models/Licenses");
+
 const moment = require("moment");
 
 const bcrypt = require("bcryptjs");
@@ -97,9 +99,13 @@ exports.login = async (req, res) => {
   try {
     let email = req.body.email; //email
     let password = req.body.password; //password
-    const user = await Architects.findOne({ email }).populate(
-      "subscriptions.license"
-    ); // Finding already existing Architect
+    const user = await Architects.findOne({ email }).populate({
+      path: "subscriptions",
+      populate: {
+        path: "subscription",
+        model: "Subscriptions",
+      },
+    }); // Finding already existing Architect
     if (!user) {
       // If we found existing user in db
       return res
@@ -210,7 +216,13 @@ exports.getAll = async (req, res) => {
   try {
     const architects = await Architects.find()
       .sort([["createdAt", -1]])
-      .populate("subscriptions.id"); // Finding all the Architects from db
+      .populate({
+        path: "subscriptions",
+        populate: {
+          path: "subscription",
+          model: "Subscriptions",
+        },
+      }); // Finding all the Architects from db
     res.json({ success: true, architects }); // Success
   } catch (err) {
     // Error handling
@@ -494,7 +506,7 @@ exports.addSubscription = async (req, res) => {
       );
 
       const data = {
-        id: subscription._id,
+        subscription: subscription._id,
         start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
         end_date: moment(
           moment(new Date())
@@ -502,14 +514,17 @@ exports.addSubscription = async (req, res) => {
             .add(1, "days")
             .calendar()
         ).format("YYYY/MM/DD"),
+        credit: subscription.credit,
         projects: req.body.projects,
+        assigned_to: req.params.architectId,
       };
+
+      const license = await Licenses.create(data);
 
       await Architects.findByIdAndUpdate(
         req.params.architectId,
         {
-          subscriptions: data,
-          credit: subscription.credit,
+          subscriptions: license._id,
         },
         { new: true }
       );
