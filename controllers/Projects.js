@@ -335,11 +335,22 @@ exports.deleteWorkDetail = async (req, res) => {
     const workDetailId = req.body.workDetailId;
     let project = await Projects.findById(projectId);
 
+    let workId = "";
     project.works.map((item1) => {
       item1.work_details.pull({ _id: workDetailId });
+      if (item1.work_details.length < 1 && !item1.unit) {
+        workId = item1._id;
+      }
       return item1;
     });
     project.save();
+    if (workId) {
+      await Projects.findByIdAndUpdate(
+        projectId,
+        { $pull: { works: { _id: workId } } },
+        { new: true }
+      );
+    }
 
     res.json({
       success: true,
