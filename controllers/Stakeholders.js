@@ -29,9 +29,14 @@ exports.create = async (req, res) => {
 
 exports.createByArchitect = async (req, res) => {
   try {
-    const existingStakeholder = await Stakeholders.findOne({
-      name: req.body.name,
-    }); // Finding already existing stakeholder
+    const architect = await Architects.findOne({
+      _id: req.params.architectId,
+    }).populate("stakeholders");
+
+    const existingStakeholder = architect.stakeholders.find(
+      (item) => item.name == req.body.name
+    );
+
     if (existingStakeholder) {
       // If we found existing stakeholder in db
       return res
