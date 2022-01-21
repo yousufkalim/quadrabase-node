@@ -11,6 +11,7 @@ exports.create = async (req, res) => {
   try {
     const existingProjects = await Projects.findOne({
       name: req.body.name,
+      architect: req.body.architect,
     }); // Finding already existing Projects
     if (existingProjects) {
       // If we found existing Projects in db
