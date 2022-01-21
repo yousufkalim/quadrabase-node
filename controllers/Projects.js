@@ -115,6 +115,7 @@ exports.getWorks = async (req, res) => {
       {
         $unwind: {
           path: "$work_unit",
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
