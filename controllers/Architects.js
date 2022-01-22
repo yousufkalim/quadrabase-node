@@ -16,6 +16,8 @@ const Licenses = require("../models/Licenses");
 
 const moment = require("moment");
 
+const { sendEmail } = require("../utils/sendEmail");
+
 const bcrypt = require("bcryptjs");
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 const JWT = require("jsonwebtoken");
@@ -136,35 +138,42 @@ exports.login = async (req, res) => {
  */
 exports.forgotPassword = async (req, res) => {
   try {
-    let email = req.body.email; //email
-    let user = await Architects.findOne({ email }); // Finding if Architect exists
-    if (!user) {
-      // If we not found existing user in db
+    let email = req.body.email;
+    let architect = await Architects.findOne({ email });
+
+    if (!architect) {
       return res
         .status(404)
-        .json({ success: false, message: "Architect does not exist" });
+        .json({ success: false, message: "Architect not found" });
     }
-    let token = Math.floor(Math.random() * 9000) + ""; //random number token generator
 
-    const resetPasswordExpires = Date.now() + 900000;
-    let resetPasswordToken = await bcrypt.hash(token, parseInt(bcryptSalt)); // hashing token with bcryptjs
-    //update Architect
-    user = await Architects.findOneAndUpdate(
-      { _id: user._id },
-      {
-        $set: {
-          resetPasswordToken: resetPasswordToken, //reset password token
-          resetPasswordExpires: resetPasswordExpires, ///reset password token expiration
-        },
-      },
-      { new: true }
-    );
-    // Done
-    res.json({ message: "Email Sent successfully", user }); //Success
+    // Generating random password
+    let randomPassword = Math.random().toString(36).slice(-8);
+
+    // Sending email to user
+    sendEmail(email, randomPassword)
+      .then(async () => {
+        // If email is sent then we have to update the password in db
+        architect.password = await bcrypt.hash(
+          randomPassword,
+          parseInt(bcryptSalt)
+        );
+        await architect.save();
+
+        // Done
+        res.json({ success: true, message: "Email sent successfully" });
+      })
+      .catch((err) => {
+        // Error handling
+        console.log("Error ----> ", err);
+        res
+          .status(500)
+          .json({ success: false, message: "Internal server error" });
+      });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
-    res.status(500).json({ message: err.message });
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 /**

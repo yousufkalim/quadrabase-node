@@ -11,6 +11,7 @@ exports.create = async (req, res) => {
   try {
     const existingProjects = await Projects.findOne({
       name: req.body.name,
+      architect: req.body.architect,
     }); // Finding already existing Projects
     if (existingProjects) {
       // If we found existing Projects in db
@@ -115,6 +116,7 @@ exports.getWorks = async (req, res) => {
       {
         $unwind: {
           path: "$work_unit",
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
@@ -333,11 +335,22 @@ exports.deleteWorkDetail = async (req, res) => {
     const workDetailId = req.body.workDetailId;
     let project = await Projects.findById(projectId);
 
+    let workId = "";
     project.works.map((item1) => {
       item1.work_details.pull({ _id: workDetailId });
+      if (item1.work_details.length < 1 && !item1.unit) {
+        workId = item1._id;
+      }
       return item1;
     });
     project.save();
+    if (workId) {
+      await Projects.findByIdAndUpdate(
+        projectId,
+        { $pull: { works: { _id: workId } } },
+        { new: true }
+      );
+    }
 
     res.json({
       success: true,

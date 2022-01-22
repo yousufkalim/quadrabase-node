@@ -134,6 +134,34 @@ exports.getAll = async (req, res) => {
   }
 };
 
+// get first two level of booklibraries
+exports.getTwoLevels = async (req, res) => {
+  try {
+    let bookLibraries = await BookLibraries.find().populate("categories");
+
+    res.json({ success: true, bookLibraries }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// get first two level of booklibraries
+exports.getLevel3 = async (req, res) => {
+  try {
+    let works = await Works.find({ category: req.params.CategoryId }).populate(
+      "work_details"
+    );
+
+    res.json({ success: true, works }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 /**
  * Get BookLibrary by id
  * @param {object} req
@@ -248,6 +276,24 @@ exports.getByArchitectId = async (req, res) => {
 
       { $sort: { ranking: 1 } },
     ]);
+    res.json({ success: true, bookLibrary }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// get first two level of booklibraries by architect Id
+exports.getTwoLevelsByArchitectID = async (req, res) => {
+  try {
+    const ArchitectId = req.params.ArchitectId; // Getting BookLibrary id from URL parameter
+
+    let bookLibrary = await BookLibraries.find({
+      architect: ArchitectId,
+      type: "private",
+    }).populate("categories");
+
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
     // Error handling
