@@ -26,6 +26,10 @@ router.post(
 
 // Read
 router.get("/", StakeholderTypes.getAll); // Get all StakeholderTypes at once
+router.get(
+  "/getByStakeholder/:stakeholderId",
+  StakeholderTypes.getByStakeholder
+); // Get all StakeholderTypes at once
 
 // Update
 router.put(

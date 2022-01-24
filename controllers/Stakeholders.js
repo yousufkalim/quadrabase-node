@@ -97,6 +97,23 @@ exports.getById = async (req, res) => {
 };
 
 /**
+ * Get stakeholders by type id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByType = async (req, res) => {
+  try {
+    const typeId = req.params.typeId; // Getting stakeholder id from URL parameter
+    const stakeholder = await Stakeholders.find({ type: typeId }); // Finding stakeholder by id
+    res.json({ success: true, stakeholder }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
  * Update stakeholders
  * @param {object} req
  * @param {object} res

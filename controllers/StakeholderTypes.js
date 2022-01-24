@@ -1,4 +1,5 @@
 const StakeholderTypes = require("../models/StakeholderTypes");
+const Stakeholders = require("../models/Stakeholders");
 
 //unit create
 exports.create = async (req, res) => {
@@ -38,6 +39,24 @@ exports.getAll = async (req, res) => {
       ["createdAt", -1],
     ]); // Finding all the Units from db
     res.json({ success: true, stakeholderTypes }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+/**
+ * Get all Units
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByStakeholder = async (req, res) => {
+  try {
+    const stakeholder = await Stakeholders.findById(
+      req.params.stakeholderId
+    ).populate("type"); // Finding all the Units from db
+    res.json({ success: true, type: stakeholder.type }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
