@@ -90,43 +90,48 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    let bookLibraries = await BookLibraries.aggregate([
-      // Finding all the BookLibraries from db
-      {
-        $match: {
-          type: "public",
-        },
-      },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "_id",
-
-          foreignField: "book_library",
-          as: "categories",
-        },
-      },
-      {
-        $lookup: {
-          from: "works",
-          localField: "categories._id",
-          foreignField: "category",
-          as: "works",
-        },
-      },
-      {
-        $lookup: {
-          from: "workdetails",
-          localField: "works._id",
-          foreignField: "work",
-          as: "work_details",
-        },
-      },
-
-      { $sort: { ranking: 1 } },
-    ]);
+    let bookLibraries = await BookLibraries.find({ type: "public" });
 
     res.json({ success: true, bookLibraries }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getLevel2 = async (req, res) => {
+  try {
+    const BookLibraryId = req.params.BookLibraryId;
+    let categories = await Categories.find({ book_library: BookLibraryId });
+
+    res.json({ success: true, categories }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getLevel3 = async (req, res) => {
+  try {
+    const CategoryId = req.params.CategoryId;
+    let works = await Works.find({ category: CategoryId });
+
+    res.json({ success: true, works }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getLevel4 = async (req, res) => {
+  try {
+    const WorkId = req.params.WorkId;
+    let workDetails = await WorkDetails.find({ work: WorkId });
+
+    res.json({ success: true, workDetails }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -137,7 +142,9 @@ exports.getAll = async (req, res) => {
 // get first two level of booklibraries
 exports.getTwoLevels = async (req, res) => {
   try {
-    let bookLibraries = await BookLibraries.find().populate("categories");
+    let bookLibraries = await BookLibraries.find({ type: "public" }).populate(
+      "categories"
+    );
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
@@ -518,6 +525,7 @@ exports.deleteCategory = async (req, res) => {
       return res.json({
         success: true,
         message: "Category deleted successfully",
+        Category,
       }); // Success
     }
     await WorkDetails.deleteOne({ work: workList._id }); // delete work details
