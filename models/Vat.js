@@ -8,6 +8,7 @@ const vatSchema = new mongoose.Schema(
     },
     symbol: {
       type: String,
+      default: "%",
     },
     ranking: {
       type: Number,
