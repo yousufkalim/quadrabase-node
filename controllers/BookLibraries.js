@@ -193,43 +193,10 @@ exports.search = async (req, res) => {
   try {
     // using RegExp for search
     const regex = new RegExp(req.query.q, "i");
-    let bookLibraries = await BookLibraries.aggregate([
-      // Finding all the BookLibraries from db
-      {
-        $match: {
-          name: { $regex: regex },
-          type: "public",
-        },
-      },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "_id",
-
-          foreignField: "book_library",
-          as: "categories",
-        },
-      },
-
-      {
-        $lookup: {
-          from: "works",
-          localField: "categories._id",
-          foreignField: "category",
-          as: "works",
-        },
-      },
-      {
-        $lookup: {
-          from: "workdetails",
-          localField: "works._id",
-          foreignField: "work",
-          as: "work_details",
-        },
-      },
-
-      { $sort: { ranking: 1 } },
-    ]);
+    let bookLibraries = await BookLibraries.find({
+      name: { $regex: regex },
+      type: "public",
+    }).populate("categories");
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
