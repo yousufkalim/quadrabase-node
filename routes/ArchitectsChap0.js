@@ -33,6 +33,11 @@ router.get(
   ArchitectsChap0.getById
 ); // get ArchitectsChap0 by id
 router.get(
+  "/current/getByProject",
+  Auth(ArchitectsModel),
+  ArchitectsChap0.getByProject
+); // get ArchitectsChap0 by id
+router.get(
   "/current/architectchap0part2",
   Auth(ArchitectsModel),
   ArchitectsChap0.getByIdArchitectId
@@ -45,6 +50,12 @@ router.put(
   isValidated,
   Auth(ArchitectsModel),
   ArchitectsChap0.update
+); // Update a specific ArchitectsChap0 by it's id
+
+router.put(
+  "/updateByProject/:projectId/:architectsChap0Id",
+  Auth(ArchitectsModel),
+  ArchitectsChap0.updateByProject
 ); // Update a specific ArchitectsChap0 by it's id
 
 // Delete

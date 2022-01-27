@@ -1,5 +1,6 @@
 const Stakeholders = require("../models/Stakeholders");
 const Architects = require("../models/Architects");
+const Projects = require("../models/Projects");
 
 //stakeholders create
 exports.create = async (req, res) => {
@@ -28,9 +29,14 @@ exports.create = async (req, res) => {
 
 exports.createByArchitect = async (req, res) => {
   try {
-    const existingStakeholder = await Stakeholders.findOne({
-      name: req.body.name,
-    }); // Finding already existing stakeholder
+    const architect = await Architects.findOne({
+      _id: req.params.architectId,
+    }).populate("stakeholders");
+
+    const existingStakeholder = architect.stakeholders.find(
+      (item) => item.name == req.body.name
+    );
+
     if (existingStakeholder) {
       // If we found existing stakeholder in db
       return res
@@ -91,6 +97,23 @@ exports.getById = async (req, res) => {
 };
 
 /**
+ * Get stakeholders by type id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByType = async (req, res) => {
+  try {
+    const typeId = req.params.typeId; // Getting stakeholder id from URL parameter
+    const stakeholder = await Stakeholders.find({ type: typeId }); // Finding stakeholder by id
+    res.json({ success: true, stakeholder }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
  * Update stakeholders
  * @param {object} req
  * @param {object} res
@@ -142,6 +165,17 @@ exports.delete = async (req, res) => {
 exports.deleteByArchitect = async (req, res) => {
   try {
     const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
+
+    const inUseStakholder = await Projects.findOne({
+      stakeholders: { $all: [stakeholderID] },
+    });
+    if (inUseStakholder) {
+      // If we found existing stakeholder in db
+      return res
+        .status(401)
+        .json({ success: false, message: "Stakeholder in use of a project" });
+    }
+
     await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
 
     const architectId = req.params.architectId; // Getting architectId from URL parameter

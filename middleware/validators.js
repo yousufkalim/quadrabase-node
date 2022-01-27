@@ -117,9 +117,6 @@ exports.validateProjects = [
 // add work to project validation
 exports.validateAddWorkToProject = [
   check("name", "Name is required.").notEmpty().trim(),
-  check("unit", "unit is required.").notEmpty().trim(),
-  check("unit_price", "Work ID is required.").notEmpty().trim(),
-  check("quantity", "Work ID is required.").notEmpty().trim(),
 ];
 
 // Stakeholder Create Validation
@@ -144,6 +141,11 @@ exports.validateVAT = [check("value", "Value is required.").notEmpty().trim()];
 
 // Units Create Validation
 exports.validateUnits = [check("name", "Name is required.").notEmpty().trim()];
+
+// Units Create Validation
+exports.validateStakeholderTypes = [
+  check("text", "Text is required.").notEmpty().trim(),
+];
 
 // CCTP Create Validation
 exports.validateCCTP = [

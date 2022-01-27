@@ -1,13 +1,17 @@
 const Projects = require("../models/Projects");
 const Architects = require("../models/Architects");
 const WorkDetails = require("../models/WorkDetails");
+const Works = require("../models/Works");
 const mongoose = require("mongoose");
+const ArchitectsChap0 = require("../models/ArchitectsChap0");
+const Chap0 = require("../models/Chap0");
 
 //Projects create
 exports.create = async (req, res) => {
   try {
     const existingProjects = await Projects.findOne({
       name: req.body.name,
+      architect: req.body.architect,
     }); // Finding already existing Projects
     if (existingProjects) {
       // If we found existing Projects in db
@@ -76,7 +80,9 @@ exports.getByArchitect = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
-    const project = await Projects.findById(projectId).populate("vat"); // Finding project by id
+    const project = await Projects.findById(projectId)
+      .populate("vat")
+      .populate("chap0part2.id"); // Finding project by id
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
@@ -110,6 +116,7 @@ exports.getWorks = async (req, res) => {
       {
         $unwind: {
           path: "$work_unit",
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
@@ -160,10 +167,47 @@ exports.getWorks = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
+    let project = {};
+    if (req.body.chap0part2 && req.body.chap0part2.status === "modified") {
+      const chap0 = await Chap0.findById(req.body.chap0part2.id);
 
-    const project = await Projects.findByIdAndUpdate(projectId, req.body, {
-      new: true,
-    }); // Updating the project
+      const existingTitle = await ArchitectsChap0.findOne({
+        title: chap0.title,
+        architect: req.userId,
+      }); // Finding already existing ArchitectsChap0
+      if (existingTitle) {
+        // If we found existing ArchitectsChap0 in db
+        return res.status(401).json({
+          success: false,
+          message:
+            "Seleted General Chap. 0 part 2 already exists in Architect Chap. 0 part 2",
+        });
+      }
+
+      const architectsChap0 = await ArchitectsChap0.create({
+        title: chap0.title,
+        text: chap0.text,
+        architect: req.userId,
+      });
+
+      await Architects.findByIdAndUpdate(
+        req.body.architect,
+        { $push: { chap0part2: architectsChap0._id } },
+        { new: true }
+      );
+      req.body.chap0part2 = {
+        id: architectsChap0._id,
+        status: "modified",
+      };
+      project = await Projects.findByIdAndUpdate(projectId, req.body, {
+        new: true,
+      }); // Updating the project
+    } else {
+      project = await Projects.findByIdAndUpdate(projectId, req.body, {
+        new: true,
+      }); // Updating the project
+    }
+
     res.json({
       success: true,
       message: "Project updated successfully",
@@ -291,11 +335,22 @@ exports.deleteWorkDetail = async (req, res) => {
     const workDetailId = req.body.workDetailId;
     let project = await Projects.findById(projectId);
 
+    let workId = "";
     project.works.map((item1) => {
       item1.work_details.pull({ _id: workDetailId });
+      if (item1.work_details.length < 1 && !item1.unit) {
+        workId = item1._id;
+      }
       return item1;
     });
     project.save();
+    if (workId) {
+      await Projects.findByIdAndUpdate(
+        projectId,
+        { $pull: { works: { _id: workId } } },
+        { new: true }
+      );
+    }
 
     res.json({
       success: true,
@@ -327,6 +382,7 @@ exports.addWork = async (req, res) => {
         req.body.work_details = temp;
       });
     }
+
     const project = await Projects.findByIdAndUpdate(
       req.params.projectId,
       { $push: { works: req.body } },

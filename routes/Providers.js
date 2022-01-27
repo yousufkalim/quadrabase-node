@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Providers = require("../controllers/Providers");
 const { validateProvider, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
+const ArchitectsModel = require("../models/Architects");
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -17,6 +18,7 @@ router.post("/create", validateProvider, isValidated, Auth(), Providers.create);
 
 // Read
 router.get("/", Auth(), Providers.getAll); // Get all Providers at once
+router.get("/get/all", Auth(ArchitectsModel), Providers.getAll); // Get all Providers at once
 router.get("/:providerId", Auth(), Providers.getById); // Get one Provider by it's id
 router.get("/works/:providerId", Auth(), Providers.getWorksByProviderId); // Get all works attached to Provider by it's id
 

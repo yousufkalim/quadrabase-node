@@ -21,7 +21,7 @@ router.post(
   "/create",
   validateSubscription,
   isValidated,
-  Auth(),
+  // Auth(),
   Subscriptions.create
 );
 

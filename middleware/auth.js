@@ -19,9 +19,23 @@ function Auth(MODEL = Admins) {
       });
     });
     decoded.then(async ({ email }) => {
-      const user = await MODEL.findOne({
-        email: email,
-      });
+      let user = {};
+      if (MODEL != Admins) {
+        user = await MODEL.findOne({
+          email: email,
+        }).populate({
+          path: "subscriptions",
+          populate: {
+            path: "subscription",
+            model: "Subscriptions",
+          },
+        });
+      } else {
+        user = await MODEL.findOne({
+          email: email,
+        });
+      }
+
       if (!user)
         return res
           .status(404)

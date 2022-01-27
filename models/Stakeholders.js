@@ -36,6 +36,10 @@ const stakeholdersSchema = new mongoose.Schema(
     city: {
       type: String,
     },
+    type: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "StakeholderTypes",
+    },
   },
   {
     timestamps: true,

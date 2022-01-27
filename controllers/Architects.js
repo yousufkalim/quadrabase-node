@@ -12,7 +12,11 @@ const WorkDetails = require("../models/WorkDetails");
 const Stakeholders = require("../models/Stakeholders");
 
 const Subscriptions = require("../models/Subscriptions");
+const Licenses = require("../models/Licenses");
+
 const moment = require("moment");
+
+const { sendEmail } = require("../utils/sendEmail");
 
 const bcrypt = require("bcryptjs");
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
@@ -97,7 +101,13 @@ exports.login = async (req, res) => {
   try {
     let email = req.body.email; //email
     let password = req.body.password; //password
-    const user = await Architects.findOne({ email }); // Finding already existing Architect
+    const user = await Architects.findOne({ email }).populate({
+      path: "subscriptions",
+      populate: {
+        path: "subscription",
+        model: "Subscriptions",
+      },
+    }); // Finding already existing Architect
     if (!user) {
       // If we found existing user in db
       return res
@@ -128,35 +138,42 @@ exports.login = async (req, res) => {
  */
 exports.forgotPassword = async (req, res) => {
   try {
-    let email = req.body.email; //email
-    let user = await Architects.findOne({ email }); // Finding if Architect exists
-    if (!user) {
-      // If we not found existing user in db
+    let email = req.body.email;
+    let architect = await Architects.findOne({ email });
+
+    if (!architect) {
       return res
         .status(404)
-        .json({ success: false, message: "Architect does not exist" });
+        .json({ success: false, message: "Architect not found" });
     }
-    let token = Math.floor(Math.random() * 9000) + ""; //random number token generator
 
-    const resetPasswordExpires = Date.now() + 900000;
-    let resetPasswordToken = await bcrypt.hash(token, parseInt(bcryptSalt)); // hashing token with bcryptjs
-    //update Architect
-    user = await Architects.findOneAndUpdate(
-      { _id: user._id },
-      {
-        $set: {
-          resetPasswordToken: resetPasswordToken, //reset password token
-          resetPasswordExpires: resetPasswordExpires, ///reset password token expiration
-        },
-      },
-      { new: true }
-    );
-    // Done
-    res.json({ message: "Email Sent successfully", user }); //Success
+    // Generating random password
+    let randomPassword = Math.random().toString(36).slice(-8);
+
+    // Sending email to user
+    sendEmail(email, randomPassword)
+      .then(async () => {
+        // If email is sent then we have to update the password in db
+        architect.password = await bcrypt.hash(
+          randomPassword,
+          parseInt(bcryptSalt)
+        );
+        await architect.save();
+
+        // Done
+        res.json({ success: true, message: "Email sent successfully" });
+      })
+      .catch((err) => {
+        // Error handling
+        console.log("Error ----> ", err);
+        res
+          .status(500)
+          .json({ success: false, message: "Internal server error" });
+      });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
-    res.status(500).json({ message: err.message });
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 /**
@@ -208,7 +225,13 @@ exports.getAll = async (req, res) => {
   try {
     const architects = await Architects.find()
       .sort([["createdAt", -1]])
-      .populate("subscriptions.id"); // Finding all the Architects from db
+      .populate({
+        path: "subscriptions",
+        populate: {
+          path: "subscription",
+          model: "Subscriptions",
+        },
+      }); // Finding all the Architects from db
     res.json({ success: true, architects }); // Success
   } catch (err) {
     // Error handling
@@ -487,13 +510,12 @@ exports.addSubscription = async (req, res) => {
       });
       res.json({ success: true, message: "Subscription Removed!" });
     } else {
-
       const subscription = await Subscriptions.findById(
         req.body.subscriptionId
       );
 
       const data = {
-        id: subscription._id,
+        subscription: subscription._id,
         start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
         end_date: moment(
           moment(new Date())
@@ -501,14 +523,17 @@ exports.addSubscription = async (req, res) => {
             .add(1, "days")
             .calendar()
         ).format("YYYY/MM/DD"),
-        projects: req.body.projects
+        credit: subscription.credit,
+        projects: req.body.projects,
+        assigned_to: req.params.architectId,
       };
+
+      const license = await Licenses.create(data);
 
       await Architects.findByIdAndUpdate(
         req.params.architectId,
         {
-          subscriptions: data,
-          credit: subscription.credit,
+          subscriptions: license._id,
         },
         { new: true }
       );
