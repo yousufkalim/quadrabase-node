@@ -107,6 +107,34 @@ exports.getWorks = async (req, res) => {
       },
       {
         $lookup: {
+          from: "categories",
+          localField: "works.category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "booklibraries",
+          localField: "category.book_library",
+          foreignField: "_id",
+          as: "trade",
+        },
+      },
+      {
+        $unwind: {
+          path: "$trade",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
           from: "units",
           localField: "works.unit",
           foreignField: "_id",
@@ -145,12 +173,23 @@ exports.getWorks = async (req, res) => {
           workUnit: "$work_unit",
           workDetails: "$works.work_details",
           workDetailsUnit: "$work_details_unit",
+          category: "$category",
+          trade: "$trade",
         },
       },
       {
         $unset: ["work.work_details"],
       },
+      {
+        $group: {
+          _id: "$trade.name",
+          data: {
+            $push: "$$ROOT",
+          },
+        },
+      },
     ]); // Finding works project by id
+    console.log("wallah", works.data);
     res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
