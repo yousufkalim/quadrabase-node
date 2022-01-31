@@ -183,13 +183,13 @@ exports.getWorks = async (req, res) => {
       {
         $group: {
           _id: "$trade.name",
+          ranking: { $first: "$trade.ranking" },
           data: {
             $push: "$$ROOT",
           },
         },
       },
     ]); // Finding works project by id
-    console.log("wallah", works.data);
     res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
