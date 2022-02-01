@@ -516,13 +516,8 @@ exports.addSubscription = async (req, res) => {
 
       const data = {
         subscription: subscription._id,
-        start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
-        end_date: moment(
-          moment(new Date())
-            .add(subscription.duration, "months")
-            .add(1, "days")
-            .calendar()
-        ).format("YYYY/MM/DD"),
+        start_date: moment(req.body.start_date).format("YYYY/MM/DD"),
+        end_date: moment(req.body.end_date).format("YYYY/MM/DD"),
         credit: subscription.credit,
         projects: req.body.projects,
         assigned_to: req.params.architectId,

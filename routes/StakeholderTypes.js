@@ -32,13 +32,7 @@ router.get(
 ); // Get all StakeholderTypes at once
 
 // Update
-router.put(
-  "/:stakeholderTypeId",
-  validateStakeholderTypes,
-  isValidated,
-  Auth(),
-  StakeholderTypes.update
-); // Update a specific StakeholderTypes by it's id
+router.put("/:stakeholderTypeId", Auth(), StakeholderTypes.update); // Update a specific StakeholderTypes by it's id
 
 // Delete
 router.delete("/:stakeholderTypeId", Auth(), StakeholderTypes.delete); // delete a specific StakeholderTypes by it's id
