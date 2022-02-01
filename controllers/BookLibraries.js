@@ -100,6 +100,21 @@ exports.getAll = async (req, res) => {
   }
 };
 
+exports.getByFamily = async (req, res) => {
+  try {
+    let bookLibraries = await BookLibraries.find({
+      type: "public",
+      families: { $all: [req.params.FamilyId] },
+    });
+
+    res.json({ success: true, bookLibraries }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 exports.getLevel2 = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId;
