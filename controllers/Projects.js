@@ -91,7 +91,78 @@ exports.getById = async (req, res) => {
   }
 };
 
+// works
 exports.getWorks = async (req, res) => {
+  try {
+    const projectId = req.params.projectId; // Getting projectId from URL parameter
+    const works = await Projects.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(projectId),
+        },
+      },
+      {
+        $unwind: {
+          path: "$works",
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "works.unit",
+          foreignField: "_id",
+          as: "work_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_unit",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: "$works.work_details",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "works.work_details.unit",
+          foreignField: "_id",
+          as: "work_details_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_details_unit",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          work: "$works",
+          workUnit: "$work_unit",
+          workDetails: "$works.work_details",
+          workDetailsUnit: "$work_details_unit",
+        },
+      },
+      {
+        $unset: ["work.work_details"],
+      },
+    ]); // Finding works project by id
+    console.log(works, works);
+    res.json({ success: true, works }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// works by trades
+exports.getWorksByTrades = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
     const works = await Projects.aggregate([
