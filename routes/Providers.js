@@ -30,6 +30,7 @@ router.put(
   Auth(),
   Providers.update
 ); // Update a specific Provider by it's id
+router.put("/addsubscription/:providerId", Auth(), Providers.addSubscription); /// assign subscription to provider
 
 // Delete
 router.delete("/:providerId", Auth(), Providers.delete); // delete a specific Provider by it's id

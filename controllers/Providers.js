@@ -1,5 +1,6 @@
 const Providers = require("../models/Providers");
 const Works = require("../models/Works");
+const moment = require("moment");
 
 //provider create
 exports.create = async (req, res) => {
@@ -81,6 +82,27 @@ exports.update = async (req, res) => {
     // Error handling
     console.log("Error ----> ", err.message);
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.addSubscription = async (req, res) => {
+  if (!req.body.name) {
+    await Providers.findByIdAndUpdate(req.params.providerId, {
+      subscription: {},
+    });
+    res.json({ success: true, message: "Subscription Removed!" });
+  } else {
+    const data = {
+      name: req.body.name,
+      start_date: moment(req.body.start_date).format("YYYY/MM/DD"),
+      end_date: moment(req.body.end_date).format("YYYY/MM/DD"),
+    };
+    console.log("providerId", req.params.providerId);
+
+    await Providers.findByIdAndUpdate(req.params.providerId, {
+      subscription: data,
+    });
+    res.json({ success: true, message: "Subscription Updated!" });
   }
 };
 
