@@ -143,6 +143,11 @@ exports.validateVAT = [check("value", "Value is required.").notEmpty().trim()];
 exports.validateUnits = [check("name", "Name is required.").notEmpty().trim()];
 
 // Units Create Validation
+exports.validateTranches = [
+  check("name", "Name is required.").notEmpty().trim(),
+];
+
+// Units Create Validation
 exports.validateStakeholderTypes = [
   check("text", "Text is required.").notEmpty().trim(),
 ];
