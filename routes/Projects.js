@@ -38,6 +38,7 @@ router.get("/byArchitect/:architectId", Projects.getByArchitect); // get all Pro
 router.get("/:projectId", Projects.getById); // get Projects by id
 router.get("/works/:projectId", Projects.getWorks); // get Projects by id
 router.get("/worksByTrades/:projectId", Projects.getWorksByTrades); // get Projects by id
+router.get("/worksByTranches/:projectId", Projects.getWorksByTranches); // get Projects by id
 
 // Update
 router.put("/:projectId", Auth(ArchitectsModel), Projects.update); // Update a specific Projects by it's id
