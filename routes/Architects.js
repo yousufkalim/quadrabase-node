@@ -37,7 +37,6 @@ router.post(
 // create - architect Signup
 router.post(
   "/signup",
-  upload("/", "logo", "single"),
 
   validateArchitect,
   isValidated,
