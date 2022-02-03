@@ -27,7 +27,7 @@ router.post(
 
 // Read
 router.get("/", Auth(), Subscriptions.getAll); // Get all Subscriptions at once
-router.get("/getAll/architect", Auth(ArchitectsModel), Subscriptions.getAll); // Get all Subscriptions at once
+router.get("/getAll/architect", Subscriptions.getAll); // Get all Subscriptions at once
 router.get("/:subscriptionId", Auth(), Subscriptions.getById); // Get one subscription by it's id
 
 // Update
