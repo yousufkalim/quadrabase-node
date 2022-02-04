@@ -33,6 +33,16 @@ router.post(
   Auth(),
   Architects.create
 );
+
+// create - architect Signup
+router.post(
+  "/signup",
+
+  validateArchitect,
+  isValidated,
+  Architects.signup
+);
+
 // create - BookLibrary
 router.post(
   "/BookLibraries/create",
