@@ -8,6 +8,11 @@ const workSchema = new mongoose.Schema({
   unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
   unit_price: { type: Number },
   quantity: { type: Number },
+  tranch: { type: mongoose.Schema.Types.ObjectId, ref: "Tranches" },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  },
   work_details: [
     {
       name: { type: String },

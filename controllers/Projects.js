@@ -91,6 +91,7 @@ exports.getById = async (req, res) => {
   }
 };
 
+// works
 exports.getWorks = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
@@ -149,6 +150,237 @@ exports.getWorks = async (req, res) => {
       },
       {
         $unset: ["work.work_details"],
+      },
+    ]); // Finding works project by id
+    res.json({ success: true, works }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// works by trades
+exports.getWorksByTrades = async (req, res) => {
+  try {
+    const projectId = req.params.projectId; // Getting projectId from URL parameter
+    const works = await Projects.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(projectId),
+        },
+      },
+      {
+        $unwind: {
+          path: "$works",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "works.category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "booklibraries",
+          localField: "category.book_library",
+          foreignField: "_id",
+          as: "trade",
+        },
+      },
+      {
+        $unwind: {
+          path: "$trade",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "works.unit",
+          foreignField: "_id",
+          as: "work_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_unit",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: "$works.work_details",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "works.work_details.unit",
+          foreignField: "_id",
+          as: "work_details_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_details_unit",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          work: "$works",
+          workUnit: "$work_unit",
+          workDetails: "$works.work_details",
+          workDetailsUnit: "$work_details_unit",
+          category: "$category",
+          trade: "$trade",
+        },
+      },
+      {
+        $unset: ["work.work_details"],
+      },
+      {
+        $group: {
+          _id: "$trade.name",
+          ranking: { $first: "$trade.ranking" },
+          data: {
+            $push: "$$ROOT",
+          },
+        },
+      },
+    ]); // Finding works project by id
+    res.json({ success: true, works }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// works by tranches
+exports.getWorksByTranches = async (req, res) => {
+  try {
+    const projectId = req.params.projectId; // Getting projectId from URL parameter
+    const works = await Projects.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(projectId),
+        },
+      },
+      {
+        $unwind: {
+          path: "$works",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "works.category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "booklibraries",
+          localField: "category.book_library",
+          foreignField: "_id",
+          as: "trade",
+        },
+      },
+      {
+        $unwind: {
+          path: "$trade",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "works.unit",
+          foreignField: "_id",
+          as: "work_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_unit",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: "$works.work_details",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "units",
+          localField: "works.work_details.unit",
+          foreignField: "_id",
+          as: "work_details_unit",
+        },
+      },
+      {
+        $unwind: {
+          path: "$work_details_unit",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "tranches",
+          localField: "works.tranch",
+          foreignField: "_id",
+          as: "tranch",
+        },
+      },
+      {
+        $unwind: {
+          path: "$tranch",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          work: "$works",
+          workUnit: "$work_unit",
+          workDetails: "$works.work_details",
+          workDetailsUnit: "$work_details_unit",
+          category: "$category",
+          trade: "$trade",
+          tranch: "$tranch",
+        },
+      },
+      {
+        $unset: ["work.work_details"],
+      },
+      {
+        $group: {
+          _id: "$trade.name",
+          ranking: { $first: "$trade.ranking" },
+          data: {
+            $push: "$$ROOT",
+          },
+        },
       },
     ]); // Finding works project by id
     res.json({ success: true, works }); // Success

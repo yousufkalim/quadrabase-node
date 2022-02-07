@@ -52,7 +52,18 @@ const providersSchema = new mongoose.Schema(
     },
     establishment: {
       type: String,
-    }
+    },
+    subscription: {
+      name: {
+        type: String,
+      },
+      start_date: {
+        type: Date,
+      },
+      end_date: {
+        type: Date,
+      },
+    },
   },
   {
     timestamps: true,

@@ -60,6 +60,67 @@ exports.create = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+//architect create
+exports.signup = async (req, res) => {
+  try {
+    const subscription = req.body.subscription;
+    delete req.body.subscription;
+
+    let email = req.body.email; //email
+    let password = req.body.password; //password
+
+    const existingArchitect = await Architects.findOne({ email }); // Finding already existing architect
+    const existingAdmin = await Admins.findOne({ email }); // Finding already existing architect
+
+    if (existingArchitect) {
+      // If we found existing architect in db
+      return res
+        .status(404)
+        .json({ success: false, message: "Architect already exists" });
+    }
+    if (existingAdmin) {
+      // If we found existing admin in db
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin already exists" });
+    }
+    let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
+    req.body.client_code = client_code;
+    req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt));
+    // Creating architect
+    const architect = await Architects.create(req.body); // Adding architect in db
+
+    // assinging subscription
+    const data = {
+      subscription: subscription._id,
+      start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
+      end_date: moment(
+        moment(new Date())
+          .add(subscription.duration, "months")
+          .add(1, "days")
+          .calendar()
+      ).format("YYYY/MM/DD"),
+      credit: subscription.credit,
+      projects: subscription.projects,
+      architect: architect._id,
+      assigned_to: architect._id,
+    };
+
+    const license = await Licenses.create(data);
+
+    architect.subscriptions = license._id;
+    await architect.save();
+
+    // Done
+    res.json({ message: "Architect created successfully", architect }); //Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 //BookLibrary create
 exports.createBookLibrary = async (req, res) => {
   try {
@@ -516,13 +577,8 @@ exports.addSubscription = async (req, res) => {
 
       const data = {
         subscription: subscription._id,
-        start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
-        end_date: moment(
-          moment(new Date())
-            .add(subscription.duration, "months")
-            .add(1, "days")
-            .calendar()
-        ).format("YYYY/MM/DD"),
+        start_date: moment(req.body.start_date).format("YYYY/MM/DD"),
+        end_date: moment(req.body.end_date).format("YYYY/MM/DD"),
         credit: subscription.credit,
         projects: req.body.projects,
         assigned_to: req.params.architectId,

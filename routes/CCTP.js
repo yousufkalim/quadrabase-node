@@ -20,7 +20,7 @@ router.get("/", Auth(), CCTP.getAll); // Get all CCTP at once
 router.get("/:CCTPId", Auth(), CCTP.getById); // Get one CCTP by it's id
 
 // Update
-router.put("/:CCTPId", validateCCTP, isValidated, Auth(), CCTP.update); // Update a specific CCTP by it's id
+router.put("/:CCTPId", Auth(), CCTP.update); // Update a specific CCTP by it's id
 
 // Delete
 router.delete("/:CCTPId", Auth(), CCTP.delete); // delete a specific CCTP by it's id
