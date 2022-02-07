@@ -64,6 +64,10 @@ const providersSchema = new mongoose.Schema(
         type: Date,
       },
     },
+    authorized: {
+      type: String,
+      default: "Yes",
+    },
   },
   {
     timestamps: true,
