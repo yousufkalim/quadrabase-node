@@ -42,7 +42,7 @@ const providersSchema = new mongoose.Schema(
       type: String,
     },
     po_box: {
-      type: Number,
+      type: String,
     },
     email_address_client: {
       type: String,
