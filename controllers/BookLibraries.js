@@ -169,21 +169,6 @@ exports.getTwoLevels = async (req, res) => {
   }
 };
 
-// get first two level of booklibraries
-exports.getLevel3 = async (req, res) => {
-  try {
-    let works = await Works.find({ category: req.params.CategoryId }).populate(
-      "work_details"
-    );
-
-    res.json({ success: true, works }); // Success
-  } catch (err) {
-    // Error handling
-    console.log("Error ----> ", err.message);
-    res.status(500).json({ message: err.message });
-  }
-};
-
 /**
  * Get BookLibrary by id
  * @param {object} req
@@ -281,7 +266,7 @@ exports.getTwoLevelsByArchitectID = async (req, res) => {
     let bookLibrary = await BookLibraries.find({
       architect: ArchitectId,
       type: "private",
-    }).populate("categories");
+    });
 
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
