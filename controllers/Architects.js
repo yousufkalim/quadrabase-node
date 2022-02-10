@@ -93,7 +93,6 @@ exports.signup = async (req, res) => {
 
     // assinging subscription
     const data = {
-      subscription: subscription._id,
       start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
       end_date: moment(
         moment(new Date())
@@ -101,9 +100,7 @@ exports.signup = async (req, res) => {
           .add(1, "days")
           .calendar()
       ).format("YYYY/MM/DD"),
-      credit: subscription.credit,
       projects: subscription.projects,
-      architect: architect._id,
       assigned_to: architect._id,
     };
 
