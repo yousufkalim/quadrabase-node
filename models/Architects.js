@@ -5,7 +5,7 @@ const architectsSchema = new mongoose.Schema(
   {
     address_1: String,
     address_2: String,
-    po_box: Number,
+    po_box: String,
     postal_code: Number,
     city: String,
     phone: String,
@@ -18,7 +18,7 @@ const architectsSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      minlength: 8,
+      minlength: 6,
     },
     profile_pic: String,
     establishment: String,
