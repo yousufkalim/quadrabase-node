@@ -15,6 +15,7 @@ const LicensesSchema = new mongoose.Schema(
     },
     credit: {
       type: Number,
+      default: 0,
     },
     projects: {
       type: Number,

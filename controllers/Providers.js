@@ -94,8 +94,10 @@ exports.addSubscription = async (req, res) => {
   } else {
     const data = {
       name: req.body.name,
-      start_date: moment(req.body.start_date).format("YYYY/MM/DD"),
-      end_date: moment(req.body.end_date).format("YYYY/MM/DD"),
+      start_date: moment(req.body.start_date)
+        .add(1, "days")
+        .format("YYYY/MM/DD"),
+      end_date: moment(req.body.end_date).add(1, "days").format("YYYY/MM/DD"),
     };
     console.log("providerId", req.params.providerId);
 

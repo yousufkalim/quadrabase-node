@@ -42,7 +42,7 @@ const providersSchema = new mongoose.Schema(
       type: String,
     },
     po_box: {
-      type: Number,
+      type: String,
     },
     email_address_client: {
       type: String,
@@ -63,6 +63,10 @@ const providersSchema = new mongoose.Schema(
       end_date: {
         type: Date,
       },
+    },
+    authorized: {
+      type: String,
+      default: "Yes",
     },
   },
   {
