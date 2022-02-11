@@ -7,6 +7,7 @@ const BookLibraries = require("../models/BookLibraries");
 const Categories = require("../models/Categories");
 const Works = require("../models/Works");
 const WorkDetails = require("../models/WorkDetails");
+const Units = require("../models/Units");
 
 const populateQuery = [
   {
@@ -276,6 +277,56 @@ exports.import = async (req, res) => {
 
         }
 
+        // Update unit_price
+        if(activeRow["P.U. H.T."]){
+          // Update Works
+          work = await Works.findByIdAndUpdate(
+            workId,
+            { unit_price: activeRow["P.U. H.T."] },
+          ); // Updating the Works for unit_price.
+        }
+
+        // Update bpu_text
+        const objBpuArr = work.bpu_text;
+        if(activeRow["BPU"]){
+
+          const existingBPU = objBpuArr.includes(activeRow["BPU"]);
+          if (existingBPU) {
+            // do nothing
+          } else {
+            // Update Works
+            work = await Works.findByIdAndUpdate(
+              workId,
+              { $push: { bpu_text: activeRow["BPU"] } },
+              {
+                new: true,
+              }
+            ); // Updating the Works for bpu_text.
+          }
+        }
+
+        // Update unit
+        let unit;
+        let unitID;
+        const existingUnit = await Units.findOne({name: activeRow.Unité}); // Finding already existing BookLibrary
+        if (existingUnit) {
+          unit = existingUnit;
+        } else {
+          //Creating Unit
+          unit = await Units.create({
+            "name": activeRow.Unité,
+            "ranking": 1,
+          }); // Adding Unit in db
+        }
+
+        unitID = unit._id;
+
+        // Update Work
+        work = await Works.findByIdAndUpdate(
+          workId,
+          { unit: unitID },
+        ); // Update Work for unitID
+
         lastCreatedIDWork = (await Works.find().sort([["createdAt", -1]]))[0]._id;
 
       } else if(activeRow.Niveau == 4){
@@ -303,13 +354,44 @@ exports.import = async (req, res) => {
           }
         ); // Updating the works
 
-        works = await WorkDetails.findByIdAndUpdate(
+        workDetails = await WorkDetails.findByIdAndUpdate(
           workDetailId,
           { $set: { work: lastCreatedIDWork } },
           {
             new: true,
           }
-        ); // Updating the Families Schema
+        ); // Updating the WorkDetails Schema
+
+        // Update unit_price
+        if(activeRow["P.U. H.T."]){
+          // Update Works
+          workDetails = await WorkDetails.findByIdAndUpdate(
+            workDetailId,
+            { unit_price: activeRow["P.U. H.T."] },
+          ); // Updating the Works for unit_price.
+        }
+
+        // Update unit
+        let unit;
+        let unitID;
+        const existingUnit = await Units.findOne({name: activeRow.Unité}); // Finding already existing BookLibrary
+        if (existingUnit) {
+          unit = existingUnit;
+        } else {
+          //Creating Unit
+          unit = await Units.create({
+            "name": activeRow.Unité,
+            "ranking": 1,
+          }); // Adding Unit in db
+        }
+
+        unitID = unit._id;
+
+        // Update WorkDetails
+        workDetails = await WorkDetails.findByIdAndUpdate(
+          workDetailId,
+          { unit: unitID },
+        ); // Update WorkDetails for unitID
 
       }
 
