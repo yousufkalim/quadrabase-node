@@ -311,24 +311,56 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
-    let bookLibrary = await BookLibraries.findById(BookLibraryId);
+    let bookLibrary = await BookLibraries.aggregate([
+      // Finding all the BookLibraries from db
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(BookLibraryId),
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+
+          foreignField: "book_library",
+          as: "categories",
+        },
+      },
+      {
+        $lookup: {
+          from: "works",
+          localField: "categories._id",
+          foreignField: "category",
+          as: "works",
+        },
+      },
+
+      { $sort: { ranking: 1 } },
+    ]);
     if (!bookLibrary) {
       return res.status(404).json({ message: "BookLibraries  not found" });
     } // double check if BookLibraries id is invalid
     await BookLibraries.findByIdAndDelete(BookLibraryId); // Deleting the BookLibrary
 
-    let categories = await Categories.deleteMany({
+    await Categories.deleteMany({
       book_library: BookLibraryId,
     }); // Deleting from the Categories in BookLibraries
-    const works = await Works.deleteMany({
-      category: categories._id,
+
+    let tempCategories = [];
+    bookLibrary[0].categories.map((item) => tempCategories.push(item._id));
+    await Works.deleteMany({
+      category: { $in: tempCategories },
     }); // Deleting the Works
+
+    let tempWorks = [];
+    bookLibrary[0].works.map((item) => tempWorks.push(item._id));
     await WorkDetails.deleteMany({
-      work: works._id,
+      work: { $in: tempWorks },
     }); // Deleting the WorkDetails
 
     await Families.updateMany(
-      { _id: bookLibrary.families },
+      { _id: { $in: bookLibrary.families } },
       { $pull: { book_libraries: bookLibrary._id } }
     ); // Deleting from the Families
     res.json({
