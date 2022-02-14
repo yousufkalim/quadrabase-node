@@ -8,6 +8,8 @@ const workDetailsSchema = new mongoose.Schema(
     },
     ranking: {
       type: Number,
+      required: true,
+      default: 0,
     },
     unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
     unit_price: { type: Number, default: 0 },

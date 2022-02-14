@@ -13,6 +13,8 @@ const bookLibrariesSchema = new mongoose.Schema(
     ],
     ranking: {
       type: Number,
+      required: true,
+      default: 0,
     },
     type: {
       type: String,

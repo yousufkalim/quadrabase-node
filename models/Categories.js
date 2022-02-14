@@ -13,6 +13,8 @@ const categoriesSchema = new mongoose.Schema(
     ],
     ranking: {
       type: Number,
+      required: true,
+      default: 0,
     },
     book_library: {
       type: mongoose.Schema.Types.ObjectId,
