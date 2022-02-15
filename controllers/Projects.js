@@ -609,6 +609,7 @@ exports.addWork = async (req, res) => {
           unit: item.unit,
           unit_price: item.unit_price,
           quantity: 1,
+          ranking: item.ranking,
         };
         temp.push(data);
         req.body.work_details = temp;

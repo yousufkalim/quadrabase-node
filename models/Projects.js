@@ -8,6 +8,11 @@ const workSchema = new mongoose.Schema({
   unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
   unit_price: { type: Number },
   quantity: { type: Number },
+  ranking: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   tranch: { type: mongoose.Schema.Types.ObjectId, ref: "Tranches" },
   category: {
     type: mongoose.Schema.Types.ObjectId,
@@ -19,6 +24,11 @@ const workSchema = new mongoose.Schema({
       unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
       unit_price: { type: Number },
       quantity: { type: Number },
+      ranking: {
+        type: Number,
+        required: true,
+        default: 0,
+      },
     },
   ],
 });
