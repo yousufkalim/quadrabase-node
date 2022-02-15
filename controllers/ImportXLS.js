@@ -92,14 +92,21 @@ exports.import = async (req, res) => {
     let lastCreatedIDWork;
     // let lastCreatedIDWorkDetail; // Don't need this, as its the last link in the hierarchy
 
+    let rankingArr;
+    let ranking;
+
     const existingfamily = await Families.findOne({name: jsonData[0].Domaine}); // Finding already existing family
     if (existingfamily) {
       lastCreatedIDFamily = existingfamily._id;
     } else {
+
+      rankingArr = await Families.find();
+      ranking = rankingArr.length;
+
       // Creating family
       const family = await Families.create({
-        name: jsonData[0].Domaine,
-        ranking: 1
+        "name": jsonData[0].Domaine,
+        "ranking": ranking
       });
 
       lastCreatedIDFamily = (await Families.find().sort([["createdAt", -1]]))[0]._id;
@@ -111,19 +118,20 @@ exports.import = async (req, res) => {
 
       if(activeRow.Niveau == 1){
 
-        // console.log(`THIS IS THE i: ${i}, lastCreatedIDFamily: ${lastCreatedIDFamily}, activeRow.Libellé: ${activeRow.Libellé}`);
-
         const existingBookLibrary = await BookLibraries.findOne({name: activeRow.Libellé}); // Finding already existing BookLibrary
         if (existingBookLibrary) {
           lastCreatedIDBookLibrary = existingBookLibrary._id;
           continue;
         }
 
+        rankingArr = await BookLibraries.find({ families: { $all : [lastCreatedIDFamily] } });
+        ranking = rankingArr.length;
+
         //Creating BookLibrary
         let bookLibrary = await BookLibraries.create({
           "name": activeRow.Libellé,
           "type": "public",
-          "ranking": 1,
+          "ranking": ranking,
           "families": [
             lastCreatedIDFamily
           ]
@@ -175,9 +183,13 @@ exports.import = async (req, res) => {
           continue;
         } // double check if category name exists
 
+        rankingArr = await Categories.find({ book_library: lastCreatedIDBookLibrary });
+        ranking = rankingArr.length;
+
         let category = await Categories.create({
           "BookLibraryId": lastCreatedIDBookLibrary,
-          "name": activeRow.Libellé
+          "name": activeRow.Libellé,
+          "ranking": ranking
         });
 
         const categoryId = category._id;
@@ -231,10 +243,14 @@ exports.import = async (req, res) => {
           lastCreatedIDWork = workExist._id;
           continue;
         } // double check if work name exists
-        
+
+        rankingArr = await Works.find({ category: lastCreatedIDCategory });
+        ranking = rankingArr.length;
+
         let work = await Works.create({
           "categoryId": lastCreatedIDCategory,
-          "name": activeRow.Libellé
+          "name": activeRow.Libellé,
+          "ranking": ranking
         });
 
         const workId = work._id;
@@ -312,10 +328,13 @@ exports.import = async (req, res) => {
         if (existingUnit) {
           unit = existingUnit;
         } else {
+          rankingArr = await Units.find();
+          ranking = rankingArr.length;
+
           //Creating Unit
           unit = await Units.create({
             "name": activeRow.Unité,
-            "ranking": 1,
+            "ranking": ranking,
           }); // Adding Unit in db
         }
 
@@ -341,9 +360,14 @@ exports.import = async (req, res) => {
         if (workDetailExist) {
           continue;
         } // double check if work detail exists
+
+        rankingArr = await WorkDetails.find({ work: lastCreatedIDWork });
+        ranking = rankingArr.length;
+
         let workDetails = await WorkDetails.create({
           "workId": lastCreatedIDWork,
-          "name": activeRow.Libellé
+          "name": activeRow.Libellé,
+          "ranking": ranking
         });
         const workDetailId = workDetails._id;
         works = await Works.findByIdAndUpdate(
@@ -378,10 +402,13 @@ exports.import = async (req, res) => {
         if (existingUnit) {
           unit = existingUnit;
         } else {
+          rankingArr = await Units.find();
+          ranking = rankingArr.length;
+
           //Creating Unit
           unit = await Units.create({
             "name": activeRow.Unité,
-            "ranking": 1,
+            "ranking": ranking,
           }); // Adding Unit in db
         }
 
