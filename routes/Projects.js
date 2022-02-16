@@ -44,6 +44,11 @@ router.get("/worksByTranches/:projectId", Projects.getWorksByTranches); // get P
 router.put("/:projectId", Auth(ArchitectsModel), Projects.update); // Update a specific Projects by it's id
 router.put("/updateWork/:projectId", Projects.updateWork); // Update a specific work
 router.put("/updateWorkDetail/:projectId", Projects.updateWorkDetail); // Update a specific work detail
+router.put("/updateWorkRanking/:projectId", Projects.updateWorkRanking);
+router.put(
+  "/updateWorkDetailRanking/:projectId",
+  Projects.updateWorkDetailRanking
+);
 
 // Delete
 router.delete("/:projectId", Projects.delete); // delete a specific Projects by it's id

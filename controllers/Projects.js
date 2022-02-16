@@ -512,6 +512,59 @@ exports.updateWorkDetail = async (req, res) => {
   }
 };
 
+exports.updateWorkRanking = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      if (item1._id == workId) {
+        item1.ranking = req.body.ranking;
+      }
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Ranking updated successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateWorkDetailRanking = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      item1.work_details.map((item2) => {
+        if (item2._id == workDetailId) {
+          item2.renking = req.body.ranking;
+        }
+        return item2;
+      });
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Ranking updated successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Delete project
  * @param {object} req
