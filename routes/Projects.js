@@ -31,6 +31,7 @@ router.post(
   isValidated,
   Projects.addWork
 ); // add work to project
+router.post("/duplicateWork/:projectId", Projects.duplicateWork); // create Project
 
 // Read
 router.get("/", Projects.getAll); // get all Projects
