@@ -686,7 +686,7 @@ exports.addWork = async (req, res) => {
   }
 };
 
-//Add work to project
+//duplicate work
 exports.duplicateWork = async (req, res) => {
   try {
     const projectId = req.params.projectId;
@@ -736,6 +736,44 @@ exports.duplicateWork = async (req, res) => {
       success: true,
       message: "Duplicate work created",
       work,
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//duplicate work detail
+exports.duplicateWorkDetail = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    let workDetail = {};
+    project.works.map((item1) => {
+      if (item1._id == workId) {
+        item1.work_details.map((item2) => {
+          if (item2._id == workDetailId) {
+            workDetail.name = item2.name;
+            workDetail.unit = item2.unit;
+            workDetail.unit_price = item2.unit_price;
+            workDetail.quantity = item2.quantity;
+            workDetail.ranking = item2.ranking + 1;
+          }
+        });
+        item1.work_details.push(workDetail);
+        return item1;
+      }
+    });
+    await project.save();
+
+    res.json({
+      success: true,
+      message: "Duplicate work Detail created",
+      project,
     }); // Success
   } catch (err) {
     // Error handling
