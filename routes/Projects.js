@@ -31,6 +31,8 @@ router.post(
   isValidated,
   Projects.addWork
 ); // add work to project
+router.post("/duplicateWork/:projectId", Projects.duplicateWork); // duplicate work
+router.post("/duplicateWorkDetail/:projectId", Projects.duplicateWorkDetail); // duplicate work detail
 
 // Read
 router.get("/", Projects.getAll); // get all Projects
@@ -44,6 +46,11 @@ router.get("/worksByTranches/:projectId", Projects.getWorksByTranches); // get P
 router.put("/:projectId", Auth(ArchitectsModel), Projects.update); // Update a specific Projects by it's id
 router.put("/updateWork/:projectId", Projects.updateWork); // Update a specific work
 router.put("/updateWorkDetail/:projectId", Projects.updateWorkDetail); // Update a specific work detail
+router.put("/updateWorkRanking/:projectId", Projects.updateWorkRanking);
+router.put(
+  "/updateWorkDetailRanking/:projectId",
+  Projects.updateWorkDetailRanking
+);
 
 // Delete
 router.delete("/:projectId", Projects.delete); // delete a specific Projects by it's id

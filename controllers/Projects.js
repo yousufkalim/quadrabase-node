@@ -512,6 +512,59 @@ exports.updateWorkDetail = async (req, res) => {
   }
 };
 
+exports.updateWorkRanking = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      if (item1._id == workId) {
+        item1.ranking = req.body.ranking;
+      }
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Ranking updated successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateWorkDetailRanking = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    project.works.map((item1) => {
+      item1.work_details.map((item2) => {
+        if (item2._id == workDetailId) {
+          item2.renking = req.body.ranking;
+        }
+        return item2;
+      });
+      return item1;
+    });
+    project.save();
+
+    res.json({
+      success: true,
+      message: "Ranking updated successfully",
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Delete project
  * @param {object} req
@@ -624,6 +677,102 @@ exports.addWork = async (req, res) => {
     res.json({
       success: true,
       message: "Work added to project",
+      project,
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//duplicate work
+exports.duplicateWork = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    let project = await Projects.findById(projectId);
+
+    let work = {};
+    project.works.map((item1) => {
+      if (item1._id == workId) {
+        console.log(item1);
+        work.name = item1.name;
+        work.cctp_text = item1.cctp_text;
+        work.bpu_text = item1.bpu_text;
+        work.ranking = item1.ranking + 1;
+        if (item1.unit) {
+          work.unit = item1.unit;
+        }
+        if (item1.unit_price) {
+          work.unit_price = item1.unit_price;
+        }
+        if (item1.quantity) {
+          work.quantity = item1.quantity;
+        }
+        if (item1.tranch) {
+          work.tranch = item1.tranch;
+        }
+        if (item1.category) {
+          work.category = item1.category;
+        }
+        work.work_details = [];
+        item1.work_details.map((item2) => {
+          let tempObj = {
+            name: item2.name,
+            unit: item2.unit,
+            unit_price: item2.unit_price,
+            quantity: item2.quantity,
+            ranking: item2.ranking,
+          };
+          work.work_details.push(tempObj);
+        });
+      }
+    });
+    project.works.push(work);
+    await project.save();
+
+    res.json({
+      success: true,
+      message: "Duplicate work created",
+      work,
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//duplicate work detail
+exports.duplicateWorkDetail = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const workId = req.body.workId;
+    const workDetailId = req.body.workDetailId;
+    let project = await Projects.findById(projectId);
+
+    let workDetail = {};
+    project.works.map((item1) => {
+      if (item1._id == workId) {
+        item1.work_details.map((item2) => {
+          if (item2._id == workDetailId) {
+            workDetail.name = item2.name;
+            workDetail.unit = item2.unit;
+            workDetail.unit_price = item2.unit_price;
+            workDetail.quantity = item2.quantity;
+            workDetail.ranking = item2.ranking + 1;
+          }
+        });
+        item1.work_details.push(workDetail);
+        return item1;
+      }
+    });
+    await project.save();
+
+    res.json({
+      success: true,
+      message: "Duplicate work Detail created",
       project,
     }); // Success
   } catch (err) {
