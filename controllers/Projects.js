@@ -471,7 +471,7 @@ exports.updateWork = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work updated successfully",
+      message: "Work updated Successfully",
     }); // Success
   } catch (err) {
     // Error handling
@@ -503,7 +503,7 @@ exports.updateWorkDetail = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work detail updated successfully",
+      message: "Work Detail updated Successfully",
     }); // Success
   } catch (err) {
     // Error handling
@@ -639,7 +639,7 @@ exports.deleteWorkDetail = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work detail deleted successfully",
+      message: "WorkDetail deleted successfully",
     }); // Success
   } catch (err) {
     // Error handling

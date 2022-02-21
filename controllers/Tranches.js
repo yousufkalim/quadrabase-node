@@ -17,7 +17,7 @@ exports.create = async (req, res) => {
       // If we found existing tranch in db
       return res
         .status(404)
-        .json({ success: false, message: "Tranch already exists." });
+        .json({ success: false, message: "Tranch already exists" });
     }
 
     // Creating Tranch

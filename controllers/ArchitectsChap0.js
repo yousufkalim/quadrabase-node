@@ -148,7 +148,7 @@ exports.updateByProject = async (req, res) => {
       console.log("dah");
       res.json({
         success: true,
-        message: "Chap. 0 part 2 updated successfully",
+        message: "ArchitectsChap0 updated successfully",
         architectsChap0,
       }); // Success
     } else if (req.body.status === "selected") {
@@ -180,7 +180,7 @@ exports.updateByProject = async (req, res) => {
       console.log("dah dah dah");
       res.json({
         success: true,
-        message: "Chap. 0 part 2 updated successfully",
+        message: "ArchitectsChap0 updated successfully",
         architectsChap0,
       }); // Success
     }
@@ -207,7 +207,7 @@ exports.delete = async (req, res) => {
       // If we found existing stakeholder in db
       return res.status(401).json({
         success: false,
-        message: "Chap. 0 part 2 in use of a project",
+        message: "ArchitectsChap0 in use of a project",
       });
     }
 
@@ -223,7 +223,7 @@ exports.delete = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Chap. 0 part 2 deleted successfully",
+      message: "ArchitectsChap0 deleted successfully",
     }); // Success
   } catch (err) {
     // Error handling
