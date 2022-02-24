@@ -43,8 +43,6 @@ router.post(
   Architects.signup
 );
 
-router.get("/download", Architects.generatePdf);
-
 // create - BookLibrary
 router.post(
   "/BookLibraries/create",
@@ -78,6 +76,7 @@ router.get(
   Auth(ArchitectsModel),
   Architects.getStakeholders
 ); ////// get stakholders of current architect
+router.get("/download", Architects.generatePdf); ///download pdf api
 
 // Update
 router.put(

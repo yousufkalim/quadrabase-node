@@ -24,7 +24,7 @@ const JWT = require("jsonwebtoken");
 const fs = require("fs");
 const pdf = require("pdf-creator-node");
 const path = require("path");
-const options = require("../helpers/options");
+const options = require("../utils/options");
 
 //architect create
 exports.create = async (req, res) => {
@@ -615,13 +615,21 @@ exports.generatePdf = async (req, res) => {
     date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
     DESTINATAIRE:
       "Société UNTEL 255 avenue du NordImmeuble Le Millénium 75000 PARIS",
-    initialprice: 1490.0,
+    initialprice: (1490).toFixed(2),
     initialCount: 1,
-    initialTotal: 1490.0,
+    initialTotal: (1490).toFixed(2),
+    reprice: (1490).toFixed(2),
+    reCount: 1,
+    reTotal: (1490).toFixed(2),
+    packprice: (500).toFixed(2),
+    packCount: 1,
+    packTotal: (500).toFixed(2),
     projects: 5,
-    totalHT: 1990.0,
-    totalTTC: 2388.0,
-    tva: 20,
+    totalHT: (1990).toFixed(2),
+    tvaPercentage: 20,
+    tvaAmount: (398).toFixed(2),
+    totalTTC: (2388).toFixed(2),
+    paymentMode: "Virement bancaire",
   };
 
   const document = {
