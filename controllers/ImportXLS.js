@@ -118,12 +118,6 @@ exports.import = async (req, res) => {
 
       if(activeRow.Niveau == 1){
 
-        const existingBookLibrary = await BookLibraries.findOne({name: activeRow.Libellé}); // Finding already existing BookLibrary
-        if (existingBookLibrary) {
-          lastCreatedIDBookLibrary = existingBookLibrary._id;
-          continue;
-        }
-
         rankingArr = await BookLibraries.find({ families: { $all : [lastCreatedIDFamily] } });
         ranking = rankingArr.length;
 
@@ -176,12 +170,6 @@ exports.import = async (req, res) => {
       } else if(activeRow.Niveau == 2){
 
         // console.log(`THIS IS THE i: ${i}, lastCreatedIDBookLibrary: ${lastCreatedIDBookLibrary}, activeRow.Libellé: ${activeRow.Libellé}`);
-
-        let categoryExist = await Categories.findOne({name: activeRow.Libellé});
-        if (categoryExist) {
-          lastCreatedIDCategory = categoryExist._id;
-          continue;
-        } // double check if category name exists
 
         rankingArr = await Categories.find({ book_library: lastCreatedIDBookLibrary });
         ranking = rankingArr.length;
@@ -237,12 +225,6 @@ exports.import = async (req, res) => {
       } else if(activeRow.Niveau == 3){
 
         // console.log(`THIS IS THE i: ${i}, lastCreatedIDCategory: ${lastCreatedIDCategory}, activeRow.Libellé: ${activeRow.Libellé}`);
-
-        let workExist = await Works.findOne({name: activeRow.Libellé});
-        if (workExist) {
-          lastCreatedIDWork = workExist._id;
-          continue;
-        } // double check if work name exists
 
         rankingArr = await Works.find({ category: lastCreatedIDCategory });
         ranking = rankingArr.length;
@@ -357,10 +339,6 @@ exports.import = async (req, res) => {
         if (!works) {
           continue;
         } // double check if works id is valid
-        let workDetailExist = await WorkDetails.findOne({ name: activeRow.Libellé });
-        if (workDetailExist) {
-          continue;
-        } // double check if work detail exists
 
         rankingArr = await WorkDetails.find({ work: lastCreatedIDWork });
         ranking = rankingArr.length;
