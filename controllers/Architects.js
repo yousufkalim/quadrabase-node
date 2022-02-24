@@ -21,6 +21,10 @@ const { sendEmail } = require("../utils/sendEmail");
 const bcrypt = require("bcryptjs");
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 const JWT = require("jsonwebtoken");
+const fs = require("fs");
+const pdf = require("pdf-creator-node");
+const path = require("path");
+const options = require("../helpers/options");
 
 //architect create
 exports.create = async (req, res) => {
@@ -597,4 +601,45 @@ exports.addSubscription = async (req, res) => {
     console.log("Error ----> ", err.message);
     res.status(500).json({ success: false, message: err.message });
   }
+};
+
+exports.generatePdf = async (req, res) => {
+  const html = fs.readFileSync(
+    path.join(__dirname, "../utils/template.html"),
+    "utf-8"
+  );
+  const filename = Math.random() + "_doc" + ".pdf";
+
+  const obj = {
+    Facture: "F20220001",
+    date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
+    DESTINATAIRE:
+      "Société UNTEL 255 avenue du NordImmeuble Le Millénium 75000 PARIS",
+    initialprice: 1490.0,
+    initialCount: 1,
+    initialTotal: 1490.0,
+    projects: 5,
+    totalHT: 1990.0,
+    totalTTC: 2388.0,
+    tva: 20,
+  };
+
+  const document = {
+    html: html,
+    data: obj,
+    path: "./uploads/invoice/" + filename,
+  };
+  await pdf
+    .create(document, options)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  const filepath = "http://localhost:5000/uploads/invoice/" + filename;
+
+  res.status(200).json({
+    path: filepath,
+  });
 };

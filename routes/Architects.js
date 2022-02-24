@@ -43,6 +43,8 @@ router.post(
   Architects.signup
 );
 
+router.get("/download", Architects.generatePdf);
+
 // create - BookLibrary
 router.post(
   "/BookLibraries/create",
