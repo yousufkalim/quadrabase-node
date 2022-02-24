@@ -294,11 +294,11 @@ exports.import = async (req, res) => {
         }
 
         // Update unit_price
-        if(activeRow["P.U. H.T."]){
+        if(activeRow["P.U. H.T."] ?? activeRow["PU HT"]){
           // Update Works
           work = await Works.findByIdAndUpdate(
             workId,
-            { unit_price: activeRow["P.U. H.T."] },
+            { unit_price: activeRow["P.U. H.T."] ?? activeRow["PU HT"] },
           ); // Updating the Works for unit_price.
         }
 
@@ -334,6 +334,7 @@ exports.import = async (req, res) => {
           //Creating Unit
           unit = await Units.create({
             "name": activeRow.Unité,
+            "symbol": activeRow.Unité,
             "ranking": ranking,
           }); // Adding Unit in db
         }
@@ -387,11 +388,11 @@ exports.import = async (req, res) => {
         ); // Updating the WorkDetails Schema
 
         // Update unit_price
-        if(activeRow["P.U. H.T."]){
+        if(activeRow["P.U. H.T."] ?? activeRow["PU HT"]){
           // Update Works
           workDetails = await WorkDetails.findByIdAndUpdate(
             workDetailId,
-            { unit_price: activeRow["P.U. H.T."] },
+            { unit_price: activeRow["P.U. H.T."] ?? activeRow["PU HT"] },
           ); // Updating the Works for unit_price.
         }
 
@@ -408,6 +409,7 @@ exports.import = async (req, res) => {
           //Creating Unit
           unit = await Units.create({
             "name": activeRow.Unité,
+            "symbol": activeRow.Unité,
             "ranking": ranking,
           }); // Adding Unit in db
         }
@@ -431,7 +433,7 @@ exports.import = async (req, res) => {
 
     res.status(200).send({
       success: true,
-      message: "All good."
+      message: `Imported -> ${file.originalname} Successfully.`
     });
     
   } catch (error) {
