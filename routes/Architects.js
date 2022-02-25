@@ -67,6 +67,8 @@ router.post(
   isValidated,
   Architects.resetPassword
 );
+///download invoice pdf api
+router.post("/download", Architects.generatePdf);
 // Read
 router.get("/", Auth(), Architects.getAll); // Get all Architects at once
 router.get("/:architectId", Auth(), Architects.getById); // Get one architect by it's id
@@ -76,7 +78,6 @@ router.get(
   Auth(ArchitectsModel),
   Architects.getStakeholders
 ); ////// get stakholders of current architect
-router.get("/download", Architects.generatePdf); ///download pdf api
 
 // Update
 router.put(
