@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pdf Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+</head>
+<body style="font-size: 12px;">
+  <table>
+    <tr>
+      <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width:270px;">
+        <div><img height="70" width="100" src="https://www.quadrabase.fr/Portals/0/BlockBuilderImages/464/Logo_QBSoft_12.png" alt=""></div>
+    
+        <div style="margin-top: 7px;padding: 5px 10px;width: 250px; background-color: #C0C0C0;"><strong>EMETTEUR</strong> </div>
+
+        <div style="position: relative; margin-top: 7px;padding: 5px;width: 250px;">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 110px;">
+                Société :
+              </td>
+              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+                <strong>QBSoft Sas</strong>
+              </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              Adresse :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>37 rue d’Antibes
+                06400 CANNES</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              Pays :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>France</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              SIRET du siège :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>898 885 058 00013</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              Code activité :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>62.01Z</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              N° TVA :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>FR90898885058</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              Contact :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>JC IMBERT</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              N° Tél. :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>+336 14 87 75 59</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              Adresse Email :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>contact@qbsoft.fr</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 110px;">
+              Site internet :
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 160px;">
+              <strong>www.qbsoft.fr</strong>
+            </td>
+          </tr>
+          </table>
+        </div>
+      </td>
+      <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin-left: 10px;">
+        <div style="margin-top: 7px;padding: 5px 10px;width: 250px; background-color: #C0C0C0;"> <strong>Facture n° : {{this.Facture}}</strong> </div>
+        <div style="margin-top: 7px;padding: 5px 10px;width: 250px; ">Date : {{this.date}}</div>
+        <div style="margin-top: 7px;padding: 5px 10px;width: 250px; background-color: #C0C0C0;"> <strong>DESTINATAIRE</strong> </div>
+        <div style="margin-top: 7px;padding: 5px 10px;width: 150px; "><strong>{{this.DESTINATAIRE}}</strong></div>
+      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff;">
+        <div style="margin-top: 7px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>Details</strong> </div>
+        <div style="position: relative; margin-top: 7px;padding: 5px;width: 530px;">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" ">
+          <tr >
+              <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;border-bottom: 1px solid black;">
+                Code
+              </td>
+              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;border-bottom: 1px solid black;">
+                Description
+              </td>
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;border-bottom: 1px solid black;">
+                P.U. H.T
+              </td>
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 35px;border-bottom: 1px solid black;">
+                Qté
+              </td>
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;border-bottom: 1px solid black;">
+                Total H.T.
+              </td>
+              
+          </tr>
+          <tr >
+            <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;">
+              70600100
+            </td>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;">
+              Abonnement initial QB<br>
+              <div style="font-size: 8px;margin-top: -3px;">(UƟlisaƟon de l’applicaƟon web Quadrabase avec 1 pack 5 Projets)</div>
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;">
+              {{this.initialprice}}
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 35px;">
+              {{this.initialCount}}
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;">
+              {{this.initialTotal}}
+            </td>
+            
+        </tr>
+        <tr >
+          <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;">
+            70600200
+          </td>
+          <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 270px;">
+            ReAbonnement QB
+          </td>
+          <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;">
+            {{this.reprice}}
+          </td>
+          <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 35px;">
+            {{this.reCount}}
+          </td>
+          <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;">
+            {{this.reTotal}}
+          </td>
+          
+      </tr>
+      <tr >
+        <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;border-bottom: 1px solid black;">
+          70600300
+        </td>
+        <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;border-bottom: 1px solid black;">
+          Pack 5 Projets
+        </td>
+        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;border-bottom: 1px solid black;">
+          {{this.packprice}}
+        </td>
+        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 35px;border-bottom: 1px solid black;">
+          {{this.packCount}}
+        </td>
+        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;border-bottom: 1px solid black;">
+          {{this.packTotal}}
+        </td>
+        
+      </tr>
+    </table>
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" " style="margin-top: 10px;">
+            <tr >
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;">
+                Total H.T. : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{this.totalHT}}
+              </td>
+            </tr>
+            <tr >
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; ">
+                T.V.A. ({{this.tvaPercentage}}%) : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{this.tvaAmount}}
+              </td>
+            </tr>
+            <tr >
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; ">
+                <div style="width: 220px;background-color: #C0C0C0; padding: 3px;">
+                A régler &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong> Total T.T.C. : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{this.totalTTC}}</strong>
+              </div>
+              </td>
+            </tr>
+            </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div style="margin-top: 50px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>Conditions</strong> </div>
+  <div style="margin-top: 10px;padding: 0px 15px;width: 530px; background-color: #fff;">Conditions de règlement : <strong> A réception de la facture. </strong></div>
+  <div style="padding: 0px 15px;width: 530px; background-color: #fff;">Mode de règlement : <strong> {{paymentMode}}</strong></div>
+  <div style="margin-top: 25px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>RIB</strong> </div>
+  <div style="margin-top: 10px;padding: 0px 15px;width: 530px; background-color: #fff;">IBAN : <strong>FR76 1695 8000 0115 4724 0729 575</strong> </div>
+  <div style="padding: 0px 15px;width: 530px; background-color: #fff;">BIC/SWIFT : <strong> QNTOFRP1XXX</strong></div>
+  <div style="padding: 0px 15px;width: 530px; background-color: #fff;">Titulaire : <strong> QBSoft 37 rue d’Antibes 06400 CANNES</strong></div>
+</body>
+</html>
