@@ -464,6 +464,8 @@ exports.updateWork = async (req, res) => {
         item1.unit = req.body.unit;
         item1.unit_price = req.body.unit_price;
         item1.quantity = req.body.quantity;
+        item1.cctp_text = req.body.cctp_text;
+        item1.bpu_text = req.body.bpu_text;
       }
       return item1;
     });
