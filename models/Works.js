@@ -21,10 +21,8 @@ const worksSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-
     unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
-    unit_price: { type: Number, default: 0 },
-
+    unit_price: { type: mongoose.Types.Decimal128, default: 0.00 },
     providers: [
       {
         provider: {
