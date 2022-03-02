@@ -9,6 +9,11 @@ const ChapsSchema = new mongoose.Schema(
     text: {
       type: String,
     },
+    ranking: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   {
     timestamps: true,

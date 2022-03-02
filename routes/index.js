@@ -11,6 +11,8 @@ router.use("/BookLibraries", require("./BookLibraries")); // All the BookLibrari
 router.use("/Subscriptions", require("./Subscriptions")); // All the Subscriptions routes
 router.use("/Providers", require("./Providers")); // All the Providers routes
 router.use("/Chap0", require("./Chap0")); // All the Chap0 routes
+router.use("/Chap0Level2", require("./Chap0Level2")); // All the Chap0 routes
+router.use("/Chap0Level3", require("./Chap0Level3")); // All the Chap0 routes
 router.use("/VAT", require("./VAT")); // All the VAT routes
 router.use("/Units", require("./Units")); // All the Units routes
 router.use("/CCTP", require("./CCTP")); // All the CCTP routes
