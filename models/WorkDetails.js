@@ -12,7 +12,11 @@ const workDetailsSchema = new mongoose.Schema(
       default: 0,
     },
     unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
-    unit_price: { type: mongoose.Types.Decimal128, default: 0.00 },
+    unit_price: {
+      // type: mongoose.Types.Decimal128,
+      type: Number,
+      default: 0.0,
+    },
     work: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Work",
