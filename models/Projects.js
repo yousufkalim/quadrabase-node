@@ -93,6 +93,10 @@ const projectsSchema = new mongoose.Schema(
         ref: "Stakeholders",
       },
     ],
+    architectStakeholder: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Stakeholders",
+    },
     works: [workSchema],
     status: {
       type: String,
