@@ -2,6 +2,7 @@ const Admins = require("../models/Admins");
 const bcrypt = require("bcryptjs");
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 const JWT = require("jsonwebtoken");
+const { sendEmail } = require("../utils/sendEmail");
 
 //admin register
 exports.register = async (req, res) => {
@@ -69,31 +70,37 @@ exports.login = async (req, res) => {
  */
 exports.forgotPassword = async (req, res) => {
   try {
-    let email = req.body.email; //email
-    let user = await Admins.findOne({ email }); // Finding if admin exists
-    if (!user) {
-      // If we not found existing user in db
+    let email = req.body.email;
+    let admin = await Admins.findOne({ email });
+
+    if (!admin) {
       return res
         .status(404)
-        .json({ success: false, message: "Admin does not exist" });
+        .json({ success: false, message: "Admin not found" });
     }
-    let token = Math.floor(Math.random() * 9000) + ""; //random number token generator
 
-    const resetPasswordExpires = Date.now() + 900000;
-    let resetPasswordToken = await bcrypt.hash(token, parseInt(bcryptSalt)); // hashing token with bcryptjs
-    //update admin
-    user = await Admins.findOneAndUpdate(
-      { _id: user._id },
-      {
-        $set: {
-          resetPasswordToken: resetPasswordToken, //reset password token
-          resetPasswordExpires: resetPasswordExpires, ///reset password token expiration
-        },
-      },
-      { new: true }
-    );
-    // Done
-    res.json({ message: "Email Sent successfully", user }); //Success
+    // Generating random password
+    let randomPassword = Math.random().toString(36).slice(-8);
+
+    // Sending email to user
+    sendEmail(email, randomPassword)
+      .then(async () => {
+        // If email is sent then we have to update the password in db
+        admin.password = await bcrypt.hash(
+          randomPassword,
+          parseInt(bcryptSalt)
+        );
+        await admin.save();
+        // Done
+        res.json({ success: true, message: "Email sent successfully" });
+      })
+      .catch((err) => {
+        // Error handling
+        console.log("Error ----> ", err);
+        res
+          .status(500)
+          .json({ success: false, message: "Internal server error" });
+      });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
