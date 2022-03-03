@@ -70,7 +70,9 @@ exports.createByArchitect = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const stakeholders = await Stakeholders.find().sort({ ranking: 1 }); // Finding all the Stakeholders from db
+    const stakeholders = await Stakeholders.find()
+      .populate("type")
+      .sort({ ranking: 1 }); // Finding all the Stakeholders from db
     res.json({ success: true, stakeholders }); // Success
   } catch (err) {
     // Error handling
