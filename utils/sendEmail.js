@@ -44,3 +44,35 @@ exports.sendEmail = (email, password) => {
     });
   });
 };
+
+exports.sendSummaryEmail = (obj) => {
+  return new Promise((resolve, reject) => {
+    // Sender mail server config
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: sender_email,
+        pass: sender_password,
+      },
+    });
+
+    // Send email options
+    var mailOptions = {
+      from: `${sender_name} <${sender_email}>`,
+      to: obj.providerEmail,
+      subject: "Weekly email summary",
+      html: `<p>A new project has been created<br><br>Architect : ${obj.architectName}<br>e-mail : ${obj.architectEmail}<br>Project : ${obj.projectName}<br>Work : ${obj.workName} </p>`,
+    };
+
+    // Sending email
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        // Error
+        reject(error);
+      } else {
+        // Success
+        resolve({ success: true, message: "Email sent successfully" });
+      }
+    });
+  });
+};

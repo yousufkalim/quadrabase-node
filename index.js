@@ -10,6 +10,9 @@ require("./database");
 // Middleware
 require("./middleware/common")(app);
 
+// Middleware
+require("./cronjob/emailSummary");
+
 // API Routes
 app.use("/api/v1", require("./routes"));
 
