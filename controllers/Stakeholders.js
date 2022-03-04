@@ -116,6 +116,26 @@ exports.getByType = async (req, res) => {
 };
 
 /**
+ * Get stakeholders by type id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getByArchitect = async (req, res) => {
+  try {
+    const architectId = req.params.architectId; // Getting stakeholder id from URL parameter
+    const architect = await Architects.findById(architectId).populate(
+      "stakeholders"
+    ); // Finding stakeholder by id
+    console.log(architect.stakeholders);
+    res.json({ success: true, stakeholders: architect.stakeholders }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
  * Update stakeholders
  * @param {object} req
  * @param {object} res
