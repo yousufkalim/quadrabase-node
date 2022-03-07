@@ -23,6 +23,7 @@ router.use("/project", require("./Projects")); // All the ArchitectsChap0 routes
 router.use("/licenses", require("./Licenses")); // All the ArchitectsChap0 routes
 router.use("/ImportXLS", require("./ImportXLS")); // All the ArchitectsChap0 routes
 router.use("/Tranches", require("./Tranches")); // All the ArchitectsChap0 routes
+router.use("/StudyMaterials", require("./StudyMaterials")); // All the ArchitectsChap0 routes
 
 // Export
 module.exports = router;
