@@ -56,12 +56,26 @@ exports.sendSummaryEmail = (obj) => {
       },
     });
 
+    const html = `
+    <body>
+      <p>Bonjour ${obj.providerName},</p><br>
+      <p>Les projets suivants ont été ajouté dans la plateforme Quadrabase, dans lesquels l’un de vos produit est utilisé.</p><br>
+      ${obj.emailInfo.map((item) => {
+        return `<div>
+        <p>Nom du projet : ${item.projectName}</p>
+        <p>Prescripteur : ${item.prescriber}</p>
+        <p>Nom du produit : ${item.work}</p>
+        </div>`;
+      })}
+      <br><p>L’équipe Quadrabase,</p>
+    </body>`;
+
     // Send email options
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
       to: obj.providerEmail,
-      subject: "Weekly email summary",
-      html: `<p>A new project has been created<br><br>Architect : ${obj.architectName}<br>e-mail : ${obj.architectEmail}<br>Project : ${obj.projectName}<br>Work : ${obj.workName} </p>`,
+      subject: "Résumé des nouveaux projets sur Quadrabase",
+      html: html,
     };
 
     // Sending email

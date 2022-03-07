@@ -24,18 +24,39 @@ cron.schedule(
     projects.map((project) => {
       project.works.map((work) => {
         work.providers.map((item) => {
-          data = {
+          let obj = {
             providerEmail: item.provider.email,
-            architectName: `${project.architect.first_name} ${project.architect.last_name}`,
-            architectEmail: project.architect.email,
-            projectName: project.name,
-            workName: work.name,
+            providerName: item.provider.name,
+            emailInfo: [
+              {
+                projectName: project.name,
+                prescriber: project.prescriber,
+                work: work.name,
+              },
+            ],
           };
-          summaryInfo.push(data);
+          summaryInfo.push(obj);
         });
       });
     });
-    summaryInfo.map((item) => {
+    let finalSummary = [];
+    summaryInfo.map((item, index) => {
+      let obj = {
+        providerEmail: item.providerEmail,
+        providerName: item.providerName,
+        emailInfo: item.emailInfo,
+      };
+      summaryInfo.map((item2, index2) => {
+        if (index !== index2) {
+          if (item.providerEmail === item2.providerEmail) {
+            obj.emailInfo = obj.emailInfo.concat(item2.emailInfo);
+            summaryInfo.splice(index2, 1);
+          }
+        }
+      });
+      finalSummary.push(obj);
+    });
+    finalSummary.map((item) => {
       sendSummaryEmail(item)
         .then(async () => {
           // Success
