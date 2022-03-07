@@ -29,7 +29,7 @@ exports.sendEmail = (email, password) => {
       from: `${sender_name} <${sender_email}>`,
       to: email,
       subject: "Your password has been changed",
-      text: password,
+      html: passwordTemplate(password),
     };
 
     // Sending email
@@ -89,4 +89,82 @@ exports.sendSummaryEmail = (obj) => {
       }
     });
   });
+};
+
+const passwordTemplate = (password) => {
+  return `
+  <body style="margin: 0; padding: 0">
+  <table
+    role="presentation"
+    style="
+      width: 100%;
+      border-collapse: collapse;
+      border: 0;
+      border-spacing: 0;
+      background: #ffffff;
+    "
+  >
+    <tr>
+      <td align="center" style="padding: 0">
+        <table
+          role="presentation"
+          style="
+            width: 602px;
+            border-collapse: collapse;
+            border: 1px solid #cccccc;
+            border-spacing: 0;
+            text-align: left;
+          "
+        >
+          <tr>
+            <td
+              align="center"
+              style="padding: 20px 5px 10px 5px; background: rgb(255, 255, 255)"
+            >
+              <img
+                src="https://www.quadrabase.fr/Portals/0/BlockBuilderImages/464/Logo_QBSoft_12.png"
+                alt=""
+                width="150px"
+                style="height: auto; display: block"
+              />
+              <h2 style="font-family: Gadugi">
+                Bonjour, votre nouveau mot de passe est ci-dessous
+              </h2>
+            </td>
+          </tr>
+          <tr>
+            <td
+              align="center"
+              style="
+                padding: 20px 10px 20px 10px;
+                background: rgba(148, 148, 148, 0.164);
+              "
+            >
+              <h3
+                style="
+                  font-family: Monospace;
+                  font-size: 35px;
+                  background-color: rgb(53, 53, 53);
+                  padding: 2%;
+                  color: #ffffff;
+                  border-radius: 10px;
+                "
+              >
+                ${password}
+              </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p align="center" style="color: #6b6b6b; font-family: Helvetica">
+                Cet e-mail est généré automatiquement, veuillez ne pas répondre.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+`;
 };
