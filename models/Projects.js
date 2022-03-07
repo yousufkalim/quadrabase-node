@@ -18,6 +18,15 @@ const workSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
   },
+  providers: [
+    {
+      provider: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Providers",
+      },
+      documents: [{ uri: String }],
+    },
+  ],
   work_details: [
     {
       name: { type: String },
