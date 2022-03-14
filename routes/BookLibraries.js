@@ -135,6 +135,10 @@ router.put(
 // Read
 router.get("/", BookLibraries.getAll); // Get all BookLibraries at once
 router.get("/getByFamily/:FamilyId", BookLibraries.getByFamily); // Get all BookLibraries at once
+router.get(
+  "/private/getByFamily/:FamilyId",
+  BookLibraries.getPrivateLibByFamily
+); // Get all BookLibraries at once
 router.get("/getLevel2/:BookLibraryId", BookLibraries.getLevel2); // Get all BookLibraries at once
 router.get("/getLevel3/:CategoryId", BookLibraries.getLevel3); // Get all BookLibraries at once
 router.get("/getLevel4/:WorkId", BookLibraries.getLevel4); // Get all BookLibraries at once
