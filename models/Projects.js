@@ -14,9 +14,9 @@ const workSchema = new mongoose.Schema({
     default: 0,
   },
   tranch: { type: mongoose.Schema.Types.ObjectId, ref: "Tranches" },
-  category: {
+  trade: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
+    ref: "Trades",
   },
   providers: [
     {

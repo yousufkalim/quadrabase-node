@@ -21,11 +21,12 @@ router.use("/fileUploader", require("./fileUploader")); // All the Families rout
 router.use("/Stakeholders", require("./Stakeholders")); // All the stakeholder routes
 router.use("/StakeholderTypes", require("./StakeholderTypes")); // All the stakeholder routes
 router.use("/ArchitectsChap0", require("./ArchitectsChap0")); // All the ArchitectsChap0 routes
-router.use("/project", require("./Projects")); // All the ArchitectsChap0 routes
-router.use("/licenses", require("./Licenses")); // All the ArchitectsChap0 routes
-router.use("/ImportXLS", require("./ImportXLS")); // All the ArchitectsChap0 routes
-router.use("/Tranches", require("./Tranches")); // All the ArchitectsChap0 routes
-router.use("/StudyMaterials", require("./StudyMaterials")); // All the ArchitectsChap0 routes
+router.use("/project", require("./Projects")); // All the Project routes
+router.use("/licenses", require("./Licenses")); // All the License routes
+router.use("/ImportXLS", require("./ImportXLS")); // All the ImportXLS routes
+router.use("/Tranches", require("./Tranches")); // All the Tranches routes
+router.use("/Trades", require("./Trades")); // All the Trades routes
+router.use("/StudyMaterials", require("./StudyMaterials")); // All the StudyMaterials routes
 
 // Export
 module.exports = router;
