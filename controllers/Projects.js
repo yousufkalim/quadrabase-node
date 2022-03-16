@@ -177,22 +177,8 @@ exports.getWorksByTrades = async (req, res) => {
       },
       {
         $lookup: {
-          from: "categories",
-          localField: "works.category",
-          foreignField: "_id",
-          as: "category",
-        },
-      },
-      {
-        $unwind: {
-          path: "$category",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "booklibraries",
-          localField: "category.book_library",
+          from: "trades",
+          localField: "works.trade",
           foreignField: "_id",
           as: "trade",
         },
@@ -243,7 +229,6 @@ exports.getWorksByTrades = async (req, res) => {
           workUnit: "$work_unit",
           workDetails: "$works.work_details",
           workDetailsUnit: "$work_details_unit",
-          category: "$category",
           trade: "$trade",
         },
       },
@@ -285,22 +270,8 @@ exports.getWorksByTranches = async (req, res) => {
       },
       {
         $lookup: {
-          from: "categories",
-          localField: "works.category",
-          foreignField: "_id",
-          as: "category",
-        },
-      },
-      {
-        $unwind: {
-          path: "$category",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "booklibraries",
-          localField: "category.book_library",
+          from: "trades",
+          localField: "works.trade",
           foreignField: "_id",
           as: "trade",
         },
@@ -365,7 +336,6 @@ exports.getWorksByTranches = async (req, res) => {
           workUnit: "$work_unit",
           workDetails: "$works.work_details",
           workDetailsUnit: "$work_details_unit",
-          category: "$category",
           trade: "$trade",
           tranch: "$tranch",
         },
@@ -715,8 +685,8 @@ exports.duplicateWork = async (req, res) => {
         if (item1.tranch) {
           work.tranch = item1.tranch;
         }
-        if (item1.category) {
-          work.category = item1.category;
+        if (item1.trade) {
+          work.trade = item1.trade;
         }
         work.work_details = [];
         item1.work_details.map((item2) => {
