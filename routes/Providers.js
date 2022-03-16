@@ -14,7 +14,9 @@ const ArchitectsModel = require("../models/Architects");
  */
 
 // create - Provider Signup
-router.post("/create", validateProvider, isValidated, Auth(), Providers.create);
+router.post("/create", validateProvider, isValidated, Providers.create);
+///download invoice pdf api
+router.post("/download", Providers.generatePdf);
 
 // Read
 router.get("/", Auth(), Providers.getAll); // Get all Providers at once

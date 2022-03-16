@@ -12,6 +12,7 @@ const InvoiceSchema = new mongoose.Schema(
     DESTINATAIRE: {
       type: String,
     },
+    // for architect
     initialprice: {
       type: Number,
     },
@@ -40,6 +41,25 @@ const InvoiceSchema = new mongoose.Schema(
       type: Number,
     },
     projects: {
+      type: Number,
+    },
+    // for provider
+    alertPrice: {
+      type: Number,
+    },
+    alertCount: {
+      type: Number,
+    },
+    alertTotal: {
+      type: Number,
+    },
+    referenPrice: {
+      type: Number,
+    },
+    referenCount: {
+      type: Number,
+    },
+    referenTotal: {
       type: Number,
     },
     totalHT: {

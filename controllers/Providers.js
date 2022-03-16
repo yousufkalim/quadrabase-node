@@ -1,6 +1,11 @@
 const Providers = require("../models/Providers");
 const Works = require("../models/Works");
 const moment = require("moment");
+const Invoice = require("../models/Invoice");
+const fs = require("fs");
+const pdf = require("pdf-creator-node");
+const path = require("path");
+const options = require("../utils/options");
 
 //provider create
 exports.create = async (req, res) => {
@@ -10,7 +15,7 @@ exports.create = async (req, res) => {
     if (existingProvider) {
       // If we found existing provider in db
       return res
-        .status(404)
+        .status(400)
         .json({ success: false, message: "Provider already exists" });
     }
 
@@ -161,4 +166,68 @@ exports.getWorksByProviderId = async (req, res) => {
     console.log("Error ----> ", err);
     res.status(500).json({ success: false, message: err.message });
   }
+};
+
+exports.generatePdf = async (req, res) => {
+  const html = fs.readFileSync(
+    path.join(__dirname, "../templates/providerInvoice.html"),
+    "utf-8"
+  );
+  const filename = Math.random() + "_doc" + ".pdf";
+
+  const invoice = await Invoice.find();
+  let facture = "";
+  let count = "";
+  let currentYear = moment().format("YYYY");
+  if (invoice.length > 0) {
+    count = invoice[invoice.length - 1].invoiceCount + 1;
+    if (count < 10) {
+      facture = `F${currentYear}000${count}`;
+    } else if (count < 100) {
+      facture = `F${currentYear}00${count}`;
+    } else if (count < 1000) {
+      facture = `F${currentYear}0${count}`;
+    } else if (count > 1000) {
+      facture = `F${currentYear}${count}`;
+    }
+  } else {
+    facture = `F${currentYear}0001`;
+  }
+
+  const obj = {
+    Facture: facture,
+    date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
+    DESTINATAIRE: req.body.address1,
+    alertPrice: req.body.alertPrice,
+    alertCount: req.body.alertCount,
+    alertTotal: req.body.alertTotal,
+    referenPrice: req.body.referenPrice,
+    referenCount: req.body.referenCount,
+    referenTotal: req.body.referenTotal,
+    totalHT: req.body.totalHT.toFixed(2),
+    tvaPercentage: req.body.tvaPercentage,
+    tvaAmount: req.body.tvaAmount.toFixed(2),
+    totalTTC: req.body.TotalCost.toFixed(2),
+    paymentMode: req.body.paymentMode,
+  };
+
+  const document = {
+    html: html,
+    data: obj,
+    path: `./uploads/invoice/${filename}`,
+  };
+  await pdf
+    .create(document, options)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
+  obj.invoiceCount = count ? count : 1;
+  await Invoice.create(obj);
+  res.status(200).json({
+    path: filepath,
+  });
 };
