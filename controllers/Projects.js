@@ -668,7 +668,6 @@ exports.duplicateWork = async (req, res) => {
     let work = {};
     project.works.map((item1) => {
       if (item1._id == workId) {
-        console.log(item1);
         work.name = item1.name;
         work.cctp_text = item1.cctp_text;
         work.bpu_text = item1.bpu_text;
