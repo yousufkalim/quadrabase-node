@@ -1,4 +1,5 @@
 const Tranches = require("../models/Tranches");
+const Projects = require("../models/Projects");
 
 /**
  * Create tranch
@@ -76,6 +77,10 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const tranchId = req.params.tranchId; // Getting tranchId from URL parameter
+    const inUseTranch = await Projects.findOne({ "works.tranch": tranchId });
+    if (inUseTranch) {
+      return res.status(400).json({ success: false, message: "Tranch in use" });
+    }
     const tranch = await Tranches.findByIdAndDelete(tranchId); // Deleting the tranch
     res.json({ success: true, message: "Tranch deleted successfully", tranch }); // Success
   } catch (err) {

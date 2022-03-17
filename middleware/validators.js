@@ -147,6 +147,9 @@ exports.validateTranches = [
   check("name", "Name is required.").notEmpty().trim(),
 ];
 
+// Trades Create Validation
+exports.validateTrades = [check("name", "Name is required.").notEmpty().trim()];
+
 // Units Create Validation
 exports.validateStakeholderTypes = [
   check("text", "Text is required.").notEmpty().trim(),
