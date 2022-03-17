@@ -18,6 +18,9 @@ router.post("/create", validateProvider, isValidated, Providers.create);
 ///download invoice pdf api
 router.post("/download", Providers.generatePdf);
 
+///download quote pdf api
+router.post("/quote/download", Providers.generateQuotePdf);
+
 // Read
 router.get("/", Auth(), Providers.getAll); // Get all Providers at once
 router.get("/get/all", Auth(ArchitectsModel), Providers.getAll); // Get all Providers at once

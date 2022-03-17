@@ -671,3 +671,71 @@ exports.generatePdf = async (req, res) => {
     path: filepath,
   });
 };
+
+exports.generateQuotePdf = async (req, res) => {
+  const html = fs.readFileSync(
+    path.join(__dirname, "../templates/quote.html"),
+    "utf-8"
+  );
+  const filename = Math.random() + "_doc" + ".pdf";
+
+  const invoice = await Invoice.find();
+  let facture = "";
+  let count = "";
+  let currentYear = moment().format("YYYY");
+  if (invoice.length > 0) {
+    count = invoice[invoice.length - 1].invoiceCount + 1;
+    if (count < 10) {
+      facture = `F${currentYear}000${count}`;
+    } else if (count < 100) {
+      facture = `F${currentYear}00${count}`;
+    } else if (count < 1000) {
+      facture = `F${currentYear}0${count}`;
+    } else if (count > 1000) {
+      facture = `F${currentYear}${count}`;
+    }
+  } else {
+    facture = `F${currentYear}0001`;
+  }
+
+  const obj = {
+    Facture: facture,
+    date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
+    DESTINATAIRE: req.body.address1,
+    initialprice: req.body.initialPrice.toFixed(2),
+    initialCount: req.body.initialCount,
+    initialTotal: (req.body.initialPrice * req.body.initialCount).toFixed(2),
+    reprice: req.body.extendedPrice.toFixed(2),
+    reCount: req.body.extendedCount,
+    reTotal: (req.body.extendedPrice * req.body.extendedCount).toFixed(2),
+    packprice: req.body.packPrice.toFixed(2),
+    packCount: req.body.packCount,
+    packTotal: (req.body.packPrice * req.body.packCount).toFixed(2),
+    projects: req.body.packCount * 5,
+    totalHT: req.body.totalHT.toFixed(2),
+    tvaPercentage: req.body.tvaPercentage,
+    tvaAmount: req.body.tvaAmount.toFixed(2),
+    totalTTC: req.body.TotalCost.toFixed(2),
+    paymentMode: req.body.paymentMode,
+  };
+
+  const document = {
+    html: html,
+    data: obj,
+    path: `./uploads/invoice/${filename}`,
+  };
+  await pdf
+    .create(document, options)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
+  obj.invoiceCount = count ? count : 1;
+  await Invoice.create(obj);
+  res.status(200).json({
+    path: filepath,
+  });
+};
