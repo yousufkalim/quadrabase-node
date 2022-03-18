@@ -9,20 +9,46 @@ const fs = require("fs");
  */
 exports.getAll = async (req, res) => {
   try {
+
     const rootPath = __dirname.replace("controllers", "");
     const dirPath = path.join(rootPath, "uploads", "study_materials");
-    const files = fs.readdirSync(dirPath);
-    const filesArr = [];
-    files.forEach(_ => {
-      const fileStats = fs.statSync(path.join(dirPath, _));
-      const fileSize = fileStats.size / 1024;
-      filesArr.push({
-        name: _,
-        path: `uploads/study_materials/${_}`,
-        size: `${fileSize.toFixed(2)} KB`
-      });
-    });
-    res.json({ success: true, filesArr }); // Success
+
+    const folders = fs.readdirSync(dirPath);
+    const foldersArr = [];
+
+    for( let i = 0; i < folders.length; i++ ){
+
+      const folder = folders[i];
+
+      const files = fs.readdirSync(path.join(dirPath, folder));
+      const filesArr = [];
+
+      for( let j = 0; j < files.length; j++ ){
+
+        const file = files[j];
+
+        const fileStats = fs.statSync(path.join(dirPath, folder, file));
+        const fileSize = fileStats.size / 1024;
+
+        const fileObj = {
+          name: file,
+          path: `uploads/study_materials/${folder}/${file}`,
+          size: `${fileSize.toFixed(2)} KB`
+        };
+
+        filesArr.push(fileObj);
+
+      }
+
+      const folderObj = {
+        name: folder,
+        files: filesArr
+      }
+
+      foldersArr.push(folderObj);
+      
+    }
+    res.json({ success: true, filesArr: foldersArr }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
