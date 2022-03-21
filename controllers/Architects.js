@@ -175,18 +175,22 @@ exports.login = async (req, res) => {
       // If we found existing user in db
       return res
         .status(404)
-        .json({ success: false, message: "User not found!" });
+        .json({ success: false, message: "Utilisateur non trouvé!" });
     }
 
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
     if (!isCorrect)
-      return res.status(401).json({ message: "Invalid Password" });
+      return res.status(401).json({ message: "Mot de passe incorrect" });
     const token = JWT.sign({ email: user.email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
     const result = { user, token };
     // Done
-    res.json({ success: true, message: "User login successfully", result }); //Success
+    res.json({
+      success: true,
+      message: "L'utilisateur s'est connecté avec succès",
+      result,
+    }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
