@@ -40,13 +40,13 @@ exports.create = async (req, res) => {
       // If we found existing architect in db
       return res
         .status(404)
-        .json({ success: false, message: "Architect already exists" });
+        .json({ success: false, message: "L'architecte existe déjà" });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res
         .status(404)
-        .json({ success: false, message: "Admin already exists" });
+        .json({ success: false, message: "L'administrateur existe déjà" });
     }
     if (req.file) {
       req.body.profile_pic = req.file.path;
@@ -58,7 +58,7 @@ exports.create = async (req, res) => {
     const architect = await Architects.create(req.body); // Adding architect in db
 
     // Done
-    res.json({ message: "Architect created successfully", architect }); //Success
+    res.json({ message: "Architecte créé avec succès", architect }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -632,7 +632,7 @@ exports.generatePdf = async (req, res) => {
 
   const obj = {
     Facture: facture,
-    date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
+    date: moment(new Date()).format("DD MMMM YYYY"),
     DESTINATAIRE: req.body.address1,
     initialprice: req.body.initialPrice.toFixed(2),
     initialCount: req.body.initialCount,
@@ -700,7 +700,7 @@ exports.generateQuotePdf = async (req, res) => {
 
   const obj = {
     Facture: facture,
-    date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
+    date: moment(new Date()).format("DD MMMM YYYY"),
     DESTINATAIRE: req.body.address1,
     initialprice: req.body.initialPrice.toFixed(2),
     initialCount: req.body.initialCount,
