@@ -196,7 +196,7 @@ exports.generatePdf = async (req, res) => {
 
   const obj = {
     Facture: facture,
-    date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
+    date: moment(new Date()).format("DD MMMM YYYY"),
     DESTINATAIRE: req.body.address1,
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
@@ -260,7 +260,7 @@ exports.generateQuotePdf = async (req, res) => {
 
   const obj = {
     Facture: facture,
-    date: moment(new Date()).add(1, "days").format("DD MMMM YYYY"),
+    date: moment(new Date()).format("DD MMMM YYYY"),
     DESTINATAIRE: req.body.address1,
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
