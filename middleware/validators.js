@@ -133,6 +133,9 @@ exports.validateArchitectsChap0 = [
 // Chap0 Create Validation
 exports.validateChap0 = [
   check("title", "Title is required.").notEmpty().trim(),
+];
+exports.validateChap0Level3 = [
+  check("title", "Title is required.").notEmpty().trim(),
   check("text", "Text is required.").notEmpty().trim(),
 ];
 

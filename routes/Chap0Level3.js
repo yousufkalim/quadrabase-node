@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const Chap0Level3 = require("../controllers/Chap0Level3");
-const { validateChap0, isValidated } = require("../middleware/validators");
+const {
+  validateChap0Level3,
+  isValidated,
+} = require("../middleware/validators");
 const Auth = require("../middleware/auth");
 
 /**
@@ -13,7 +16,13 @@ const Auth = require("../middleware/auth");
  */
 
 // create - Chap0Level3 Signup
-router.post("/create", validateChap0, isValidated, Auth(), Chap0Level3.create);
+router.post(
+  "/create",
+  validateChap0Level3,
+  isValidated,
+  Auth(),
+  Chap0Level3.create
+);
 
 // Read
 router.get("/", Auth(), Chap0Level3.getAll); // Get all Chap0Level3 at once
