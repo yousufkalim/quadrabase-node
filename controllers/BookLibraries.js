@@ -3,7 +3,6 @@ const Families = require("../models/Families");
 const Categories = require("../models/Categories");
 const Works = require("../models/Works");
 const WorkDetails = require("../models/WorkDetails");
-const Providers = require("../models/Providers");
 const mongoose = require("mongoose");
 
 const populateQuery = [
@@ -102,10 +101,37 @@ exports.getAll = async (req, res) => {
 
 exports.getByFamily = async (req, res) => {
   try {
-    let bookLibraries = await BookLibraries.find({
-      type: "public",
-      families: { $all: [req.params.FamilyId] },
-    });
+    let bookLibraries = await BookLibraries.aggregate([
+      {
+        $match: {
+          $expr: {
+            $in: [mongoose.Types.ObjectId(req.params.FamilyId), "$families"],
+          },
+          type: "public",
+        },
+      },
+      {
+        $project: {
+          _id: "$_id",
+          cctp_text: "$cctp_text",
+          name: "$name",
+          ranking: "$ranking",
+        },
+      },
+      {
+        $addFields: {
+          cctp_text: {
+            $filter: {
+              input: "$cctp_text",
+              as: "d",
+              cond: {
+                $ne: ["$$d", null],
+              },
+            },
+          },
+        },
+      },
+    ]);
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
@@ -134,7 +160,34 @@ exports.getPrivateLibByFamily = async (req, res) => {
 exports.getLevel2 = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId;
-    let categories = await Categories.find({ book_library: BookLibraryId });
+    let categories = await Categories.aggregate([
+      {
+        $match: {
+          book_library: mongoose.Types.ObjectId(BookLibraryId),
+        },
+      },
+      {
+        $project: {
+          _id: "$_id",
+          cctp_text: "$cctp_text",
+          name: "$name",
+          ranking: "$ranking",
+        },
+      },
+      {
+        $addFields: {
+          cctp_text: {
+            $filter: {
+              input: "$cctp_text",
+              as: "d",
+              cond: {
+                $ne: ["$$d", null],
+              },
+            },
+          },
+        },
+      },
+    ]);
 
     res.json({ success: true, categories }); // Success
   } catch (err) {
@@ -147,7 +200,46 @@ exports.getLevel2 = async (req, res) => {
 exports.getLevel3 = async (req, res) => {
   try {
     const CategoryId = req.params.CategoryId;
-    let works = await Works.find({ category: CategoryId });
+    let works = await Works.aggregate([
+      {
+        $match: {
+          category: mongoose.Types.ObjectId(CategoryId),
+        },
+      },
+      {
+        $project: {
+          _id: "$_id",
+          name: "$name",
+          cctp_text: "$cctp_text",
+          bpu_text: "$bpu_text",
+          unit_price: "$unit_price",
+          providers: "$providers",
+          unit: "$unit",
+          category: "$category",
+          numberOfWorkDetails: {
+            $cond: {
+              if: { $isArray: "$work_details" },
+              then: { $size: "$work_details" },
+              else: "NA",
+            },
+          },
+          ranking: "$ranking",
+        },
+      },
+      {
+        $addFields: {
+          cctp_text: {
+            $filter: {
+              input: "$cctp_text",
+              as: "d",
+              cond: {
+                $ne: ["$$d", null],
+              },
+            },
+          },
+        },
+      },
+    ]);
 
     res.json({ success: true, works }); // Success
   } catch (err) {
@@ -160,7 +252,20 @@ exports.getLevel3 = async (req, res) => {
 exports.getLevel4 = async (req, res) => {
   try {
     const WorkId = req.params.WorkId;
-    let workDetails = await WorkDetails.find({ work: WorkId });
+    let workDetails = await WorkDetails.aggregate([
+      {
+        $match: {
+          work: mongoose.Types.ObjectId(WorkId),
+        },
+      },
+      {
+        $project: {
+          createdAt: 0,
+          updatedAt: 0,
+          __v: 0,
+        },
+      },
+    ]);
 
     res.json({ success: true, workDetails }); // Success
   } catch (err) {
@@ -275,14 +380,39 @@ exports.getByArchitectId = async (req, res) => {
 };
 
 // get first two level of booklibraries by architect Id
-exports.getTwoLevelsByArchitectID = async (req, res) => {
+exports.getByArchitect = async (req, res) => {
   try {
     const ArchitectId = req.params.ArchitectId; // Getting BookLibrary id from URL parameter
 
-    let bookLibrary = await BookLibraries.find({
-      architect: ArchitectId,
-      type: "private",
-    });
+    let bookLibrary = await BookLibraries.aggregate([
+      {
+        $match: {
+          architect: mongoose.Types.ObjectId(ArchitectId),
+          type: "private",
+        },
+      },
+      {
+        $project: {
+          _id: "$_id",
+          cctp_text: "$cctp_text",
+          name: "$name",
+          ranking: "$ranking",
+        },
+      },
+      {
+        $addFields: {
+          cctp_text: {
+            $filter: {
+              input: "$cctp_text",
+              as: "d",
+              cond: {
+                $ne: ["$$d", null],
+              },
+            },
+          },
+        },
+      },
+    ]);
 
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {

@@ -135,21 +135,18 @@ router.put(
 // Read
 router.get("/", BookLibraries.getAll); // Get all BookLibraries at once
 router.get("/getByFamily/:FamilyId", BookLibraries.getByFamily); // Get all BookLibraries at once
+router.get("/getByArchitect/:ArchitectId", BookLibraries.getByArchitect); // Get one BookLibrary by it's id
+router.get("/getLevel2/:BookLibraryId", BookLibraries.getLevel2); // Get all BookLibraries at once
+router.get("/getLevel3/:CategoryId", BookLibraries.getLevel3); // Get all BookLibraries at once
+router.get("/getLevel4/:WorkId", BookLibraries.getLevel4); // Get all BookLibraries at once
 router.get(
   "/private/getByFamily/:FamilyId",
   BookLibraries.getPrivateLibByFamily
 ); // Get all BookLibraries at once
-router.get("/getLevel2/:BookLibraryId", BookLibraries.getLevel2); // Get all BookLibraries at once
-router.get("/getLevel3/:CategoryId", BookLibraries.getLevel3); // Get all BookLibraries at once
-router.get("/getLevel4/:WorkId", BookLibraries.getLevel4); // Get all BookLibraries at once
 router.get("/getTwoLevels", BookLibraries.getTwoLevels); // Get all BookLibraries at once
 router.get("/:BookLibraryId", BookLibraries.getById); // Get one BookLibrary by it's id
 router.get("/search/getlibraries", BookLibraries.search);
 router.get("/getByArchitectId/:ArchitectId", BookLibraries.getByArchitectId); // Get one BookLibrary by it's id
-router.get(
-  "/getTwoLevelsByArchitectId/:ArchitectId",
-  BookLibraries.getTwoLevelsByArchitectID
-); // Get one BookLibrary by it's id
 
 // Update
 router.put("/:BookLibraryId", Auth(), BookLibraries.update); // Update a specific BookLibrary by it's id
