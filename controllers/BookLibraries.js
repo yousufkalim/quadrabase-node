@@ -41,12 +41,10 @@ exports.create = async (req, res) => {
 			const existingBookLibrary = await BookLibraries.findOne({ name }); // Finding already existing BookLibrary
 			if (existingBookLibrary) {
 				// If we found existing BookLibrary in db
-				return res
-					.status(404)
-					.json({
-						success: false,
-						message: "BookLibrary already exists",
-					});
+				return res.status(404).json({
+					success: false,
+					message: "BookLibrary already exists",
+				});
 			}
 		} else {
 			const existingBookLibrary = await BookLibraries.findOne({
@@ -55,12 +53,10 @@ exports.create = async (req, res) => {
 			}); // Finding already existing BookLibrary
 			if (existingBookLibrary) {
 				// If we found existing BookLibrary in db
-				return res
-					.status(404)
-					.json({
-						success: false,
-						message: "BookLibrary already exists",
-					});
+				return res.status(404).json({
+					success: false,
+					message: "BookLibrary already exists",
+				});
 			}
 		}
 
@@ -120,14 +116,6 @@ exports.getByFamily = async (req, res) => {
 				},
 			},
 			{
-				$project: {
-					_id: "$_id",
-					cctp_text: "$cctp_text",
-					name: "$name",
-					ranking: "$ranking",
-				},
-			},
-			{
 				$addFields: {
 					cctp_text: {
 						$filter: {
@@ -173,15 +161,6 @@ exports.getLevel2 = async (req, res) => {
 			{
 				$match: {
 					book_library: mongoose.Types.ObjectId(BookLibraryId),
-				},
-			},
-			{
-				$project: {
-					_id: "$_id",
-					cctp_text: "$cctp_text",
-					name: "$name",
-					ranking: "$ranking",
-					book_library: "$book_library",
 				},
 			},
 			{
@@ -399,14 +378,6 @@ exports.getByArchitect = async (req, res) => {
 				$match: {
 					architect: mongoose.Types.ObjectId(ArchitectId),
 					type: "private",
-				},
-			},
-			{
-				$project: {
-					_id: "$_id",
-					cctp_text: "$cctp_text",
-					name: "$name",
-					ranking: "$ranking",
 				},
 			},
 			{
