@@ -206,7 +206,7 @@ exports.checkout = async (req, res) => {
       line_items: lineItems,
       locale: "fr",
       mode: "payment",
-      success_url: `http://localhost:3000/success/${invoice._id}`,
+      success_url: invoice?`${process.env.STRIPE_RETURN_URL}/${invoice._id}` : process.env.STRIPE_RETURN_URL,
       cancel_url: process.env.STRIPE_REJECT_URL,
       metadata: metaData,
     });
@@ -225,7 +225,7 @@ exports.Webhook = async (req, res) => {
     event = stripe.webhooks.constructEvent(
       req.rawBody,
       sig,
-      "whsec_38c0fd6f2548f321acdb23ce5eea6a1cd53eeefe7bf27ba4e50e3bfe77a03090" //////webhook scret key
+      process.env.WEBHOOK_URI //////webhook scret key
     );
   } catch (error) {
     res.status(400).send(`Webhook Error: ${error.message}`);
@@ -257,11 +257,10 @@ exports.Webhook = async (req, res) => {
 
         // assinging subscription
         const data = {
-          start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
+          start_date: moment(new Date()).format("YYYY/MM/DD"),
           end_date: moment(
             moment(new Date())
               .add(subscription.duration, "months")
-              .add(1, "days")
               .calendar()
           ).format("YYYY/MM/DD"),
           projects: subscription.projects,
@@ -283,7 +282,52 @@ exports.Webhook = async (req, res) => {
         delete metaData.type;
         metaData.subscription=subscription;
          // Creating provider
-        const provider = await Providers.create(metaData); // Adding provider in db
+        await Providers.create(metaData); // Adding provider in db
+      }else if (metaData.type === "buySubscription") {
+        const subscription = await Subscriptions.findById(
+          metaData.subscription
+        );
+
+        const data = {
+          subscription: subscription._id,
+          start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
+          end_date: moment(
+            moment(new Date())
+              .add(subscription.duration, "months")
+              .add(1, "days")
+              .calendar()
+          ).format("YYYY/MM/DD"),
+          credit: subscription.credit,
+          projects: subscription.projects,
+          architect: metaData.architectId,
+        };
+        const license = await Licenses.create(data);
+
+        await Architects.findByIdAndUpdate(
+          metaData.architectId,
+          { $push: { myLicenses: license._id } },
+          { new: true }
+        );
+      } else if (metaData.type === "buyProjects") {
+        const subscription = await Subscriptions.findById(
+          metaData.subscription
+        );
+
+        const license = await Licenses.findById(metaData.licenseId);
+        license.projects = license.projects + subscription.projects;
+
+        await license.save();
+      } else if (metaData.type === "renew") {
+        const subscription = await Subscriptions.findById(
+          metaData.subscription
+        );
+        const license = await Licenses.findById(metaData.licenseId);
+        license.end_date = moment(
+          moment(license.end_date)
+            .add(subscription.duration, "months")
+            .calendar()
+        ).format("YYYY/MM/DD");
+        await license.save();
       }
 
       break;
