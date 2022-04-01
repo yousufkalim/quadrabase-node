@@ -80,6 +80,9 @@ const InvoiceSchema = new mongoose.Schema(
     invoiceCount: {
       type: Number,
     },
+    filePath:{
+      type:String
+    }
   },
   {
     timestamps: true,

@@ -14,7 +14,7 @@ router.post(
   Lincenses.buy
 );
 // post - checkout
-router.post("/checkout", Auth(ArchitectsModel), Lincenses.checkout);
+router.post("/checkout", Lincenses.checkout);
 
 // post - webhook
 router.post(
@@ -22,6 +22,9 @@ router.post(
   express.raw({ type: "application/json" }),
   Lincenses.Webhook
 );
+
+// get - get invoice
+router.get("/invoice/:id", Lincenses.getInvoiceById);
 
 // get - get licenses by architectId
 router.get("/:architectId", Auth(ArchitectsModel), Lincenses.getByArchitectId);
