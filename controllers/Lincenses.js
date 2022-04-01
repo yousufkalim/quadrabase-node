@@ -335,6 +335,7 @@ exports.Webhook = async (req, res) => {
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
+  res.send();
 };
 
 const architectInvoice= async (data)=>{
