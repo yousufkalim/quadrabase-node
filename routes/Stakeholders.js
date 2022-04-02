@@ -34,18 +34,13 @@ router.post(
 );
 
 // Read
-router.get("/", Stakeholders.getAll); // get all stakeholders
+router.get("/", Auth(ArchitectsModal), Stakeholders.getAll); // get all stakeholders
 router.get("/:stakeholderID", Stakeholders.getById); // get stakeholder by id
-router.get("/getByType/:typeId", Stakeholders.getByType); // get stakeholder by typeId
+router.get("/getByType/:typeId", Auth(ArchitectsModal), Stakeholders.getByType); // get stakeholder by typeId
 router.get("/getByArchitect/:architectId", Stakeholders.getByArchitect); // get stakeholder by typeId
 
 // Update
-router.put(
-  "/:stakeholderID",
-  validateStakeholder,
-  isValidated,
-  Stakeholders.update
-); // Update a specific stakeholder by it's id
+router.put("/:stakeholderID", Stakeholders.update); // Update a specific stakeholder by it's id
 
 // Delete
 router.delete("/:stakeholderID", Stakeholders.delete); // delete a specific stakeholder by it's id

@@ -44,6 +44,7 @@ exports.createByArchitect = async (req, res) => {
         .json({ success: false, message: "stakeholder already exists" });
     }
 
+    req.body.architect = req.params.architectId;
     const stakeholder = await Stakeholders.create(req.body);
 
     await Architects.findByIdAndUpdate(
@@ -70,7 +71,7 @@ exports.createByArchitect = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const stakeholders = await Stakeholders.find()
+    const stakeholders = await Stakeholders.find({ architect: req.userId })
       .populate("type")
       .sort({ ranking: 1 }); // Finding all the Stakeholders from db
     res.json({ success: true, stakeholders }); // Success
@@ -106,7 +107,10 @@ exports.getById = async (req, res) => {
 exports.getByType = async (req, res) => {
   try {
     const typeId = req.params.typeId; // Getting stakeholder id from URL parameter
-    const stakeholder = await Stakeholders.find({ type: typeId }); // Finding stakeholder by id
+    const stakeholder = await Stakeholders.find({
+      type: typeId,
+      architect: req.userId,
+    }); // Finding stakeholder by id
     res.json({ success: true, stakeholder }); // Success
   } catch (err) {
     // Error handling
