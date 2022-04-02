@@ -14,6 +14,8 @@ const stakeholdersSchema = new mongoose.Schema(
     },
     ranking: {
       type: Number,
+      required: true,
+      default: 0,
     },
     contact_no: {
       type: String,
