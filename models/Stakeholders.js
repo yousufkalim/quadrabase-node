@@ -40,6 +40,10 @@ const stakeholdersSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "StakeholderTypes",
     },
+    architect: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Architects",
+    },
   },
   {
     timestamps: true,
