@@ -5,10 +5,12 @@ const Works = require("../models/Works");
 const mongoose = require("mongoose");
 const ArchitectsChap0 = require("../models/ArchitectsChap0");
 const Chap0 = require("../models/Chap0");
+const Trades = require("../models/Trades");
 
 //Projects create
 exports.create = async (req, res) => {
   try {
+    // creating project
     const existingProjects = await Projects.findOne({
       name: req.body.name,
       architect: req.body.architect,
@@ -27,6 +29,16 @@ exports.create = async (req, res) => {
       { $push: { projects: project._id } },
       { new: true }
     );
+
+    if (project.market_type === "Trades") {
+      // Creating Trade
+      const tradeData = {
+        name: "New Lot",
+        ranking: 0,
+        project: project._id,
+      };
+      const trade = await Trades.create(tradeData); // Adding Trade in db
+    }
 
     res.json({
       message: "Project created successfully",
