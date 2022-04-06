@@ -8,10 +8,16 @@ const TranchesSchema = new mongoose.Schema(
     },
     ranking: {
       type: Number,
+      required: true,
+      default: 0,
     },
-    architect: {
+    project: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Architects",
+      ref: "Projects",
+    },
+    trade: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Trades",
     },
   },
   {

@@ -130,7 +130,6 @@ exports.getByArchitect = async (req, res) => {
     const architect = await Architects.findById(architectId).populate(
       "stakeholders"
     ); // Finding stakeholder by id
-    console.log(architect.stakeholders);
     res.json({ success: true, stakeholders: architect.stakeholders }); // Success
   } catch (err) {
     // Error handling
