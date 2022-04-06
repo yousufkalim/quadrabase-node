@@ -23,7 +23,7 @@ router.post(
 );
 
 // Read
-router.get("/", Auth(ArchitectsModal), Trades.getAll); // Get all Trades at once
+router.get("/:projectId", Auth(ArchitectsModal), Trades.getAll); // Get all Trades at once
 
 // Update
 router.put("/:tradeId", Auth(ArchitectsModal), Trades.update); // Update a specific Trades by it's id

@@ -9,10 +9,9 @@ const Projects = require("../models/Projects");
 exports.create = async (req, res) => {
   try {
     let name = req.body.name; // name
-    req.body.architect = req.userId;
     const existingTrade = await Trades.findOne({
       name,
-      architect: req.body.architect,
+      project: req.body.project,
     }); // Finding already existing Trade
     if (existingTrade) {
       // If we found existing trade in db
@@ -40,7 +39,7 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const trades = await Trades.find({ architect: req.userId });
+    const trades = await Trades.find({ project: req.params.projectId });
     res.json({ success: true, trades }); // Success
   } catch (err) {
     // Error handling
@@ -77,10 +76,6 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const tradeId = req.params.tradeId; // Getting tradeId from URL parameter
-    const inUseTrade = await Projects.findOne({ "works.trade": tradeId });
-    if (inUseTrade) {
-      return res.status(400).json({ success: false, message: "Trade in use" });
-    }
     const trade = await Trades.findByIdAndDelete(tradeId); // Deleting the trade
     res.json({ success: true, message: "Trade deleted successfully", trade }); // Success
   } catch (err) {
