@@ -23,7 +23,7 @@ router.post(
 );
 
 // Read
-router.get("/", Auth(ArchitectsModal), Tranches.getAll); // Get all Tranches at once
+router.get("/:projectId", Auth(ArchitectsModal), Tranches.getAll); // Get all Tranches at once
 
 // Update
 router.put("/:tranchId", Auth(ArchitectsModal), Tranches.update); // Update a specific Tranches by it's id

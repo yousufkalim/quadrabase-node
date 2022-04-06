@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const ArchitectsChap0 = require("../models/ArchitectsChap0");
 const Chap0 = require("../models/Chap0");
 const Trades = require("../models/Trades");
+const Tranches = require("../models/Tranches");
 
 //Projects create
 exports.create = async (req, res) => {
@@ -33,11 +34,26 @@ exports.create = async (req, res) => {
     if (project.market_type === "Trades") {
       // Creating Trade
       const tradeData = {
-        name: "New Lot",
+        name: "Nouveau Lot",
+        ranking: 0,
+        project: project._id,
+      };
+      await Trades.create(tradeData); // Adding Trade in db
+    } else if (project.market_type === "TradesAndTranches") {
+      // Creating Trade
+      const tradeData = {
+        name: "Nouveau Lot",
         ranking: 0,
         project: project._id,
       };
       const trade = await Trades.create(tradeData); // Adding Trade in db
+      const tranchData = {
+        name: "Nouveau Slice",
+        ranking: 0,
+        project: project._id,
+        trade: trade._id,
+      };
+      await Tranches.create(tranchData); // Adding Trade in db
     }
 
     res.json({

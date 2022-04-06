@@ -9,10 +9,9 @@ const Projects = require("../models/Projects");
 exports.create = async (req, res) => {
   try {
     let name = req.body.name; // name
-    req.body.architect = req.userId;
     const existingTranch = await Tranches.findOne({
       name,
-      architect: req.body.architect,
+      trade: req.body.trade,
     }); // Finding already existing Tranch
     if (existingTranch) {
       // If we found existing tranch in db
@@ -40,7 +39,7 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const tranches = await Tranches.find({ architect: req.userId });
+    const tranches = await Tranches.find({ project: req.params.projectId });
     res.json({ success: true, tranches }); // Success
   } catch (err) {
     // Error handling
@@ -77,10 +76,6 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const tranchId = req.params.tranchId; // Getting tranchId from URL parameter
-    const inUseTranch = await Projects.findOne({ "works.tranch": tranchId });
-    if (inUseTranch) {
-      return res.status(400).json({ success: false, message: "Tranch in use" });
-    }
     const tranch = await Tranches.findByIdAndDelete(tranchId); // Deleting the tranch
     res.json({ success: true, message: "Tranch deleted successfully", tranch }); // Success
   } catch (err) {
