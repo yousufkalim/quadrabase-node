@@ -9,6 +9,10 @@ const architectChap0Schema = new mongoose.Schema(
     text: {
       type: String,
     },
+    type: {
+      type: String,
+      enum: ["private", "duplicate"],
+    },
     architect: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Architects",

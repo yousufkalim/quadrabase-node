@@ -127,7 +127,6 @@ exports.validateStakeholder = [
 // ArchitectsChap0 Create Validation
 exports.validateArchitectsChap0 = [
   check("title", "Title is required.").notEmpty().trim(),
-  check("text", "Text is required.").notEmpty().trim(),
 ];
 
 // Chap0 Create Validation

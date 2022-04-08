@@ -11,6 +11,15 @@ exports.create = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Chap already exists" });
     }
+    if (req.body.family) {
+      const existingFamily = await Chap0.findOne({ family: req.body.family }); // Family have to be unique
+      if (existingFamily) {
+        // If we found existing Chap0 in db
+        return res
+          .status(404)
+          .json({ success: false, message: "Family already in use" });
+      }
+    }
 
     // Creating Chap0
     const chap0 = await Chap0.create(req.body); // Adding Chap0 in db
@@ -66,6 +75,16 @@ exports.update = async (req, res) => {
   try {
     const Chap0Id = req.params.Chap0Id; // Getting chap0 id from URL parameter
 
+    if (req.body.family) {
+      const existingFamily = await Chap0.findOne({ family: req.body.family }); // Family have to be unique
+      if (existingFamily) {
+        // If we found existing Chap0 in db
+        return res
+          .status(404)
+          .json({ success: false, message: "Family already in use" });
+      }
+    }
+
     const chap0 = await Chap0.findByIdAndUpdate(Chap0Id, req.body, {
       new: true,
     }); // Updating the chap0
@@ -86,7 +105,7 @@ exports.delete = async (req, res) => {
   try {
     const Chap0Id = req.params.Chap0Id; // Getting chap0 id from URL parameter
     const chap0 = await Chap0.findByIdAndDelete(Chap0Id); // Deleting the chap0
-    res.json({ success: true,message: "Chap0 deleted successfully" , chap0 }); // Success
+    res.json({ success: true, message: "Chap0 deleted successfully", chap0 }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

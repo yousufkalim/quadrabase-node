@@ -14,6 +14,10 @@ const ChapsSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    family: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Families",
+    },
   },
   {
     timestamps: true,
