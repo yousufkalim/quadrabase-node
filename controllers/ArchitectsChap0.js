@@ -87,6 +87,20 @@ exports.getByIdArchitectId = async (req, res) => {
   }
 };
 
+exports.getPrivate = async (req, res) => {
+  try {
+    const architectsChap0 = await ArchitectsChap0.find({
+      architect: req.userId,
+      type: "private",
+    }); // Finding architectsChap0 by architectId
+    res.json({ success: true, architectsChap0 }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.getByProject = async (req, res) => {
   try {
     const architectsChap0 = await ArchitectsChap0.find({
@@ -145,7 +159,6 @@ exports.updateByProject = async (req, res) => {
           new: true,
         }
       ); // Updating the ArchitectsChap0
-      console.log("dah");
       res.json({
         success: true,
         message: "ArchitectsChap0 updated successfully",

@@ -401,19 +401,6 @@ exports.update = async (req, res) => {
     if (req.body.chap0part2 && req.body.chap0part2.status === "modified") {
       const chap0 = await Chap0.findById(req.body.chap0part2.id);
 
-      const existingTitle = await ArchitectsChap0.findOne({
-        title: chap0.title,
-        architect: req.userId,
-      }); // Finding already existing ArchitectsChap0
-      if (existingTitle) {
-        // If we found existing ArchitectsChap0 in db
-        return res.status(401).json({
-          success: false,
-          message:
-            "Seleted General Chap. 0 part 2 already exists in Architect Chap. 0 part 2",
-        });
-      }
-
       const architectsChap0 = await ArchitectsChap0.create({
         title: chap0.title,
         text: chap0.text,

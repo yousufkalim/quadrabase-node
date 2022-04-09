@@ -27,6 +27,7 @@ router.post(
 
 // Read
 router.get("/", Auth(ArchitectsModel), ArchitectsChap0.getAll); // get all ArchitectsChap0
+router.get("/private", Auth(ArchitectsModel), ArchitectsChap0.getPrivate); // get all ArchitectsChap0
 router.get(
   "/:architectsChap0Id",
   Auth(ArchitectsModel),
