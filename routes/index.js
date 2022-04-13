@@ -5,6 +5,7 @@
 const router = require("express").Router();
 
 // Parent Routes
+router.use("/Auth", require("./Auth")); // All the Admins routes
 router.use("/Admins", require("./Admins")); // All the Admins routes
 router.use("/Architects", require("./Architects")); // All the Architects routes
 router.use("/BookLibraries", require("./BookLibraries")); // All the BookLibraries routes

@@ -48,7 +48,7 @@ exports.create = async (req, res) => {
       };
       const trade = await Trades.create(tradeData); // Adding Trade in db
       const tranchData = {
-        name: "Nouveau Slice",
+        name: "Nouveau Tranche",
         ranking: 0,
         project: project._id,
         trade: trade._id,
