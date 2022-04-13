@@ -59,15 +59,16 @@ exports.sendSummaryEmail = (obj) => {
     const html = `
     <body>
       <p>Bonjour ${obj.providerName},</p><br>
-      <p>Les projets suivants ont été ajouté dans la plateforme Quadrabase, dans lesquels l’un de vos produit est utilisé.</p><br>
+      <p>Comme convenu dans notre accord, nous vous informons que les projets suivants ont été ajoutés dans la plateforme Quadrabase et dans lesquels des produits sélectionnés correspondent à votre production.</p><br>
       ${obj.emailInfo.map((item) => {
         return `<div>
+        <p>Maitre d’ouvrage : ${item.client}</p>
         <p>Nom du projet : ${item.projectName}</p>
         <p>Prescripteur : ${item.prescriber}</p>
         <p>Nom du produit : ${item.work}</p>
         </div>`;
       })}
-      <br><p>L’équipe Quadrabase,</p>
+      <br><p>L’équipe QBSoft Sas,</p>
     </body>`;
 
     // Send email options

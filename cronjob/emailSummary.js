@@ -19,7 +19,8 @@ cron.schedule(
       },
     })
       .populate("works.providers.provider")
-      .populate("architect");
+      .populate("architect")
+      .populate("client");
     let summaryInfo = [];
     projects.map((project) => {
       project.works.map((work) => {
@@ -30,6 +31,7 @@ cron.schedule(
             emailInfo: [
               {
                 projectName: project.name,
+                client: project.client.name,
                 prescriber: project.prescriber,
                 work: work.name,
               },
