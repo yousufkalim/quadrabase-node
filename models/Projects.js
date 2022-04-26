@@ -54,7 +54,8 @@ const projectsSchema = new mongoose.Schema(
       ref: "Architects",
     },
     prescriber: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Stakeholders",
     },
     name: {
       type: String,
