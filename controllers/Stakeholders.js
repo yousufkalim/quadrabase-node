@@ -1,4 +1,5 @@
 const Stakeholders = require("../models/Stakeholders");
+const StakeholderTypes = require("../models/StakeholderTypes");
 const Architects = require("../models/Architects");
 const Projects = require("../models/Projects");
 
@@ -19,6 +20,29 @@ exports.create = async (req, res) => {
 
     res.json({
       message: "Stakeholder created successfully",
+    }); //Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//stakeholders create
+exports.createByProject = async (req, res) => {
+  try {
+    let type = req.params.type;
+    console.log(type, "type");
+    const stakeholderType = await StakeholderTypes.findOne({
+      text: { $regex: type, $options: "$i" },
+    });
+
+    req.body.type = stakeholderType._id;
+    const stakeholder = await Stakeholders.create(req.body); //stakeholder create
+
+    res.json({
+      success: true,
+      stakeholder,
     }); //Success
   } catch (err) {
     // Error handling
@@ -135,6 +159,32 @@ exports.getByArchitect = async (req, res) => {
     // Error handling
     console.log("Error ----> ", err);
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Find stakeholders by type
+ * @param {object} req
+ * @param {object} res
+ */
+
+exports.getByTypeName = async (req, res) => {
+  try {
+    const stakeholders = await Stakeholders.find({ architect: req.userId })
+      .populate("type")
+      .sort({ ranking: 1 }); // All stakeholder
+
+    let type = req.params.type.toUpperCase(); // Type from client
+    const reqStakeholders = stakeholders.filter((item) => {
+      let itemType = item.type.text.toUpperCase();
+      return itemType === type;
+    }); /// Filter by type
+    console.log(reqStakeholders, "reqStakeholders");
+    res.json({ success: true, stakeholders: reqStakeholders }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
   }
 };
 

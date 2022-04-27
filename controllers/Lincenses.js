@@ -156,26 +156,25 @@ exports.assign = async (req, res) => {
   }
 };
 
-exports.getInvoiceById=async(req,res)=>{
-  try{
+exports.getInvoiceById = async (req, res) => {
+  try {
     const invoice = await Invoice.findById(req.params.id);
     res.json({ success: true, url: invoice.filePath });
-  }catch(err){
+  } catch (err) {
     // Error handling
     console.log("Error---->", err.message);
     res.status(500).json({ message: err.message });
   }
-}
+};
 
 // checkout
 exports.checkout = async (req, res) => {
   try {
     let metaData = req.body.metaData;
     let lineItems = req.body.line_items;
-    let invoice="";
-    if(metaData.type==="architectSignup"){
-
-      let email =metaData.email; //email
+    let invoice = "";
+    if (metaData.type === "architectSignup") {
+      let email = metaData.email; //email
 
       const existingArchitect = await Architects.findOne({ email }); // Finding already existing architect
       const existingAdmin = await Admins.findOne({ email }); // Finding already existing architect
@@ -188,8 +187,7 @@ exports.checkout = async (req, res) => {
       }
 
       invoice = await architectInvoice(req.body.invoiceData);
-    }else if(metaData.type === "providerSignup"){
-
+    } else if (metaData.type === "providerSignup") {
       let email = metaData.email; //email
       const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
       if (existingProvider) {
@@ -206,7 +204,9 @@ exports.checkout = async (req, res) => {
       line_items: lineItems,
       locale: "fr",
       mode: "payment",
-      success_url: invoice?`${process.env.STRIPE_RETURN_URL}/${invoice._id}` : process.env.STRIPE_RETURN_URL,
+      success_url: invoice
+        ? `${process.env.CLIENT_URL}/auth/login`
+        : process.env.STRIPE_RETURN_URL,
       cancel_url: process.env.STRIPE_REJECT_URL,
       metadata: metaData,
     });
@@ -236,13 +236,11 @@ exports.Webhook = async (req, res) => {
       const session = event.data.object;
       const metaData = session.metadata;
       // Check if buy subscription
-      console.log("metaData",metaData)
-      if(metaData.type==="architectSignup"){
-
+      if (metaData.type === "architectSignup") {
         const subscription = {
           duration: parseInt(metaData.subscriptionDuration),
           projects: parseInt(metaData.subscriptionProjects),
-        }
+        };
         delete metaData.subscriptionDuration;
         delete metaData.subscriptionProjects;
         delete metaData.type;
@@ -250,7 +248,10 @@ exports.Webhook = async (req, res) => {
         let password = metaData.password; //password
         let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
         metaData.client_code = client_code;
-        metaData.password = bcrypt.hashSync(password, parseInt(process.env.BCRYPT_SALT || 10));
+        metaData.password = bcrypt.hashSync(
+          password,
+          parseInt(process.env.BCRYPT_SALT || 10)
+        );
 
         // Creating architect
         const architect = await Architects.create(metaData); // Adding architect in db
@@ -259,9 +260,7 @@ exports.Webhook = async (req, res) => {
         const data = {
           start_date: moment(new Date()).format("YYYY/MM/DD"),
           end_date: moment(
-            moment(new Date())
-              .add(subscription.duration, "months")
-              .calendar()
+            moment(new Date()).add(subscription.duration, "months").calendar()
           ).format("YYYY/MM/DD"),
           projects: subscription.projects,
           assigned_to: architect._id,
@@ -270,20 +269,20 @@ exports.Webhook = async (req, res) => {
         const license = await Licenses.create(data);
         architect.subscriptions = license._id;
         await architect.save();
-      }else if(metaData.type === "providerSignup"){
+      } else if (metaData.type === "providerSignup") {
         const subscription = {
           name: metaData.subscriptionName,
           start_date: metaData.subscriptionStartDate,
           end_date: metaData.subscriptionEndDate,
-        }
+        };
         delete metaData.subscriptionName;
         delete metaData.subscriptionStartDate;
         delete metaData.subscriptionEndDate;
         delete metaData.type;
-        metaData.subscription=subscription;
-         // Creating provider
+        metaData.subscription = subscription;
+        // Creating provider
         await Providers.create(metaData); // Adding provider in db
-      }else if (metaData.type === "buySubscription") {
+      } else if (metaData.type === "buySubscription") {
         const subscription = await Subscriptions.findById(
           metaData.subscription
         );
@@ -338,7 +337,7 @@ exports.Webhook = async (req, res) => {
   res.send();
 };
 
-const architectInvoice= async (data)=>{
+const architectInvoice = async (data) => {
   const html = fs.readFileSync(
     path.join(__dirname, "../templates/invoice.html"),
     "utf-8"
@@ -401,11 +400,11 @@ const architectInvoice= async (data)=>{
   const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
   obj.invoiceCount = count ? count : 1;
   obj.filePath = filepath;
-  const newInvoice= await Invoice.create(obj);
+  const newInvoice = await Invoice.create(obj);
   return newInvoice;
-}
+};
 
-const providerInvoice=async(data)=>{
+const providerInvoice = async (data) => {
   const html = fs.readFileSync(
     path.join(__dirname, "../templates/providerInvoice.html"),
     "utf-8"
@@ -466,4 +465,4 @@ const providerInvoice=async(data)=>{
   obj.filePath = filepath;
   const newInvoice = await Invoice.create(obj);
   return newInvoice;
-}
+};
