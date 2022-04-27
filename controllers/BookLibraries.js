@@ -219,6 +219,61 @@ exports.getLevel3 = async (req, res) => {
         },
       },
       {
+        $unwind: {
+          path: "$providers",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "providers",
+          localField: "providers.provider",
+          foreignField: "_id",
+          as: "providersList",
+        },
+      },
+      {
+        $unwind: {
+          path: "$providersList",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          cctp_text: {
+            $first: "$cctp_text",
+          },
+          bpu_text: {
+            $first: "$bpu_text",
+          },
+          ranking: {
+            $first: "$ranking",
+          },
+          unit_price: {
+            $first: "$unit_price",
+          },
+          work_details: {
+            $first: "$work_details",
+          },
+          name: {
+            $first: "$name",
+          },
+          providers: {
+            $push: "$providers",
+          },
+          providersList: {
+            $push: "$providersList",
+          },
+          category: {
+            $first: "$category",
+          },
+          unit: {
+            $first: "$unit",
+          },
+        },
+      },
+      {
         $project: {
           _id: "$_id",
           name: "$name",
@@ -236,6 +291,7 @@ exports.getLevel3 = async (req, res) => {
             },
           },
           ranking: "$ranking",
+          providersList: "$providersList",
         },
       },
       {
