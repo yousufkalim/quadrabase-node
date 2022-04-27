@@ -37,6 +37,7 @@ exports.createByProject = async (req, res) => {
     });
 
     req.body.type = stakeholderType._id;
+    req.body.architect = req.userId;
     const stakeholder = await Stakeholders.create(req.body); //stakeholder create
 
     res.json({

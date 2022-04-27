@@ -92,7 +92,9 @@ exports.getByArchitect = async (req, res) => {
   try {
     const project = await Projects.find({
       architect: req.params.architectId,
-    }).populate("vat"); // Finding all the Project from db
+    })
+      .populate("vat")
+      .populate("prescriber"); // Finding all the Project from db
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
@@ -110,7 +112,9 @@ exports.getById = async (req, res) => {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
     const project = await Projects.findById(projectId)
       .populate("vat")
-      .populate("chap0part2.id"); // Finding project by id
+      .populate("chap0part2.id")
+      .populate("prescriber")
+      .populate("client"); // Finding project by id
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
