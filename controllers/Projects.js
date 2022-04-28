@@ -685,12 +685,18 @@ exports.duplicateWork = async (req, res) => {
     let project = await Projects.findById(projectId);
 
     let work = {};
+    let maxRanking = Math.max.apply(
+      Math,
+      project.works.map((item) => {
+        return item.ranking;
+      })
+    );
     project.works.map((item1) => {
       if (item1._id == workId) {
         work.name = item1.name;
         work.cctp_text = item1.cctp_text;
         work.bpu_text = item1.bpu_text;
-        work.ranking = item1.ranking + 1;
+        work.ranking = maxRanking + 1;
         if (item1.unit) {
           work.unit = item1.unit;
         }
@@ -745,13 +751,19 @@ exports.duplicateWorkDetail = async (req, res) => {
     let workDetail = {};
     project.works.map((item1) => {
       if (item1._id == workId) {
+        let maxRanking = Math.max.apply(
+          Math,
+          item1.work_details.map((item) => {
+            return item.ranking;
+          })
+        );
         item1.work_details.map((item2) => {
           if (item2._id == workDetailId) {
             workDetail.name = item2.name;
             workDetail.unit = item2.unit;
             workDetail.unit_price = item2.unit_price;
             workDetail.quantity = item2.quantity;
-            workDetail.ranking = item2.ranking + 1;
+            workDetail.ranking = maxRanking + 1;
           }
         });
         item1.work_details.push(workDetail);
