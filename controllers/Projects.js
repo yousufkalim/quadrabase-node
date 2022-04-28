@@ -34,7 +34,7 @@ exports.create = async (req, res) => {
     if (project.market_type === "Trades") {
       // Creating Trade
       const tradeData = {
-        name: "Nouveau Lot",
+        name: "Lot n°1",
         ranking: 0,
         project: project._id,
       };
@@ -42,13 +42,13 @@ exports.create = async (req, res) => {
     } else if (project.market_type === "TradesAndTranches") {
       // Creating Trade
       const tradeData = {
-        name: "Nouveau Lot",
+        name: "Lot n°1",
         ranking: 0,
         project: project._id,
       };
       const trade = await Trades.create(tradeData); // Adding Trade in db
       const tranchData = {
-        name: "Nouveau Tranche",
+        name: "Tranche n°1",
         ranking: 0,
         project: project._id,
         trade: trade._id,
