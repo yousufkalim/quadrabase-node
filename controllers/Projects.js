@@ -696,7 +696,7 @@ exports.duplicateWork = async (req, res) => {
         work.name = item1.name;
         work.cctp_text = item1.cctp_text;
         work.bpu_text = item1.bpu_text;
-        work.ranking = maxRanking + 1;
+        work.ranking = maxRanking >= 0 ? maxRanking + 1 : 0;
         if (item1.unit) {
           work.unit = item1.unit;
         }
@@ -763,7 +763,7 @@ exports.duplicateWorkDetail = async (req, res) => {
             workDetail.unit = item2.unit;
             workDetail.unit_price = item2.unit_price;
             workDetail.quantity = item2.quantity;
-            workDetail.ranking = maxRanking + 1;
+            workDetail.ranking = maxRanking >= 0 ? maxRanking + 1 : 0;
           }
         });
         item1.work_details.push(workDetail);
