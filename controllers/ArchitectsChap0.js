@@ -205,6 +205,35 @@ exports.updateByProject = async (req, res) => {
   }
 };
 
+exports.updateLevel = async (req, res) => {
+  try {
+    if (req.body.type === "level0") {
+      await ArchitectsChap0.findByIdAndUpdate(
+        req.params.id,
+        {
+          title: req.body.title,
+          text: req.body.text,
+        },
+        {
+          new: true,
+        }
+      ); // Updating the ArchitectsChap0
+    } else if (req.body.type === "level1") {
+      console.log("architectsChap0", architectsChap0);
+    } else if (req.body.type === "level2") {
+      console.log(req.body, "body3");
+    }
+    res.json({
+      success: true,
+      message: "Updated successfully",
+    });
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Delete ArchitectsChap0
  * @param {object} req

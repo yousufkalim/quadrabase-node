@@ -59,6 +59,12 @@ router.put(
   ArchitectsChap0.updateByProject
 ); // Update a specific ArchitectsChap0 by it's id
 
+router.put(
+  "/editChapLevel/:id",
+  Auth(ArchitectsModel),
+  ArchitectsChap0.updateLevel
+); // Update a specific ArchitectsChap0 by it's id
+
 // Delete
 router.delete(
   "/:architectsChap0Id",
