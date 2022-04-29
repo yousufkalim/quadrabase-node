@@ -34,7 +34,7 @@ exports.create = async (req, res) => {
     if (project.market_type === "Trades") {
       // Creating Trade
       const tradeData = {
-        name: "Nouveau Lot",
+        name: "Lot n°1",
         ranking: 0,
         project: project._id,
       };
@@ -42,13 +42,13 @@ exports.create = async (req, res) => {
     } else if (project.market_type === "TradesAndTranches") {
       // Creating Trade
       const tradeData = {
-        name: "Nouveau Lot",
+        name: "Lot n°1",
         ranking: 0,
         project: project._id,
       };
       const trade = await Trades.create(tradeData); // Adding Trade in db
       const tranchData = {
-        name: "Nouveau Tranche",
+        name: "Tranche n°1",
         ranking: 0,
         project: project._id,
         trade: trade._id,
@@ -92,7 +92,9 @@ exports.getByArchitect = async (req, res) => {
   try {
     const project = await Projects.find({
       architect: req.params.architectId,
-    }).populate("vat"); // Finding all the Project from db
+    })
+      .populate("vat")
+      .populate("prescriber"); // Finding all the Project from db
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
@@ -110,7 +112,9 @@ exports.getById = async (req, res) => {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
     const project = await Projects.findById(projectId)
       .populate("vat")
-      .populate("chap0part2.id"); // Finding project by id
+      .populate("chap0part2.id")
+      .populate("prescriber")
+      .populate("client"); // Finding project by id
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
@@ -681,12 +685,18 @@ exports.duplicateWork = async (req, res) => {
     let project = await Projects.findById(projectId);
 
     let work = {};
+    let maxRanking = Math.max.apply(
+      Math,
+      project.works.map((item) => {
+        return item.ranking;
+      })
+    );
     project.works.map((item1) => {
       if (item1._id == workId) {
         work.name = item1.name;
         work.cctp_text = item1.cctp_text;
         work.bpu_text = item1.bpu_text;
-        work.ranking = item1.ranking + 1;
+        work.ranking = maxRanking >= 0 ? maxRanking + 1 : 0;
         if (item1.unit) {
           work.unit = item1.unit;
         }
@@ -741,13 +751,19 @@ exports.duplicateWorkDetail = async (req, res) => {
     let workDetail = {};
     project.works.map((item1) => {
       if (item1._id == workId) {
+        let maxRanking = Math.max.apply(
+          Math,
+          item1.work_details.map((item) => {
+            return item.ranking;
+          })
+        );
         item1.work_details.map((item2) => {
           if (item2._id == workDetailId) {
             workDetail.name = item2.name;
             workDetail.unit = item2.unit;
             workDetail.unit_price = item2.unit_price;
             workDetail.quantity = item2.quantity;
-            workDetail.ranking = item2.ranking + 1;
+            workDetail.ranking = maxRanking >= 0 ? maxRanking + 1 : 0;
           }
         });
         item1.work_details.push(workDetail);

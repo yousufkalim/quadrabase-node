@@ -32,12 +32,12 @@ exports.create = async (req, res) => {
 exports.createByProject = async (req, res) => {
   try {
     let type = req.params.type;
-    console.log(type, "type");
     const stakeholderType = await StakeholderTypes.findOne({
       text: { $regex: type, $options: "$i" },
     });
 
     req.body.type = stakeholderType._id;
+    req.body.architect = req.userId;
     const stakeholder = await Stakeholders.create(req.body); //stakeholder create
 
     res.json({
@@ -179,7 +179,6 @@ exports.getByTypeName = async (req, res) => {
       let itemType = item.type.text.toUpperCase();
       return itemType === type;
     }); /// Filter by type
-    console.log(reqStakeholders, "reqStakeholders");
     res.json({ success: true, stakeholders: reqStakeholders }); // Success
   } catch (err) {
     // Error handling
