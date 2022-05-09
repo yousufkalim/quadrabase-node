@@ -25,6 +25,12 @@ router.post(
   ArchitectsChap0.create
 );
 
+router.post(
+  "/createChapLevel/:id",
+  Auth(ArchitectsModel),
+  ArchitectsChap0.createLevel
+); // Update a specific ArchitectsChap0 by it's id
+
 // Read
 router.get("/", Auth(ArchitectsModel), ArchitectsChap0.getAll); // get all ArchitectsChap0
 router.get("/private", Auth(ArchitectsModel), ArchitectsChap0.getPrivate); // get all ArchitectsChap0

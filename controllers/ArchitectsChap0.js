@@ -41,6 +41,52 @@ exports.create = async (req, res) => {
  * @param {object} req
  * @param {object} res
  */
+exports.createLevel = async (req, res) => {
+  try {
+    if (req.body.type === "level0") {
+      await ArchitectsChap0.findByIdAndUpdate(
+        req.params.id,
+        {
+          $push: {
+            level2: {
+              title: req.body.title,
+              text: req.body.text,
+              ranking: req.body.ranking,
+            },
+          },
+        },
+        {
+          new: true,
+        }
+      ); // Updating the ArchitectsChap0
+    } else if (req.body.type === "level1") {
+      const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
+      architectsChap0.level2.map((item) => {
+        if (item._id.toString() === req.body.id.toString()) {
+          item.level3.push({
+            title: req.body.title,
+            text: req.body.text,
+            ranking: req.body.ranking,
+          });
+        }
+      });
+      architectsChap0.save();
+    }
+    res.json({
+      message: "Level created successfully",
+    }); //Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+/**
+ * Get all ArchitectsChap0
+ * @param {object} req
+ * @param {object} res
+ */
 exports.getAll = async (req, res) => {
   try {
     const architectsChap0 = await ArchitectsChap0.find(); // Finding all the architectsChap0 from db
