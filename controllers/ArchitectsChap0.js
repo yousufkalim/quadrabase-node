@@ -219,9 +219,25 @@ exports.updateLevel = async (req, res) => {
         }
       ); // Updating the ArchitectsChap0
     } else if (req.body.type === "level1") {
-      console.log("architectsChap0", architectsChap0);
+      const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
+      architectsChap0.level2.map((item) => {
+        if (item._id.toString() === req.body.id.toString()) {
+          item.title = req.body.title;
+          item.text = req.body.text;
+        }
+      });
+      architectsChap0.save();
     } else if (req.body.type === "level2") {
-      console.log(req.body, "body3");
+      const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
+      architectsChap0.level2.map((item) => {
+        item.level3.map((item2) => {
+          if (item2._id.toString() === req.body.id.toString()) {
+            item2.title = req.body.title;
+            item2.text = req.body.text;
+          }
+        });
+      });
+      architectsChap0.save();
     }
     res.json({
       success: true,
