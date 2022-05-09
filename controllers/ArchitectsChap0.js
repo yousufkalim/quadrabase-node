@@ -191,7 +191,6 @@ exports.updateByProject = async (req, res) => {
           new: true,
         }
       ); // Updating the project
-      console.log("dah dah dah");
       res.json({
         success: true,
         message: "ArchitectsChap0 updated successfully",
@@ -242,6 +241,42 @@ exports.updateLevel = async (req, res) => {
     res.json({
       success: true,
       message: "Updated successfully",
+    });
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Delete ArchitectsChap0
+ * @param {object} req
+ * @param {object} res
+ */
+exports.deleteLevel = async (req, res) => {
+  try {
+    if (req.body.type === "level1") {
+      let architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
+      let temp = architectsChap0.level2.filter((item) => {
+        return item._id.toString() !== req.body.id.toString();
+      });
+      architectsChap0.level2 = temp;
+      architectsChap0.save();
+    } else if (req.body.type === "level2") {
+      const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
+      architectsChap0.level2.map((item) => {
+        let temp = [];
+        temp = item.level3.filter((item2) => {
+          return item2._id.toString() !== req.body.id.toString();
+        });
+        item.level3 = temp;
+      });
+      architectsChap0.save();
+    }
+    res.json({
+      success: true,
+      message: "Deleted successfully",
     });
   } catch (err) {
     // Error handling

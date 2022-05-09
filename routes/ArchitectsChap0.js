@@ -72,5 +72,11 @@ router.delete(
   ArchitectsChap0.delete
 ); // delete a specific ArchitectsChap0 by it's id
 
+router.delete(
+  "/deleteChapLevel/:id",
+  Auth(ArchitectsModel),
+  ArchitectsChap0.deleteLevel
+); // Update a specific ArchitectsChap0 by it's id
+
 // Export
 module.exports = router;
