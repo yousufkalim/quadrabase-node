@@ -221,8 +221,12 @@ exports.updateLevel = async (req, res) => {
       const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
       architectsChap0.level2.map((item) => {
         if (item._id.toString() === req.body.id.toString()) {
-          item.title = req.body.title;
-          item.text = req.body.text;
+          if (typeof req.body.ranking === "number") {
+            item.ranking = req.body.ranking;
+          } else {
+            item.title = req.body.title;
+            item.text = req.body.text;
+          }
         }
       });
       architectsChap0.save();
@@ -231,8 +235,12 @@ exports.updateLevel = async (req, res) => {
       architectsChap0.level2.map((item) => {
         item.level3.map((item2) => {
           if (item2._id.toString() === req.body.id.toString()) {
-            item2.title = req.body.title;
-            item2.text = req.body.text;
+            if (typeof req.body.ranking === "number") {
+              item2.ranking = req.body.ranking;
+            } else {
+              item2.title = req.body.title;
+              item2.text = req.body.text;
+            }
           }
         });
       });
