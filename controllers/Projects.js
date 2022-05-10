@@ -5,6 +5,7 @@ const Works = require("../models/Works");
 const mongoose = require("mongoose");
 const ArchitectsChap0 = require("../models/ArchitectsChap0");
 const Chap0 = require("../models/Chap0");
+const Chap0Level2 = require("../models/Chap0Level2");
 const Trades = require("../models/Trades");
 const Tranches = require("../models/Tranches");
 
@@ -404,11 +405,26 @@ exports.update = async (req, res) => {
     let project = {};
     if (req.body.chap0part2 && req.body.chap0part2.status === "modified") {
       const chap0 = await Chap0.findById(req.body.chap0part2.id);
-
+      const chap0Level2 = await Chap0Level2.aggregate([
+        {
+          $match: {
+            parentLevel: mongoose.Types.ObjectId(chap0._id),
+          },
+        },
+        {
+          $lookup: {
+            from: "chap0level3",
+            localField: "_id",
+            foreignField: "parentLevel",
+            as: "level3",
+          },
+        },
+      ]);
       const architectsChap0 = await ArchitectsChap0.create({
         title: chap0.title,
         text: chap0.text,
         architect: req.userId,
+        level2: chap0Level2,
       });
 
       await Architects.findByIdAndUpdate(
