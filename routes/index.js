@@ -28,6 +28,7 @@ router.use("/ImportXLS", require("./ImportXLS")); // All the ImportXLS routes
 router.use("/Tranches", require("./Tranches")); // All the Tranches routes
 router.use("/Trades", require("./Trades")); // All the Trades routes
 router.use("/StudyMaterials", require("./StudyMaterials")); // All the StudyMaterials routes
+router.use("/Contact", require("./Contact")); // Contact routes
 
 // Export
 module.exports = router;
