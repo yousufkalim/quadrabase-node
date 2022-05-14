@@ -45,6 +45,46 @@ exports.sendEmail = (email, password) => {
   });
 };
 
+exports.contactUs = (name, phone, email, message) => {
+  return new Promise((resolve, reject) => {
+    // Sender mail server config
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: sender_email,
+        pass: sender_password,
+      },
+    });
+
+    // Send email options
+    var mailOptions = {
+      from: `${sender_name} <${sender_email}>`,
+      to: "contact@qbsoft.fr",
+      subject: "Nouveau formulaire en ligne - Quadrabase",
+      html: `<div>
+        <p>Un visiteur a rempli le formulaire en ligne, voici les informations :</p>
+        <ul>
+          <li>Nom : ${name}</li>
+          <li>Téléphoner: ${phone}</li>
+          <li>Email: ${email}</li>
+          <li>Message : ${message}</li>
+        </ul>
+      </div>`,
+    };
+
+    // Sending email
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        // Error
+        reject(error);
+      } else {
+        // Success
+        resolve({ success: true, message: "Email sent successfully" });
+      }
+    });
+  });
+};
+
 exports.sendSummaryEmail = (obj) => {
   return new Promise((resolve, reject) => {
     // Sender mail server config
