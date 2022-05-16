@@ -65,7 +65,7 @@ exports.contactUs = (name, phone, email, message) => {
         <p>Un visiteur a rempli le formulaire en ligne, voici les informations :</p>
         <ul>
           <li>Nom : ${name}</li>
-          <li>Téléphoner: ${phone}</li>
+          <li>Téléphone: ${phone}</li>
           <li>Email: ${email}</li>
           <li>Message : ${message}</li>
         </ul>
