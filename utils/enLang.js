@@ -1,0 +1,17 @@
+module.exports = {
+  AuthLoginMsg1: "User not found!",
+  AuthLoginMsg2: "incorrect password",
+  AuthLoginMsg3: "User logged in successfully",
+  AdminRegisterMsg1: "Admin already exists",
+  AdminRegisterMsg2: "Admin created successfully",
+  AdminForgetPass1: "Admin not found",
+  AdminForgetPass2: "Email sent successfully",
+  AdminForgetPass3: "Internal server error",
+  ArchitectSignUp1: "Architect already exists",
+  ArchitectSignUp2: "Architect created successfully",
+  ArchitectSignUp3: "Architect not found",
+  ArchitectSignUp4: "New Password Can't be Empty!",
+  ArchitectSignUp5: "Invalid Old Password",
+  ContactMsg1: "Thank you for getting in touch",
+  stakeholderTypeMsg1: "Stakeholder Type already exists",
+};

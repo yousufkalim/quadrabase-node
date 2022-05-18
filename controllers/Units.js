@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
       // If we found existing unit in db
       return res
         .status(404)
-        .json({ success: false, message: "Unit already exists." });
+        .json({ success: false, message: "Unit already exists" });
     }
 
     // Creating unit
@@ -84,7 +84,7 @@ exports.delete = async (req, res) => {
   try {
     const unitsId = req.params.unitsId; // Getting unit id from URL parameter
     const unit = await Units.findByIdAndDelete(unitsId); // Deleting the unit
-    res.json({ success: true, message: "Unit deleted successfully" , unit }); // Success
+    res.json({ success: true, message: "Unit deleted successfully", unit }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);

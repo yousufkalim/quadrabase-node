@@ -3,18 +3,22 @@ const bcrypt = require("bcryptjs");
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 const JWT = require("jsonwebtoken");
 const { sendEmail } = require("../utils/sendEmail");
+const fr = require("../utils/frLang");
+const en = require("../utils/enLang");
 
 //admin register
 exports.register = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let email = req.body.email; //email
     let password = req.body.password; //password
     const existingAdmin = await Admins.findOne({ email }); // Finding already existing admin
     if (existingAdmin) {
       // If we found existing user in db
-      return res
-        .status(401)
-        .json({ success: false, message: "Admin already exists" });
+      return res.status(401).json({
+        success: false,
+        message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+      });
     }
 
     // Getting url of the image
@@ -27,7 +31,10 @@ exports.register = async (req, res) => {
     const user = await Admins.create(req.body); // Adding admin in db
 
     // Done
-    res.json({ message: "Admin created successfully", user }); //Success
+    res.json({
+      message: lang === "fr" ? fr.AdminRegisterMsg2 : en.AdminRegisterMsg2,
+      user,
+    }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -38,18 +45,22 @@ exports.register = async (req, res) => {
 //admin login
 exports.login = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let email = req.body.email; //email
     let password = req.body.password; //password
     const user = await Admins.findOne({ email }); // Finding already existing admin
     if (!user) {
       // If we found existing user in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Utilisateur non trouvé!" });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.AuthLoginMsg1 : en.AuthLoginMsg1,
+      });
     }
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
     if (!isCorrect)
-      return res.status(404).json({ message: "Mot de passe incorrect" });
+      return res
+        .status(404)
+        .json({ message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2 });
     const token = JWT.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
@@ -57,8 +68,7 @@ exports.login = async (req, res) => {
     // Done
     res.json({
       success: true,
-      message:
-        "L'utilisateur s'est connecté avec succèsUser login successfully",
+      message: lang === "fr" ? fr.AuthLoginMsg3 : en.AuthLoginMsg3,
       result,
     }); //Success
   } catch (err) {
@@ -75,13 +85,17 @@ exports.login = async (req, res) => {
  */
 exports.forgotPassword = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let email = req.body.email;
     let admin = await Admins.findOne({ email });
 
     if (!admin) {
       return res
         .status(404)
-        .json({ success: false, message: "Admin not found" });
+        .json({
+          success: false,
+          message: lang === "fr" ? fr.AdminForgetPass1 : en.AdminForgetPass1,
+        });
     }
 
     // Generating random password
@@ -97,14 +111,20 @@ exports.forgotPassword = async (req, res) => {
         );
         await admin.save();
         // Done
-        res.json({ success: true, message: "Email sent successfully" });
+        res.json({
+          success: true,
+          message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+        });
       })
       .catch((err) => {
         // Error handling
         console.log("Error ----> ", err);
         res
           .status(500)
-          .json({ success: false, message: "Internal server error" });
+          .json({
+            success: false,
+            message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+          });
       });
   } catch (err) {
     // Error handling

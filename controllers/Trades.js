@@ -1,5 +1,7 @@
 const Trades = require("../models/Trades");
 const Projects = require("../models/Projects");
+const fr = require("../utils/frLang");
+const en = require("../utils/enLang");
 
 /**
  * Create trade
@@ -8,6 +10,7 @@ const Projects = require("../models/Projects");
  */
 exports.create = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let name = req.body.name; // name
     const existingTrade = await Trades.findOne({
       name,
@@ -17,7 +20,10 @@ exports.create = async (req, res) => {
       // If we found existing trade in db
       return res
         .status(404)
-        .json({ success: false, message: "Trade already exists" });
+        .json({
+          success: false,
+          message: lang === "fr" ? fr.tradesMsg1 : en.tradesMsg1,
+        });
     }
 
     // Creating Trade

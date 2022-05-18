@@ -27,6 +27,9 @@ const pdf = require("pdf-creator-node");
 const path = require("path");
 const options = require("../utils/options");
 
+const fr = require("../utils/frLang");
+const en = require("../utils/enLang");
+
 //architect create
 exports.create = async (req, res) => {
   try {
@@ -69,6 +72,7 @@ exports.create = async (req, res) => {
 //architect create
 exports.signup = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     const subscription = req.body.subscription;
     delete req.body.subscription;
 
@@ -80,15 +84,17 @@ exports.signup = async (req, res) => {
 
     if (existingArchitect) {
       // If we found existing architect in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Architect already exists" });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+      });
     }
     if (existingAdmin) {
       // If we found existing admin in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Admin already exists" });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+      });
     }
     let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
     req.body.client_code = client_code;
@@ -115,7 +121,10 @@ exports.signup = async (req, res) => {
     await architect.save();
 
     // Done
-    res.json({ message: "Architect created successfully", architect }); //Success
+    res.json({
+      message: lang === "fr" ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
+      architect,
+    }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -125,6 +134,7 @@ exports.signup = async (req, res) => {
 
 exports.createOnSingup = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let email = req.body.email; //email
     let password = req.body.password; //password
 
@@ -133,15 +143,17 @@ exports.createOnSingup = async (req, res) => {
 
     if (existingArchitect) {
       // If we found existing architect in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Architect already exists" });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+      });
     }
     if (existingAdmin) {
       // If we found existing admin in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Admin already exists" });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+      });
     }
     let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
     req.body.client_code = client_code;
@@ -153,7 +165,7 @@ exports.createOnSingup = async (req, res) => {
     // Done
     res.json({
       success: true,
-      message: "Architect created successfully",
+      message: lang === "fr" ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
       architect,
     }); //Success
   } catch (err) {
@@ -245,13 +257,15 @@ exports.login = async (req, res) => {
  */
 exports.forgotPassword = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let email = req.body.email;
     let architect = await Architects.findOne({ email });
 
     if (!architect) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Architect not found" });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+      });
     }
 
     // Generating random password
@@ -268,19 +282,26 @@ exports.forgotPassword = async (req, res) => {
         await architect.save();
 
         // Done
-        res.json({ success: true, message: "Email sent successfully" });
+        res.json({
+          success: true,
+          message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+        });
       })
       .catch((err) => {
         // Error handling
         console.log("Error ----> ", err);
-        res
-          .status(500)
-          .json({ success: false, message: "Internal server error" });
+        res.status(500).json({
+          success: false,
+          message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+        });
       });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+    });
   }
 };
 /**
@@ -428,17 +449,20 @@ exports.update = async (req, res) => {
  */
 exports.updateByArchitect = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     if (req.body.oldPassword) {
       if (!req.body.newPassword)
-        return res
-          .status(401)
-          .json({ message: "New Password Can't be Empty!" });
+        return res.status(401).json({
+          message: lang === "fr" ? fr.ArchitectSignUp4 : en.ArchitectSignUp4,
+        });
       const isCorrect = bcrypt.compareSync(
         req.body.oldPassword,
         req.user.password
       ); // Check if old password is correct
       if (!isCorrect)
-        return res.status(401).json({ message: "Invalid Old Password" });
+        return res.status(401).json({
+          message: lang === "fr" ? fr.ArchitectSignUp5 : en.ArchitectSignUp5,
+        });
 
       req.body.password = bcrypt.hashSync(
         req.body.newPassword,
@@ -495,13 +519,17 @@ exports.updateByArchitect = async (req, res) => {
  */
 exports.delete = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     const architectId = req.params.architectId; // Getting architect id from URL parameter
     let architect = await Architects.findOne({ _id: architectId }); // Finding already existing Architect
     if (!architect) {
       // If we not found existing architect in db
       return res
         .status(401)
-        .json({ success: false, message: "Architect not found" });
+        .json({
+          success: false,
+          message: lang === "fr" ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+        });
     }
 
     architect = await Architects.findByIdAndDelete(architectId); // Deleting the architect

@@ -1,0 +1,18 @@
+module.exports = {
+  AuthLoginMsg1: "Utilisateur non trouvé!",
+  AuthLoginMsg2: "Mot de passe incorrect",
+  AuthLoginMsg3: "L'utilisateur s'est connecté avec succès",
+  AdminRegisterMsg1: "L'administrateur existe déjà",
+  AdminRegisterMsg2: "Administrateur créé avec succès",
+  AdminForgetPass1: "Administrateur introuvable",
+  AdminForgetPass2: "E-mail envoyé avec succès",
+  AdminForgetPass3: "Erreur Interne du Serveur",
+  ArchitectSignUp1: "L'architecte existe déjà",
+  ArchitectSignUp2: "Architecte créé avec succès",
+  ArchitectSignUp3: "Architecte introuvable",
+  ArchitectSignUp4: "Le nouveau mot de passe ne peut pas être vide !",
+  ArchitectSignUp5: "Ancien mot de passe invalide",
+  ContactMsg1: "Merci de rester en contact",
+  stakeholderTypeMsg1: "Le type de partie prenante existe déjà",
+  tradesMsg1: "Le commerce existe déjà",
+};

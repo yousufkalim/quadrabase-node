@@ -1,16 +1,23 @@
 const StakeholderTypes = require("../models/StakeholderTypes");
 const Stakeholders = require("../models/Stakeholders");
+const fr = require("../utils/frLang");
+const en = require("../utils/enLang");
 
 //unit create
 exports.create = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let text = req.body.text; //name
     const existingStakeholderType = await StakeholderTypes.findOne({ text }); // Finding already existing unit
     if (existingStakeholderType) {
       // If we found existing unit in db
       return res
         .status(404)
-        .json({ success: false, message: "Stakeholder Type already exists." });
+        .json({
+          success: false,
+          message:
+            lang === "fr" ? fr.stakeholderTypeMsg1 : en.stakeholderTypeMsg1,
+        });
     }
 
     // Creating unit
