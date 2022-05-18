@@ -101,6 +101,20 @@ exports.getAll = async (req, res) => {
   }
 };
 
+exports.getAllPrivate = async (req, res) => {
+  try {
+    let bookLibraries = await BookLibraries.find({ type: "private" }).populate(
+      "architect"
+    );
+
+    res.json({ success: true, bookLibraries }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 exports.getByFamily = async (req, res) => {
   try {
     let bookLibraries = await BookLibraries.aggregate([
