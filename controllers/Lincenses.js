@@ -174,18 +174,6 @@ exports.checkout = async (req, res) => {
     let lineItems = req.body.line_items;
     let invoice = "";
     if (metaData.type === "architectSignup") {
-      let email = metaData.email; //email
-
-      const existingArchitect = await Architects.findOne({ email }); // Finding already existing architect
-      const existingAdmin = await Admins.findOne({ email }); // Finding already existing architect
-
-      if (existingArchitect || existingAdmin) {
-        // If we found existing architect in db
-        return res
-          .status(404)
-          .json({ success: false, message: "User already exists" });
-      }
-
       invoice = await architectInvoice(req.body.invoiceData);
     } else if (metaData.type === "providerSignup") {
       let email = metaData.email; //email
@@ -244,17 +232,8 @@ exports.Webhook = async (req, res) => {
         delete metaData.subscriptionDuration;
         delete metaData.subscriptionProjects;
         delete metaData.type;
-
-        let password = metaData.password; //password
-        let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
-        metaData.client_code = client_code;
-        metaData.password = bcrypt.hashSync(
-          password,
-          parseInt(process.env.BCRYPT_SALT || 10)
-        );
-
-        // Creating architect
-        const architect = await Architects.create(metaData); // Adding architect in db
+        // finding architect
+        const architect = await Architects.findById(metaData.id); // Adding architect in db
 
         // assinging subscription
         const data = {

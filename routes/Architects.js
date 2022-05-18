@@ -43,6 +43,15 @@ router.post(
   Architects.signup
 );
 
+// create - architect Signup
+router.post(
+  "/createOnSingup",
+
+  validateArchitect,
+  isValidated,
+  Architects.createOnSingup
+);
+
 // create - BookLibrary
 router.post(
   "/BookLibraries/create",

@@ -123,6 +123,46 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.createOnSingup = async (req, res) => {
+  try {
+    let email = req.body.email; //email
+    let password = req.body.password; //password
+
+    const existingArchitect = await Architects.findOne({ email }); // Finding already existing architect
+    const existingAdmin = await Admins.findOne({ email }); // Finding already existing architect
+
+    if (existingArchitect) {
+      // If we found existing architect in db
+      return res
+        .status(404)
+        .json({ success: false, message: "Architect already exists" });
+    }
+    if (existingAdmin) {
+      // If we found existing admin in db
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin already exists" });
+    }
+    let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
+    req.body.client_code = client_code;
+    req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt));
+
+    // Creating architect
+    const architect = await Architects.create(req.body); // Adding architect in db
+
+    // Done
+    res.json({
+      success: true,
+      message: "Architect created successfully",
+      architect,
+    }); //Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 //BookLibrary create
 exports.createBookLibrary = async (req, res) => {
   try {
