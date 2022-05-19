@@ -90,12 +90,10 @@ exports.forgotPassword = async (req, res) => {
     let admin = await Admins.findOne({ email });
 
     if (!admin) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: lang === "fr" ? fr.AdminForgetPass1 : en.AdminForgetPass1,
-        });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.AdminForgetPass1 : en.AdminForgetPass1,
+      });
     }
 
     // Generating random password
@@ -119,12 +117,10 @@ exports.forgotPassword = async (req, res) => {
       .catch((err) => {
         // Error handling
         console.log("Error ----> ", err);
-        res
-          .status(500)
-          .json({
-            success: false,
-            message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
-          });
+        res.status(500).json({
+          success: false,
+          message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+        });
       });
   } catch (err) {
     // Error handling
@@ -211,6 +207,7 @@ exports.getById = async (req, res) => {
  */
 exports.update = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     const adminId = req.params.adminId; // Getting admin id from URL parameter
     if (req.file) {
       req.body.profile_pic = req.file.path;
@@ -224,7 +221,12 @@ exports.update = async (req, res) => {
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+      });
   }
 };
 
@@ -235,6 +237,7 @@ exports.update = async (req, res) => {
  */
 exports.delete = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     const adminId = req.params.adminId; // Getting admin id from URL parameter
     const user = await Admins.findByIdAndDelete(adminId); // Deleting the admin
     res.json({
@@ -246,6 +249,11 @@ exports.delete = async (req, res) => {
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+      });
   }
 };

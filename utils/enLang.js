@@ -14,4 +14,5 @@ module.exports = {
   ArchitectSignUp5: "Invalid Old Password",
   ContactMsg1: "Thank you for getting in touch",
   stakeholderTypeMsg1: "Stakeholder Type already exists",
+  tradesMsg1: "Trade already exists",
 };

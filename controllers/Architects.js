@@ -33,6 +33,7 @@ const en = require("../utils/enLang");
 //architect create
 exports.create = async (req, res) => {
   try {
+    let lang = req.headers.lang ? req.headers.lang : "fr";
     let email = req.body.email; //email
     let password = req.body.password; //password
 
@@ -43,13 +44,19 @@ exports.create = async (req, res) => {
       // If we found existing architect in db
       return res
         .status(404)
-        .json({ success: false, message: "L'architecte existe déjà" });
+        .json({
+          success: false,
+          message: lang === "fr" ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+        });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res
         .status(404)
-        .json({ success: false, message: "L'administrateur existe déjà" });
+        .json({
+          success: false,
+          message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        });
     }
     if (req.file) {
       req.body.profile_pic = req.file.path;
@@ -524,12 +531,10 @@ exports.delete = async (req, res) => {
     let architect = await Architects.findOne({ _id: architectId }); // Finding already existing Architect
     if (!architect) {
       // If we not found existing architect in db
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: lang === "fr" ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
-        });
+      return res.status(401).json({
+        success: false,
+        message: lang === "fr" ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+      });
     }
 
     architect = await Architects.findByIdAndDelete(architectId); // Deleting the architect
