@@ -176,7 +176,7 @@ exports.getByTypeName = async (req, res) => {
 
     let type = req.params.type.toUpperCase(); // Type from client
     const reqStakeholders = stakeholders.filter((item) => {
-      let itemType = item.type.text.toUpperCase();
+      let itemType = item?.type?.text?.toUpperCase();
       return itemType === type;
     }); /// Filter by type
     res.json({ success: true, stakeholders: reqStakeholders }); // Success
