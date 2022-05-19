@@ -188,7 +188,7 @@ exports.checkout = async (req, res) => {
       invoice = await providerInvoice(req.body.invoiceData);
     }
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      payment_method_types: [req.body.paymentMethod],
       line_items: lineItems,
       locale: "fr",
       mode: "payment",
