@@ -26,7 +26,7 @@ const architectsSchema = new mongoose.Schema(
     client_code: String,
     authorized: {
       type: String,
-      default: "Yes",
+      default: "No",
     },
     subscriptions: {
       type: mongoose.Schema.Types.ObjectId,
