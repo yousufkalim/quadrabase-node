@@ -103,9 +103,7 @@ exports.getAll = async (req, res) => {
 
 exports.getAllPrivate = async (req, res) => {
   try {
-    let bookLibraries = await BookLibraries.find({ type: "private" }).populate(
-      "architect"
-    );
+    let bookLibraries = await BookLibraries.find({ type: "private" }).populate("architect");
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
@@ -134,19 +132,6 @@ exports.getByFamily = async (req, res) => {
               as: "d",
               cond: {
                 $ne: ["$$d", null],
-              },
-            },
-          },
-        },
-      },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", ""],
               },
             },
           },
@@ -195,19 +180,6 @@ exports.getLevel2 = async (req, res) => {
               as: "d",
               cond: {
                 $ne: ["$$d", null],
-              },
-            },
-          },
-        },
-      },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", ""],
               },
             },
           },
@@ -321,19 +293,6 @@ exports.getLevel3 = async (req, res) => {
           },
         },
       },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", ""],
-              },
-            },
-          },
-        },
-      },
     ]);
 
     res.json({ success: true, works }); // Success
@@ -393,9 +352,7 @@ exports.getTwoLevels = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
-    const bookLibrary = await BookLibraries.findById(BookLibraryId).populate(
-      populateQuery
-    ); // Finding BookLibrary by id
+    const bookLibrary = await BookLibraries.findById(BookLibraryId).populate(populateQuery); // Finding BookLibrary by id
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
     // Error handling
@@ -499,19 +456,6 @@ exports.getByArchitect = async (req, res) => {
           },
         },
       },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", ""],
-              },
-            },
-          },
-        },
-      },
     ]);
 
     res.json({ success: true, bookLibrary }); // Success
@@ -530,13 +474,9 @@ exports.getByArchitect = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
-    const BookLibrary = await BookLibraries.findByIdAndUpdate(
-      BookLibraryId,
-      req.body,
-      {
-        new: true,
-      }
-    ); // Updating the BookLibrary
+    const BookLibrary = await BookLibraries.findByIdAndUpdate(BookLibraryId, req.body, {
+      new: true,
+    }); // Updating the BookLibrary
     res.json({
       success: true,
       message: "BookLibrary updated successfully",
@@ -605,10 +545,7 @@ exports.delete = async (req, res) => {
       work: { $in: tempWorks },
     }); // Deleting the WorkDetails
 
-    await Families.updateMany(
-      { _id: { $in: bookLibrary.families } },
-      { $pull: { book_libraries: bookLibrary._id } }
-    ); // Deleting from the Families
+    await Families.updateMany({ _id: { $in: bookLibrary.families } }, { $pull: { book_libraries: bookLibrary._id } }); // Deleting from the Families
     res.json({
       success: true,
       message: "BookLibrary deleted successfully",
