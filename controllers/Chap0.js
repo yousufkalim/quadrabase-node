@@ -7,17 +7,13 @@ exports.create = async (req, res) => {
     const existingChap = await Chap0.findOne({ title }); // Finding already existing Chap0
     if (existingChap) {
       // If we found existing Chap0 in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Chap already exists" });
+      return res.status(404).json({ success: false, message: "Chap already exists" });
     }
     if (req.body.family) {
       const existingFamily = await Chap0.findOne({ family: req.body.family }); // Family have to be unique
       if (existingFamily) {
         // If we found existing Chap0 in db
-        return res
-          .status(404)
-          .json({ success: false, message: "Family already in use" });
+        return res.status(404).json({ success: false, message: "Family already in use" });
       }
     }
 
@@ -40,7 +36,9 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const chap0 = await Chap0.find().sort([["createdAt", -1]]); // Finding all the Chap0 from db
+    const chap0 = await Chap0.find()
+      .populate("family")
+      .sort([["createdAt", -1]]); // Finding all the Chap0 from db
     res.json({ success: true, chap0 }); // Success
   } catch (err) {
     // Error handling
@@ -79,9 +77,7 @@ exports.update = async (req, res) => {
       const existingFamily = await Chap0.findOne({ family: req.body.family }); // Family have to be unique
       if (existingFamily) {
         // If we found existing Chap0 in db
-        return res
-          .status(404)
-          .json({ success: false, message: "Family already in use" });
+        return res.status(404).json({ success: false, message: "Family already in use" });
       }
     }
 

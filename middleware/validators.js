@@ -87,22 +87,16 @@ exports.validateUpdateArchitect = [
   // check("establishment", "Establishment is required.").notEmpty().trim(),
   // check("service", "Service is required.").notEmpty().trim(),
   check("password", "Password is not allowed.").isEmpty().trim(),
-  check("confirm_password", "Confirm Password is not allowed.")
-    .isEmpty()
-    .trim(),
+  check("confirm_password", "Confirm Password is not allowed.").isEmpty().trim(),
 ];
 
 // Lincese Validation
-exports.validateLincese = [
-  check("subscription", "Subscription is required.").notEmpty().trim(),
-];
+exports.validateLincese = [check("subscription", "Subscription is required.").notEmpty().trim()];
 
 // Subscription Create Validation
 exports.validateSubscription = [
   check("name", "Name is required.").notEmpty().trim(),
   check("type", "Type is required.").notEmpty().trim(),
-  check("duration", "Duration is required.").notEmpty().trim(),
-  check("price", "Price is required.").notEmpty().trim(),
 ];
 
 // Project Create Validation
@@ -115,24 +109,16 @@ exports.validateProjects = [
 ];
 
 // add work to project validation
-exports.validateAddWorkToProject = [
-  check("name", "Name is required.").notEmpty().trim(),
-];
+exports.validateAddWorkToProject = [check("name", "Name is required.").notEmpty().trim()];
 
 // Stakeholder Create Validation
-exports.validateStakeholder = [
-  check("name", "Name is required.").notEmpty().trim(),
-];
+exports.validateStakeholder = [check("name", "Name is required.").notEmpty().trim()];
 
 // ArchitectsChap0 Create Validation
-exports.validateArchitectsChap0 = [
-  check("title", "Title is required.").notEmpty().trim(),
-];
+exports.validateArchitectsChap0 = [check("title", "Title is required.").notEmpty().trim()];
 
 // Chap0 Create Validation
-exports.validateChap0 = [
-  check("title", "Title is required.").notEmpty().trim(),
-];
+exports.validateChap0 = [check("title", "Title is required.").notEmpty().trim()];
 exports.validateChap0Level3 = [
   check("title", "Title is required.").notEmpty().trim(),
   check("text", "Text is required.").notEmpty().trim(),
@@ -145,17 +131,13 @@ exports.validateVAT = [check("value", "Value is required.").notEmpty().trim()];
 exports.validateUnits = [check("name", "Name is required.").notEmpty().trim()];
 
 // Units Create Validation
-exports.validateTranches = [
-  check("name", "Name is required.").notEmpty().trim(),
-];
+exports.validateTranches = [check("name", "Name is required.").notEmpty().trim()];
 
 // Trades Create Validation
 exports.validateTrades = [check("name", "Name is required.").notEmpty().trim()];
 
 // Units Create Validation
-exports.validateStakeholderTypes = [
-  check("text", "Text is required.").notEmpty().trim(),
-];
+exports.validateStakeholderTypes = [check("text", "Text is required.").notEmpty().trim()];
 
 // CCTP Create Validation
 exports.validateCCTP = [
@@ -167,9 +149,7 @@ exports.validateCCTP = [
 exports.validateFamily = [check("name", "Name is required.").notEmpty().trim()];
 
 // BookLibraries Create Validation
-exports.validateBookLibrary = [
-  check("name", "Name is required.").notEmpty().trim(),
-];
+exports.validateBookLibrary = [check("name", "Name is required.").notEmpty().trim()];
 
 // Add Category in BookLibraries Create Validation
 exports.validateAddCategory = [
@@ -177,9 +157,7 @@ exports.validateAddCategory = [
   check("name", "Category Name is required.").notEmpty().trim(),
 ];
 // Add Category in BookLibraries Create Validation
-exports.validateEditCategory = [
-  check("name", "Category Name is required.").notEmpty().trim(),
-];
+exports.validateEditCategory = [check("name", "Category Name is required.").notEmpty().trim()];
 
 // Add Work in BookLibraries Create Validation
 exports.validateAddWork = [
@@ -187,24 +165,18 @@ exports.validateAddWork = [
   check("name", "Name is required.").notEmpty().trim(),
 ];
 // Add Work in BookLibraries Create Validation
-exports.validateEditWork = [
-  check("name", "workName is required.").notEmpty().trim(),
-];
+exports.validateEditWork = [check("name", "workName is required.").notEmpty().trim()];
 // Add WorkDetail in BookLibraries Create Validation
 exports.validateAddWorkDetail = [
   check("workId", "workId is required.").notEmpty().trim(),
   check("name", "Name is required.").notEmpty().trim(),
 ];
 // Edit WorkDetail in BookLibraries Create Validation
-exports.validateEditWorkDetail = [
-  check("name", "Work Detail is required.").notEmpty().trim(),
-];
+exports.validateEditWorkDetail = [check("name", "Work Detail is required.").notEmpty().trim()];
 
 // Forgot Password Validation
 
-exports.validateForgotPassword = [
-  check("email", "Email is required.").notEmpty().trim(),
-];
+exports.validateForgotPassword = [check("email", "Email is required.").notEmpty().trim()];
 exports.validateResetPassword = [
   check("password", "Password is required.")
     .notEmpty()
@@ -222,9 +194,7 @@ exports.validateResetPassword = [
         throw new Error("Password and Confirm Password must be same");
       }
     }),
-  check("resetPasswordToken", "Reset Password Token is required.")
-    .notEmpty()
-    .trim(),
+  check("resetPasswordToken", "Reset Password Token is required.").notEmpty().trim(),
 ];
 /*
 ======================

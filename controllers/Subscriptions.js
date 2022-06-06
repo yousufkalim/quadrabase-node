@@ -8,11 +8,10 @@ exports.create = async (req, res) => {
     const existingSubscription = await Subscriptions.findOne({ name }); // Finding already existing subscription
     if (existingSubscription) {
       // If we found existing subscription in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Subscription already exists" });
+      return res.status(404).json({ success: false, message: "Subscription already exists" });
     }
     // Creating subscription
+    console.log(req.body, "req.body");
     const subscription = await Subscriptions.create(req.body); // Adding subscription in db
 
     // Done
@@ -65,13 +64,9 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const subscriptionId = req.params.subscriptionId; // Getting subscription id from URL parameter
-    const subscription = await Subscriptions.findByIdAndUpdate(
-      subscriptionId,
-      req.body,
-      {
-        new: true,
-      }
-    ); // Updating the subscription
+    const subscription = await Subscriptions.findByIdAndUpdate(subscriptionId, req.body, {
+      new: true,
+    }); // Updating the subscription
     res.json({
       success: true,
       message: "Subscription updated successfully",
@@ -93,11 +88,7 @@ exports.delete = async (req, res) => {
   try {
     const subscriptionId = req.params.subscriptionId; // Getting subscription id from URL parameter
     const subscription = await Subscriptions.findByIdAndDelete(subscriptionId); // Deleting the subscription
-    await Architects.updateMany(
-      { _id: subscription.architects },
-      { $pull: { subscriptions: subscription._id } }
-    ); // Deleting from the Architects
-    res.json({ success: true,message: "Subscription deleted successfully" , subscription }); // Success
+    res.json({ success: true, message: "Subscription deleted successfully", subscription }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
