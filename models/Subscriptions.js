@@ -10,17 +10,18 @@ const subscriptionsSchema = new mongoose.Schema(
       type: String,
     },
     duration: {
-      type: Number, ////Number of months
+      months: Number, ////Number of months
+      price: Number,
     },
     credit: {
       type: Number, ////Number of credits with this subscription
     },
-    projects: {
-      type: Number, ////Number of projects with this subscription
-      default: 0
-    },
-    price: {
-      type: Number,
+    projectsPack: {
+      projects: {
+        type: Number,
+        default: 0,
+      }, ////Number of projects with this subscription
+      price: Number,
     },
   },
   {
