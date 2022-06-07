@@ -19,18 +19,12 @@ exports.create = async (req, res) => {
     }); // Finding already existing Projects
     if (existingProjects) {
       // If we found existing Projects in db
-      return res
-        .status(401)
-        .json({ success: false, message: "Project already exists" });
+      return res.status(401).json({ success: false, message: "Project already exists" });
     }
 
     const project = await Projects.create(req.body);
 
-    let architect = await Architects.findByIdAndUpdate(
-      req.body.architect,
-      { $push: { projects: project._id } },
-      { new: true }
-    );
+    let architect = await Architects.findByIdAndUpdate(req.body.architect, { $push: { projects: project._id } }, { new: true });
 
     if (project.market_type === "Trades") {
       // Creating Trade
@@ -95,7 +89,8 @@ exports.getByArchitect = async (req, res) => {
       architect: req.params.architectId,
     })
       .populate("vat")
-      .populate("prescriber"); // Finding all the Project from db
+      .populate("prescriber")
+      .populate("client"); // Finding all the Project from db
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
@@ -427,11 +422,7 @@ exports.update = async (req, res) => {
         level2: chap0Level2,
       });
 
-      await Architects.findByIdAndUpdate(
-        req.body.architect,
-        { $push: { chap0part2: architectsChap0._id } },
-        { new: true }
-      );
+      await Architects.findByIdAndUpdate(req.body.architect, { $push: { chap0part2: architectsChap0._id } }, { new: true });
       req.body.chap0part2 = {
         id: architectsChap0._id,
         status: "modified",
@@ -582,11 +573,7 @@ exports.delete = async (req, res) => {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
     const project = await Projects.findByIdAndDelete(projectId); // Deleting the project
 
-    let architect = await Architects.findByIdAndUpdate(
-      project.architect,
-      { $pull: { projects: projectId } },
-      { new: true }
-    );
+    let architect = await Architects.findByIdAndUpdate(project.architect, { $pull: { projects: projectId } }, { new: true });
 
     res.json({
       success: true,
@@ -604,11 +591,7 @@ exports.deleteWork = async (req, res) => {
   try {
     const projectId = req.params.projectId;
     const workId = req.body.workId;
-    await Projects.findByIdAndUpdate(
-      projectId,
-      { $pull: { works: { _id: workId } } },
-      { new: true }
-    );
+    await Projects.findByIdAndUpdate(projectId, { $pull: { works: { _id: workId } } }, { new: true });
     res.json({
       success: true,
       message: "Work deleted successfully",
@@ -637,11 +620,7 @@ exports.deleteWorkDetail = async (req, res) => {
     });
     project.save();
     if (workId) {
-      await Projects.findByIdAndUpdate(
-        projectId,
-        { $pull: { works: { _id: workId } } },
-        { new: true }
-      );
+      await Projects.findByIdAndUpdate(projectId, { $pull: { works: { _id: workId } } }, { new: true });
     }
 
     res.json({
@@ -676,11 +655,7 @@ exports.addWork = async (req, res) => {
       });
     }
 
-    const project = await Projects.findByIdAndUpdate(
-      req.params.projectId,
-      { $push: { works: req.body } },
-      { new: true }
-    );
+    const project = await Projects.findByIdAndUpdate(req.params.projectId, { $push: { works: req.body } }, { new: true });
     res.json({
       success: true,
       message: "Work added to project",
