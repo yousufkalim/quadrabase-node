@@ -20,12 +20,7 @@ exports.buy = async (req, res) => {
     const data = {
       subscription: subscription._id,
       start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
-      end_date: moment(
-        moment(new Date())
-          .add(subscription.duration, "months")
-          .add(1, "days")
-          .calendar()
-      ).format("YYYY/MM/DD"),
+      end_date: moment(moment(new Date()).add(subscription.duration, "months").add(1, "days").calendar()).format("YYYY/MM/DD"),
       credit: subscription.credit,
       projects: subscription.projects,
       architect: req.params.architectId,
@@ -33,11 +28,7 @@ exports.buy = async (req, res) => {
 
     const license = await Licenses.create(data);
 
-    await Architects.findByIdAndUpdate(
-      req.params.architectId,
-      { $push: { myLicenses: license._id } },
-      { new: true }
-    );
+    await Architects.findByIdAndUpdate(req.params.architectId, { $push: { myLicenses: license._id } }, { new: true });
 
     res.json({ success: true, message: "Success!", license });
   } catch (err) {
@@ -70,9 +61,7 @@ exports.renew = async (req, res) => {
     const subscription = await Subscriptions.findById(req.body.subscription);
 
     const license = await Licenses.findById(req.params.licenseId);
-    license.end_date = moment(
-      moment(license.end_date).add(subscription.duration, "months").calendar()
-    ).format("YYYY/MM/DD");
+    license.end_date = moment(moment(license.end_date).add(subscription.duration, "months").calendar()).format("YYYY/MM/DD");
     await license.save();
 
     res.json({ success: true, message: "Success!", license });
@@ -129,9 +118,7 @@ exports.assign = async (req, res) => {
         email: req.body.email,
       });
       if (!architect) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Architect Not Found!" });
+        return res.status(404).json({ success: false, message: "Architect Not Found!" });
       }
       const license = await Licenses.findByIdAndUpdate(
         req.params.licenseId,
@@ -180,9 +167,7 @@ exports.checkout = async (req, res) => {
       const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
       if (existingProvider) {
         // If we found existing provider in db
-        return res
-          .status(400)
-          .json({ success: false, message: "Provider already exists" });
+        return res.status(400).json({ success: false, message: "Provider already exists" });
       }
 
       invoice = await providerInvoice(req.body.invoiceData);
@@ -192,9 +177,7 @@ exports.checkout = async (req, res) => {
       line_items: lineItems,
       locale: "fr",
       mode: "payment",
-      success_url: invoice
-        ? `${process.env.CLIENT_URL}/auth/login`
-        : process.env.STRIPE_RETURN_URL,
+      success_url: invoice ? `${process.env.CLIENT_URL}/auth/login` : process.env.STRIPE_RETURN_URL,
       cancel_url: process.env.STRIPE_REJECT_URL,
       metadata: metaData,
     });
@@ -238,9 +221,7 @@ exports.Webhook = async (req, res) => {
         // assinging subscription
         const data = {
           start_date: moment(new Date()).format("YYYY/MM/DD"),
-          end_date: moment(
-            moment(new Date()).add(subscription.duration, "months").calendar()
-          ).format("YYYY/MM/DD"),
+          end_date: moment(moment(new Date()).add(subscription.duration, "months").calendar()).format("YYYY/MM/DD"),
           projects: subscription.projects,
           assigned_to: architect._id,
         };
@@ -262,49 +243,34 @@ exports.Webhook = async (req, res) => {
         // Creating provider
         await Providers.create(metaData); // Adding provider in db
       } else if (metaData.type === "buySubscription") {
-        const subscription = await Subscriptions.findById(
-          metaData.subscription
-        );
+        const subscription = await Subscriptions.findById(metaData.subscription);
 
         const data = {
           subscription: subscription._id,
           start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
-          end_date: moment(
-            moment(new Date())
-              .add(subscription.duration, "months")
-              .add(1, "days")
-              .calendar()
-          ).format("YYYY/MM/DD"),
+          end_date: moment(moment(new Date()).add(subscription.duration.months, "months").add(1, "days").calendar()).format(
+            "YYYY/MM/DD"
+          ),
           credit: subscription.credit,
-          projects: subscription.projects,
+          projects: subscription.projectsPack.projects,
           architect: metaData.architectId,
         };
         const license = await Licenses.create(data);
 
-        await Architects.findByIdAndUpdate(
-          metaData.architectId,
-          { $push: { myLicenses: license._id } },
-          { new: true }
-        );
+        await Architects.findByIdAndUpdate(metaData.architectId, { $push: { myLicenses: license._id } }, { new: true });
       } else if (metaData.type === "buyProjects") {
-        const subscription = await Subscriptions.findById(
-          metaData.subscription
-        );
+        const subscription = await Subscriptions.findById(metaData.subscription);
 
         const license = await Licenses.findById(metaData.licenseId);
-        license.projects = license.projects + subscription.projects;
+        license.projects = license.projects + subscription.projectsPack.projects;
 
         await license.save();
       } else if (metaData.type === "renew") {
-        const subscription = await Subscriptions.findById(
-          metaData.subscription
-        );
+        const subscription = await Subscriptions.findById(metaData.subscription);
         const license = await Licenses.findById(metaData.licenseId);
-        license.end_date = moment(
-          moment(license.end_date)
-            .add(subscription.duration, "months")
-            .calendar()
-        ).format("YYYY/MM/DD");
+        license.end_date = moment(moment(license.end_date).add(subscription.duration.months, "months").calendar()).format(
+          "YYYY/MM/DD"
+        );
         await license.save();
       }
 
@@ -317,10 +283,7 @@ exports.Webhook = async (req, res) => {
 };
 
 const architectInvoice = async (data) => {
-  const html = fs.readFileSync(
-    path.join(__dirname, "../templates/invoice.html"),
-    "utf-8"
-  );
+  const html = fs.readFileSync(path.join(__dirname, "../templates/invoice.html"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const invoice = await Invoice.find();
@@ -384,10 +347,7 @@ const architectInvoice = async (data) => {
 };
 
 const providerInvoice = async (data) => {
-  const html = fs.readFileSync(
-    path.join(__dirname, "../templates/providerInvoice.html"),
-    "utf-8"
-  );
+  const html = fs.readFileSync(path.join(__dirname, "../templates/providerInvoice.html"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const invoice = await Invoice.find();
