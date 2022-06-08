@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 // Schema
 const providersSchema = new mongoose.Schema(
   {
+    firstname: { type: String, required: true },
     name: { type: String, required: true },
     email: {
       type: String,
