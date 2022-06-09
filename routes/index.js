@@ -30,6 +30,8 @@ router.use("/Trades", require("./Trades")); // All the Trades routes
 router.use("/StudyMaterials", require("./StudyMaterials")); // All the StudyMaterials routes
 router.use("/Contact", require("./Contact")); // Contact routes
 router.use("/Reports", require("./Reports")); // Reports routes
+router.use("/Dashboard", require("./Dashboard")); // Contact routes
+router.use("/Vists", require("./visits")); // Contact routes
 
 // Export
 module.exports = router;

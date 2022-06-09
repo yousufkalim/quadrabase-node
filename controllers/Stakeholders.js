@@ -11,9 +11,7 @@ exports.create = async (req, res) => {
     }); // Finding already existing stakeholder
     if (existingStakeholder) {
       // If we found existing stakeholder in db
-      return res
-        .status(401)
-        .json({ success: false, message: "stakeholder already exists" });
+      return res.status(401).json({ success: false, message: "stakeholder already exists" });
     }
 
     await Stakeholders.create(req.body); //stakeholder create
@@ -57,25 +55,17 @@ exports.createByArchitect = async (req, res) => {
       _id: req.params.architectId,
     }).populate("stakeholders");
 
-    const existingStakeholder = architect.stakeholders.find(
-      (item) => item.name == req.body.name
-    );
+    const existingStakeholder = architect.stakeholders.find((item) => item.email == req.body.email);
 
     if (existingStakeholder) {
       // If we found existing stakeholder in db
-      return res
-        .status(401)
-        .json({ success: false, message: "stakeholder already exists" });
+      return res.status(401).json({ success: false, message: "stakeholder already exists" });
     }
 
     req.body.architect = req.params.architectId;
     const stakeholder = await Stakeholders.create(req.body);
 
-    await Architects.findByIdAndUpdate(
-      req.params.architectId,
-      { $push: { stakeholders: stakeholder._id } },
-      { new: true }
-    );
+    await Architects.findByIdAndUpdate(req.params.architectId, { $push: { stakeholders: stakeholder._id } }, { new: true });
 
     res.json({
       message: "Stakeholder created successfully",
@@ -95,9 +85,7 @@ exports.createByArchitect = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const stakeholders = await Stakeholders.find({ architect: req.userId })
-      .populate("type")
-      .sort({ ranking: 1 }); // Finding all the Stakeholders from db
+    const stakeholders = await Stakeholders.find({ architect: req.userId }).populate("type").sort({ ranking: 1 }); // Finding all the Stakeholders from db
     res.json({ success: true, stakeholders }); // Success
   } catch (err) {
     // Error handling
@@ -151,9 +139,7 @@ exports.getByType = async (req, res) => {
 exports.getByArchitect = async (req, res) => {
   try {
     const architectId = req.params.architectId; // Getting stakeholder id from URL parameter
-    const architect = await Architects.findById(architectId).populate(
-      "stakeholders"
-    ); // Finding stakeholder by id
+    const architect = await Architects.findById(architectId).populate("stakeholders"); // Finding stakeholder by id
     res.json({ success: true, stakeholders: architect.stakeholders }); // Success
   } catch (err) {
     // Error handling
@@ -170,9 +156,7 @@ exports.getByArchitect = async (req, res) => {
 
 exports.getByTypeName = async (req, res) => {
   try {
-    const stakeholders = await Stakeholders.find({ architect: req.userId })
-      .populate("type")
-      .sort({ ranking: 1 }); // All stakeholder
+    const stakeholders = await Stakeholders.find({ architect: req.userId }).populate("type").sort({ ranking: 1 }); // All stakeholder
 
     let type = req.params.type.toUpperCase(); // Type from client
     const reqStakeholders = stakeholders.filter((item) => {
@@ -196,13 +180,9 @@ exports.update = async (req, res) => {
   try {
     const stakeholderID = req.params.stakeholderID; // Getting stakeholderID from URL parameter
 
-    const stakeholder = await Stakeholders.findByIdAndUpdate(
-      stakeholderID,
-      req.body,
-      {
-        new: true,
-      }
-    ); // Updating the stakeholders
+    const stakeholder = await Stakeholders.findByIdAndUpdate(stakeholderID, req.body, {
+      new: true,
+    }); // Updating the stakeholders
     res.json({
       success: true,
       message: "Stakeholder updated successfully",
@@ -245,19 +225,13 @@ exports.deleteByArchitect = async (req, res) => {
     });
     if (inUseStakholder) {
       // If we found existing stakeholder in db
-      return res
-        .status(401)
-        .json({ success: false, message: "Stakeholder in use of a project" });
+      return res.status(401).json({ success: false, message: "Stakeholder in use of a project" });
     }
 
     await Stakeholders.findByIdAndDelete(stakeholderID); // Deleting the stakeholder
 
     const architectId = req.params.architectId; // Getting architectId from URL parameter
-    await Architects.findByIdAndUpdate(
-      architectId,
-      { $pull: { stakeholders: stakeholderID } },
-      { new: true }
-    );
+    await Architects.findByIdAndUpdate(architectId, { $pull: { stakeholders: stakeholderID } }, { new: true });
 
     res.json({
       success: true,
