@@ -9,7 +9,13 @@ const stakeholdersSchema = new mongoose.Schema(
       // unique: true,
       // lowercase: true,
     },
-    name: {
+    establishment: {
+      type: String,
+    },
+    firstname: {
+      type: String,
+    },
+    lastname: {
       type: String,
     },
     ranking: {
@@ -34,6 +40,9 @@ const stakeholdersSchema = new mongoose.Schema(
     },
     zipcode: {
       type: Number,
+    },
+    po_box: {
+      type: String,
     },
     city: {
       type: String,
