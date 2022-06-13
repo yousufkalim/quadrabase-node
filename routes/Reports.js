@@ -6,6 +6,7 @@ router.post("/simple_estimation", Reports.simpleEstimation);
 router.post("/tt_estimation", Reports.ttEstimation);
 router.post("/bpu", Reports.BPU);
 router.post("/dpgf", Reports.DPGF);
+router.post("/cctp", Reports.CCTP);
 
 // Export
 module.exports = router;
