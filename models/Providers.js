@@ -34,7 +34,7 @@ const providersSchema = new mongoose.Schema(
       type: String,
     },
     zipcode: {
-      type: Number,
+      type: String,
     },
     logo: {
       type: String,
@@ -67,7 +67,7 @@ const providersSchema = new mongoose.Schema(
     },
     authorized: {
       type: String,
-      default: "Yes",
+      default: "No",
     },
   },
   {
