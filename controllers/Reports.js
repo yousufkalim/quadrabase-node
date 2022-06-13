@@ -3,7 +3,7 @@ const moment = require("moment");
 const fs = require("fs");
 const pdf = require("pdf-creator-node");
 const path = require("path");
-const options = require("../utils/options");
+const options = require("../utils/options_rg");
 
 exports.simpleEstimation = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr, footerKeysArr, footerValuesArr } = req.body;
