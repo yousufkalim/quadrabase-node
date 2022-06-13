@@ -43,7 +43,6 @@ exports.simpleEstimation = async (req, res) => {
   indexArr(body.footerArr);
 
   const document = {
-    // data: data,
     data: body,
     html: html,
     path: `./uploads/reports/${filename}`,
@@ -84,7 +83,6 @@ exports.ttEstimation = async (req, res) => {
   indexArr(body.bodyValuesArr);
 
   const document = {
-    // data: data,
     data: body,
     html: html,
     path: `./uploads/reports/${filename}`,
@@ -131,7 +129,6 @@ exports.BPU = async (req, res) => {
   console.log(body);
 
   const document = {
-    // data: data,
     data: body,
     html: html,
     path: `./uploads/reports/${filename}`,
@@ -172,7 +169,40 @@ exports.DPGF = async (req, res) => {
   indexArr(body.bodyValuesArr);
 
   const document = {
-    // data: data,
+    data: body,
+    html: html,
+    path: `./uploads/reports/${filename}`,
+    type: "",
+  };
+
+  await pdf
+    .create(document, options)
+    .then((res) => {
+      console.log(res, "res");
+    })
+    .catch((error) => {
+      console.log(error, "error");
+    });
+  const filepath = `${process.env.BASE_URL}/uploads/reports/${filename}`;
+  res.status(200).json({
+    path: filepath,
+  });
+};
+
+exports.CCTP = async (req, res) => {
+  const { headerArr, bodyValuesArr } = req.body;
+
+  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_cctp.html"), "utf-8");
+  const filename = Math.random() + "_doc" + ".pdf";
+
+  const body = {
+    headerArr,
+    bodyValuesArr,
+  };
+
+  indexArr(body.headerArr);
+
+  const document = {
     data: body,
     html: html,
     path: `./uploads/reports/${filename}`,
