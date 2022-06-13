@@ -57,10 +57,7 @@ exports.login = async (req, res) => {
       });
     }
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
-    if (!isCorrect)
-      return res
-        .status(404)
-        .json({ message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2 });
+    if (!isCorrect) return res.status(404).json({ message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2 });
     const token = JWT.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
@@ -103,10 +100,7 @@ exports.forgotPassword = async (req, res) => {
     sendEmail(email, randomPassword)
       .then(async () => {
         // If email is sent then we have to update the password in db
-        admin.password = await bcrypt.hash(
-          randomPassword,
-          parseInt(bcryptSalt)
-        );
+        admin.password = await bcrypt.hash(randomPassword, parseInt(bcryptSalt));
         await admin.save();
         // Done
         res.json({
@@ -140,15 +134,11 @@ exports.resetPassword = async (req, res) => {
     let user = await Admins.findOne({ resetPasswordToken }); // Finding already existing admin
     if (!user) {
       // If we not found existing user in db
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid Token!" });
+      return res.status(401).json({ success: false, message: "Invalid Token!" });
     }
     let isExpired = Number(user.restPasswordExpires);
     if (isExpired < Date.now()) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Token Expired!" });
+      return res.status(401).json({ success: false, message: "Token Expired!" });
     }
     password = bcrypt.hashSync(password, parseInt(bcryptSalt));
     user = await Admins.findOneAndUpdate(
@@ -221,12 +211,10 @@ exports.update = async (req, res) => {
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
-      });
+    res.status(500).json({
+      success: false,
+      message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+    });
   }
 };
 
@@ -249,11 +237,9 @@ exports.delete = async (req, res) => {
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
-      });
+    res.status(500).json({
+      success: false,
+      message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+    });
   }
 };
