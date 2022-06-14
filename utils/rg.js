@@ -27,6 +27,8 @@ const devSizes = {
     text: "60px",
     text_main: "400px",
   },
+  f12: "12px",
+  f14: "14px",
 };
 
 const prodSizes = {
@@ -46,6 +48,8 @@ const prodSizes = {
     text: "60px",
     text_main: "480px",
   },
+  f12: "10px",
+  f14: "12px",
 };
 
 module.exports = {
