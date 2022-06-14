@@ -23,6 +23,9 @@ const subscriptionsSchema = new mongoose.Schema(
       }, ////Number of projects with this subscription
       price: Number,
     },
+    code: {
+      type: String,
+    },
   },
   {
     timestamps: true,

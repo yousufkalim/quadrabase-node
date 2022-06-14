@@ -48,10 +48,7 @@ exports.login = async (req, res) => {
     }
 
     const isCorrect = bcrypt.compareSync(password, architect.password); // Check if architect password is correct
-    if (!isCorrect)
-      return res
-        .status(401)
-        .json({ message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2 });
+    if (!isCorrect) return res.status(401).json({ message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2 });
     const token = JWT.sign({ email: architect.email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
@@ -59,7 +56,7 @@ exports.login = async (req, res) => {
     // Done
     res.json({
       success: true,
-      message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2,
+      message: lang === "fr" ? fr.AuthLoginMsg3 : en.AuthLoginMsg3,
       result,
     }); //Success
   } catch (err) {
