@@ -1,5 +1,4 @@
 const Subscriptions = require("../models/Subscriptions");
-const Architects = require("../models/Architects");
 
 //subscription create
 exports.create = async (req, res) => {
@@ -11,7 +10,7 @@ exports.create = async (req, res) => {
       return res.status(404).json({ success: false, message: "Subscription already exists" });
     }
     // Creating subscription
-    console.log(req.body, "req.body");
+    req.body.code = Math.floor(Math.random() * 90000) + 10000;
     const subscription = await Subscriptions.create(req.body); // Adding subscription in db
 
     // Done

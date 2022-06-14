@@ -106,8 +106,8 @@ const projectsSchema = new mongoose.Schema(
     works: [workSchema],
     status: {
       type: String,
-      enum: ["ongoing", "completed", "archived"],
-      default: "ongoing",
+      enum: ["en cours", "complété", "archivé"],
+      default: "en cours",
     },
     date: {
       type: Date,
