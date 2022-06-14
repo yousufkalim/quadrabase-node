@@ -3,12 +3,12 @@ const moment = require("moment");
 const fs = require("fs");
 const pdf = require("pdf-creator-node");
 const path = require("path");
-const options = require("../utils/options_rg");
+const rgConfig = require("../utils/rg");
 
 exports.simpleEstimation = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr, footerKeysArr, footerValuesArr } = req.body;
 
-  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_simple_estimation.html"), "utf-8");
+  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_simple_estimation.hbs"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const footerArr = [];
@@ -29,6 +29,7 @@ exports.simpleEstimation = async (req, res) => {
     bodyKeysArr,
     bodyValuesArr,
     footerArr,
+    sizes: rgConfig.sizes,
   };
 
   indexArr(body.headerArr);
@@ -50,7 +51,7 @@ exports.simpleEstimation = async (req, res) => {
   };
 
   await pdf
-    .create(document, options)
+    .create(document, rgConfig.options)
     .then((res) => {
       console.log(res, "res");
     })
@@ -66,13 +67,14 @@ exports.simpleEstimation = async (req, res) => {
 exports.ttEstimation = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr } = req.body;
 
-  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_tt_estimation.html"), "utf-8");
+  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_tt_estimation.hbs"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const body = {
     headerArr,
     bodyKeysArr,
     bodyValuesArr,
+    sizes: rgConfig.sizes,
   };
 
   indexArr(body.headerArr);
@@ -90,7 +92,7 @@ exports.ttEstimation = async (req, res) => {
   };
 
   await pdf
-    .create(document, options)
+    .create(document, rgConfig.options)
     .then((res) => {
       console.log(res, "res");
     })
@@ -106,13 +108,14 @@ exports.ttEstimation = async (req, res) => {
 exports.BPU = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr } = req.body;
 
-  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_bpu.html"), "utf-8");
+  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_bpu.hbs"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const body = {
     headerArr,
     bodyKeysArr,
     bodyValuesArr,
+    sizes: rgConfig.sizes,
   };
 
   indexArr(body.headerArr);
@@ -136,7 +139,7 @@ exports.BPU = async (req, res) => {
   };
 
   await pdf
-    .create(document, options)
+    .create(document, rgConfig.options)
     .then((res) => {
       console.log(res, "res");
     })
@@ -152,13 +155,14 @@ exports.BPU = async (req, res) => {
 exports.DPGF = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr } = req.body;
 
-  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_dpgf.html"), "utf-8");
+  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_dpgf.hbs"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const body = {
     headerArr,
     bodyKeysArr,
     bodyValuesArr,
+    sizes: rgConfig.sizes,
   };
 
   indexArr(body.headerArr);
@@ -176,7 +180,7 @@ exports.DPGF = async (req, res) => {
   };
 
   await pdf
-    .create(document, options)
+    .create(document, rgConfig.options)
     .then((res) => {
       console.log(res, "res");
     })
@@ -192,12 +196,13 @@ exports.DPGF = async (req, res) => {
 exports.CCTP = async (req, res) => {
   const { headerArr, bodyValuesArr } = req.body;
 
-  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_cctp.html"), "utf-8");
+  const html = fs.readFileSync(path.join(__dirname, "../templates/rg_cctp.hbs"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const body = {
     headerArr,
     bodyValuesArr,
+    sizes: rgConfig.sizes,
   };
 
   indexArr(body.headerArr);
@@ -210,7 +215,7 @@ exports.CCTP = async (req, res) => {
   };
 
   await pdf
-    .create(document, options)
+    .create(document, rgConfig.options)
     .then((res) => {
       console.log(res, "res");
     })
