@@ -19,7 +19,7 @@
         font-weight: 600;
         padding: 0 20px;
         border: 1px solid black;
-        width: 160px;
+        width: {{this.sizes.3s.text}}
       }
 
       .header_center_text {
@@ -27,35 +27,12 @@
         font-weight: 600;
         padding: 0 20px;
         border: 1px solid black;
-        width: 460px;
-      }
-
-      .body_header_text {
-        font-size: 14px;
-        font-weight: 500;
-        border: 1px solid black;
-        width: 60px;
-      }
-
-      .body_header_name_text {
-        font-size: 14px;
-        font-weight: 500;
-        border: 1px solid black;
-        width: 480px;
+        width: {{this.sizes.3s.text_main}}
       }
 
       .body_text {
         font-size: 12px;
         font-weight: normal;
-        border: 1px solid black;
-        width: 60px;
-      }
-
-      .body_name_text {
-        font-size: 12px;
-        font-weight: normal;
-        border: 1px solid black;
-        width: 480px;
       }
     </style>
     <table style="margin-bottom: 20px;">
@@ -72,21 +49,10 @@
     <table>
       <tr>
         <td align="left" valign="top">
-          <tr style="background-color: #c0c0c0;">
-            {{#each this.bodyKeysArr}}
-            <td align="center"class={{#ifCond this.i '!=' 1}} body_header_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_header_name_text {{/ifCond}}>{{this.v}}</td>
-            {{/each}}
-          </tr>
+          {{#each this.bodyValuesArr}}
+          {{{this}}}
+          {{/each}}
         </td>
-        {{#each this.bodyValuesArr}}
-          <td align="left" valign="top">
-            <tr style="background-color: #FFFFFF;">
-              {{#each this.v}}
-              <td align="center" class={{#ifCond this.i '!=' 1}} body_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_name_text {{/ifCond}}>{{this.v}}</td>
-              {{/each}}
-            </tr>
-          </td>
-        {{/each}}
       </tr>
     <table>
   </body>
