@@ -129,8 +129,6 @@ exports.BPU = async (req, res) => {
   }
   indexArr(body.bodyValuesArr);
 
-  console.log(body);
-
   const document = {
     data: body,
     html: html,

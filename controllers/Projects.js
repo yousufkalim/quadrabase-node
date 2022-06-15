@@ -110,6 +110,7 @@ exports.getById = async (req, res) => {
       .populate("vat")
       .populate("chap0part2.id")
       .populate("prescriber")
+      .populate("stakeholders")
       .populate("client"); // Finding project by id
     res.json({ success: true, project }); // Success
   } catch (err) {
