@@ -228,6 +228,7 @@ exports.Webhook = async (req, res) => {
 
         const license = await Licenses.create(data);
         architect.subscriptions = license._id;
+        architect.authorized = "Yes";
         await architect.save();
       } else if (metaData.type === "providerSignup") {
         const subscription = {
