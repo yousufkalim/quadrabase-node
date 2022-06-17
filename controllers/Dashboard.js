@@ -17,14 +17,9 @@ const Projects = require("../models/Projects");
  */
 exports.getQuadrabaseUsers = async (req, res) => {
   try {
-    let sum = 0;
     const admin = await Admins.find().count(); //get all admins
-    const architect = await Architects.find().count(); //get all arhitects
-    const providers = await Providers.find().count(); //get all arhitects
 
-    sum = admin + architect + providers;
-
-    res.status(200).json({ success: true, numberofusers: sum });
+    res.status(200).json({ success: true, numberofusers: admin });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -37,11 +32,8 @@ exports.NumberofRegistered = async (req, res) => {
     let sum = 0;
 
     const architect = await Architects.find().count(); //get all arhitects
-    const providers = await Providers.find().count(); //get all Providers
 
-    sum = architect + providers;
-
-    res.status(200).json({ success: true, NumberofRegistered: sum });
+    res.status(200).json({ success: true, NumberofRegistered: architect });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -53,13 +45,14 @@ exports.numberofsubscriber = async (req, res) => {
   try {
     let sum = 0;
 
-    const architect = await Architects.find().count(); //get all arhitects
+    // const architect = await Architects.find().count(); //get all arhitects
     const providers = await Providers.find().count(); //get all arhitects
-    const subscriptions = await Subscriptions.find().count(); //get all Subscriptions
+    // const subscriptions = await Subscriptions.find().count(); //get all Subscriptions
 
-    sum = architect + providers + subscriptions;
+    // sum = architect + providers + subscriptions;
 
-    res.status(200).json({ success: true, numberofsubscriber: sum });
+    res.status(200).json({ success: true, numberofsubscriber: providers });
+    // res.status(200).json({ success: true, numberofsubscriber: sum });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
