@@ -8,7 +8,7 @@ module.exports = {
   AdminForgetPass2: "E-mail envoyé avec succès",
   AdminForgetPass3: "Erreur Interne du Serveur",
   ArchitectSignUp1: "L'architecte existe déjà",
-  ArchitectSignUp2: "Spécificateur créé avec succès",
+  ArchitectSignUp2: "Prescripteur créé avec succès",
   ArchitectSignUp3: "Architecte introuvable",
   ArchitectSignUp4: "Le nouveau mot de passe ne peut pas être vide !",
   ArchitectSignUp5: "Ancien mot de passe invalide",
