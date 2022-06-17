@@ -8,23 +8,17 @@ const subscriptionsSchema = new mongoose.Schema(
     },
     type: {
       type: String,
+      enum: ["Prescribers", "Manufacturers"],
     },
     duration: {
-      months: Number, ////Number of months
-      price: Number,
+      type: Number, ////Number of months
     },
-    credit: {
+    price: {
       type: Number, ////Number of credits with this subscription
     },
-    projectsPack: {
-      projects: {
-        type: Number,
-        default: 0,
-      }, ////Number of projects with this subscription
-      price: Number,
-    },
-    code: {
-      type: String,
+    reference: {
+      title: String,
+      code: String,
     },
   },
   {

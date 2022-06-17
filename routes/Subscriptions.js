@@ -1,9 +1,6 @@
 const router = require("express").Router();
 const Subscriptions = require("../controllers/Subscriptions");
-const {
-  validateSubscription,
-  isValidated,
-} = require("../middleware/validators");
+const { validateSubscription, isValidated } = require("../middleware/validators");
 const Auth = require("../middleware/auth");
 const ArchitectsModel = require("../models/Architects");
 
@@ -26,21 +23,15 @@ router.post(
 );
 
 // Read
-router.get("/", Auth(), Subscriptions.getAll); // Get all Subscriptions at once
+router.get("/", Subscriptions.getAll); // Get all Subscriptions at once
 router.get("/getAll/architect", Subscriptions.getAll); // Get all Subscriptions at once
-router.get("/:subscriptionId", Auth(), Subscriptions.getById); // Get one subscription by it's id
+router.get("/:subscriptionId", Subscriptions.getById); // Get one subscription by it's id
 
 // Update
-router.put(
-  "/:subscriptionId",
-  validateSubscription,
-  isValidated,
-  Auth(),
-  Subscriptions.update
-); // Update a specific subscription by it's id
+router.put("/:subscriptionId", validateSubscription, isValidated, Subscriptions.update); // Update a specific subscription by it's id
 
 // Delete
-router.delete("/:subscriptionId", Auth(), Subscriptions.delete); // delete a specific subscription by it's id
+router.delete("/:subscriptionId", Subscriptions.delete); // delete a specific subscription by it's id
 
 // Export
 module.exports = router;
