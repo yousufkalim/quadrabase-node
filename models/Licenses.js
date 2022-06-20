@@ -13,10 +13,6 @@ const LicensesSchema = new mongoose.Schema(
     end_date: {
       type: Date,
     },
-    credit: {
-      type: Number,
-      default: 0,
-    },
     projects: {
       type: Number,
       default: 0,
