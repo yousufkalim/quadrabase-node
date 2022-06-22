@@ -8,9 +8,7 @@ exports.create = async (req, res) => {
     const existingfamily = await Families.findOne({ name }); // Finding already existing family
     if (existingfamily) {
       // If we found existing family in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Family already exists" });
+      return res.status(404).json({ success: false, message: "Family already exists" });
     }
 
     // Creating family
@@ -33,6 +31,22 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   try {
     const families = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
+    res.json({ success: true, families }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+/**
+ * Get all Families
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getAllByArchitect = async (req, res) => {
+  try {
+    const families = await Families.find({ status: "En ligne" }).sort([["createdAt", -1]]); // Finding all the Families from db
     res.json({ success: true, families }); // Success
   } catch (err) {
     // Error handling
@@ -98,10 +112,7 @@ exports.delete = async (req, res) => {
       return res.status(404).json({ message: "Family  not found" });
     } // double check if family id is invalid
     const family = await Families.findByIdAndDelete(familyId); // Deleting the family
-    await BookLibraries.updateMany(
-      { _id: family.book_libraries },
-      { $pull: { families: family._id } }
-    ); // Deleting from the Families
+    await BookLibraries.updateMany({ _id: family.book_libraries }, { $pull: { families: family._id } }); // Deleting from the Families
     const families = await Families.find().sort([["createdAt", -1]]); // Finding all the Families from db
 
     res.json({

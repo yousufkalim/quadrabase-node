@@ -12,6 +12,11 @@ const familiesSchema = new mongoose.Schema(
       default: 0,
     },
 
+    status: {
+      type: String,
+      enum: ["En ligne", "En construction"],
+      default: "En construction",
+    },
     book_libraries: [
       {
         type: mongoose.Schema.Types.ObjectId,
