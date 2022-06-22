@@ -6,7 +6,7 @@ const architectsSchema = new mongoose.Schema(
     address_1: String,
     address_2: String,
     po_box: String,
-    postal_code: Number,
+    postal_code: String,
     city: String,
     phone: String,
     first_name: String,

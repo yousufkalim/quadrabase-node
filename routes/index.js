@@ -32,6 +32,7 @@ router.use("/Contact", require("./Contact")); // Contact routes
 router.use("/Reports", require("./Reports")); // Reports routes
 router.use("/Dashboard", require("./Dashboard")); // Contact routes
 router.use("/Vists", require("./visits")); // Contact routes
+router.use("/Folders", require("./Folders")); // Contact routes
 
 // Export
 module.exports = router;

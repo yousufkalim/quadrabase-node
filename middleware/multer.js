@@ -10,14 +10,10 @@ const storage = (field) =>
       try {
         stat = fs.statSync(dest);
       } catch (err) {
-        fs.mkdirSync(dest, {recursive: true});
+        fs.mkdirSync(dest, { recursive: true });
       }
       if (stat && !stat.isDirectory()) {
-        throw new Error(
-          'Directory cannot be created because an inode of a different type exists at "' +
-            dest +
-            '"'
-        );
+        throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
       }
       cb(null, dest);
     },
@@ -32,19 +28,13 @@ async function addPathToBody(req, res, next) {
       let files = {};
       Object.keys(req.files).map((key) => (files[key] = { files: [] }));
       for (var key in req.files) {
-        req.files[key].map((file) =>
-          files[key].files.push(
-            file.path != undefined ? file.path.replace(/\\/g, "/") : null
-          )
-        );
+        req.files[key].map((file) => files[key].files.push(file.path != undefined ? file.path.replace(/\\/g, "/") : null));
         req.body["images"] = files;
       }
     } else {
       let files = [];
       req.files.map((file) => {
-        files.push(
-          file.path != undefined ? file.path.replace(/\\/g, "/") : null
-        );
+        files.push(file.path != undefined ? file.path.replace(/\\/g, "/") : null);
       });
       req.body["images"] = files;
     }
@@ -56,7 +46,6 @@ async function addPathToBody(req, res, next) {
 const uploader = (folder) =>
   multer({
     storage: storage(folder),
-    limits: { fileSize: 10 * 1024 * 1024 },
   });
 
 module.exports = (folder = "/", field, type = "single") => {
