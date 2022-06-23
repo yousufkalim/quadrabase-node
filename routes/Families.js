@@ -18,7 +18,7 @@ router.post("/architect/create", Auth(ArchitectsModel), Families.create);
 
 // Read
 router.get("/", Families.getAll); // Get all Families at once
-router.get("/architect/getAll", Auth(ArchitectsModel), Families.getAll); // Get all Families at once
+router.get("/architect/getAll", Auth(ArchitectsModel), Families.getAllByArchitect); // Get all Families at once
 router.get("/:familyId", Auth(), Families.getById); // Get one family by it's id
 
 // Update
