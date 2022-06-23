@@ -7,7 +7,7 @@ const { promisify } = require("util");
 exports.create = async (req, res) => {
   try {
     let name = req.body.name; //name
-    const existingFolder = await Folders.findOne({ name }); // Finding already existing Folders
+    const existingFolder = await Folders.findOne({ name, parentFolder: null }); // Finding already existing Folders
     if (existingFolder) {
       // If we found existing Folders in db
       return res.status(404).json({ success: false, message: "Folder already exists" });
@@ -29,14 +29,14 @@ exports.create = async (req, res) => {
 exports.createSubFolder = async (req, res) => {
   try {
     let parentId = req.params.parentId; //name
-    const parent = await Folders.findById(parentId); // Finding already existing Folders
+    const parent = await Folders.findById(parentId).populate("subFolders"); // Finding already existing Folders
     if (!parent) {
       // If we found existing Folders in db
       return res.status(404).json({ success: false, message: "Parent folder doesn't exist" });
     }
 
     let name = req.body.name; //name
-    const existingFolder = await Folders.findOne({ name }); // Finding already existing Folders
+    const existingFolder = parent.subFolders.find((item) => item.name === name); // Finding already existing Folders
     if (existingFolder) {
       // If we found existing Folders in db
       return res.status(404).json({ success: false, message: "Subfolder already exists" });
