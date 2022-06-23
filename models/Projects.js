@@ -87,16 +87,18 @@ const projectsSchema = new mongoose.Schema(
     tranche: {
       type: String,
     },
-    chap0part2: {
-      id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "ArchitectsChap0",
+    chap0part2: [
+      {
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "ArchitectsChap0",
+        },
+        status: {
+          type: String,
+          enum: ["selected", "modified"],
+        },
       },
-      status: {
-        type: String,
-        enum: ["selected", "modified"],
-      },
-    },
+    ],
     stakeholders: [
       {
         type: mongoose.Schema.Types.ObjectId,
