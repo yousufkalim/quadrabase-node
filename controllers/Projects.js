@@ -430,7 +430,7 @@ const createArchChap = async (item, req) => {
 exports.update = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
-    if (req.body.chap0part2.length > 0) {
+    if (req.body.chap0part2?.length > 0) {
       let temp = [];
       req.body.chap0part2.map((item) => {
         if (item.status === "modified") {
