@@ -3,8 +3,8 @@ const Subscriptions = require("../models/Subscriptions");
 //subscription create
 exports.create = async (req, res) => {
   try {
-    let code = req.body.reference.code; //name
-    const existingSubscription = await Subscriptions.findOne({ "reference.code": code }); // Finding already existing subscription
+    let reference = req.body.reference; //name
+    const existingSubscription = await Subscriptions.findOne({ reference: reference }); // Finding already existing subscription
     if (existingSubscription) {
       // If we found existing subscription in db
       return res.status(404).json({ success: false, message: "La référence existe déjà" });
