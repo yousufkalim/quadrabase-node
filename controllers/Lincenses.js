@@ -244,28 +244,28 @@ exports.Webhook = async (req, res) => {
         // Creating provider
         await Providers.create(metaData); // Adding provider in db
       } else {
-        if (metaData.type === "70600100") {
-          const subscription = await Subscriptions.findById(metaData.subscription);
+        // if (metaData.type === "70600100") {
+        const subscription = await Subscriptions.findById(metaData.subscription);
 
-          const data = {
-            subscription: subscription._id,
-            start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
-            end_date: moment(
-              moment(new Date())
-                .add(subscription.duration * parseInt(metaData.count), "months")
-                .add(1, "days")
-                .calendar()
-            ).format("YYYY/MM/DD"),
-            architect: metaData.architectId,
-          };
-          const license = await Licenses.create(data);
+        const data = {
+          subscription: subscription._id,
+          start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
+          end_date: moment(
+            moment(new Date())
+              .add(subscription.duration * parseInt(metaData.count), "months")
+              .add(1, "days")
+              .calendar()
+          ).format("YYYY/MM/DD"),
+          architect: metaData.architectId,
+        };
+        const license = await Licenses.create(data);
 
-          await Architects.findByIdAndUpdate(metaData.architectId, { $push: { myLicenses: license._id } }, { new: true });
-        } else if (metaData.type === "70600200") {
-          const license = await Licenses.findById(metaData.licenseId);
-          license.projects = 5 * parseInt(metaData.count) + license.projects;
-          await license.save();
-        }
+        await Architects.findByIdAndUpdate(metaData.architectId, { $push: { myLicenses: license._id } }, { new: true });
+        // } else if (metaData.type === "70600200") {
+        //   const license = await Licenses.findById(metaData.licenseId);
+        //   license.projects = 5 * parseInt(metaData.count) + license.projects;
+        //   await license.save();
+        // }
       }
 
       break;
