@@ -395,47 +395,58 @@ exports.getWorksByTranches = async (req, res) => {
  * @param {object} req
  * @param {object} res
  */
+
+const createArchChap = async (item, req) => {
+  const chap0 = await Chap0.findById(item.id);
+  const chap0Level2 = await Chap0Level2.aggregate([
+    {
+      $match: {
+        parentLevel: mongoose.Types.ObjectId(chap0._id),
+      },
+    },
+    {
+      $lookup: {
+        from: "chap0level3",
+        localField: "_id",
+        foreignField: "parentLevel",
+        as: "level3",
+      },
+    },
+  ]);
+  const architectsChap0 = await ArchitectsChap0.create({
+    title: chap0.title,
+    text: chap0.text,
+    architect: req.userId,
+    level2: chap0Level2,
+    chap0: chap0._id,
+  });
+  await Architects.findByIdAndUpdate(req.body.architect, { $push: { chap0part2: architectsChap0._id } }, { new: true });
+  return {
+    id: architectsChap0._id,
+    status: "modified",
+  };
+};
+
 exports.update = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
-    let project = {};
-    if (req.body.chap0part2 && req.body.chap0part2.status === "modified") {
-      const chap0 = await Chap0.findById(req.body.chap0part2.id);
-      const chap0Level2 = await Chap0Level2.aggregate([
-        {
-          $match: {
-            parentLevel: mongoose.Types.ObjectId(chap0._id),
-          },
-        },
-        {
-          $lookup: {
-            from: "chap0level3",
-            localField: "_id",
-            foreignField: "parentLevel",
-            as: "level3",
-          },
-        },
-      ]);
-      const architectsChap0 = await ArchitectsChap0.create({
-        title: chap0.title,
-        text: chap0.text,
-        architect: req.userId,
-        level2: chap0Level2,
+    if (req.body.chap0part2?.length > 0) {
+      let temp = [];
+      req.body.chap0part2.map((item) => {
+        if (item.status === "modified") {
+          temp.push(createArchChap(item, req));
+        }
       });
-
-      await Architects.findByIdAndUpdate(req.body.architect, { $push: { chap0part2: architectsChap0._id } }, { new: true });
-      req.body.chap0part2 = {
-        id: architectsChap0._id,
-        status: "modified",
-      };
-      project = await Projects.findByIdAndUpdate(projectId, req.body, {
-        new: true,
-      }); // Updating the project
-    } else {
-      project = await Projects.findByIdAndUpdate(projectId, req.body, {
-        new: true,
-      }); // Updating the project
+      if (temp.length > 0) {
+        await Promise.all(temp).then((values) => {
+          req.body.chap0part2 = values;
+        });
+      }
     }
+
+    const project = await Projects.findByIdAndUpdate(projectId, req.body, {
+      new: true,
+    }); // Updating the project
 
     res.json({
       success: true,

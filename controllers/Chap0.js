@@ -9,13 +9,6 @@ exports.create = async (req, res) => {
       // If we found existing Chap0 in db
       return res.status(404).json({ success: false, message: "Chap already exists" });
     }
-    if (req.body.family) {
-      const existingFamily = await Chap0.findOne({ family: req.body.family }); // Family have to be unique
-      if (existingFamily) {
-        // If we found existing Chap0 in db
-        return res.status(404).json({ success: false, message: "Family already in use" });
-      }
-    }
 
     // Creating Chap0
     const chap0 = await Chap0.create(req.body); // Adding Chap0 in db
