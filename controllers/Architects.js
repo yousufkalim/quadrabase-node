@@ -17,7 +17,7 @@ const Invoice = require("../models/Invoice");
 
 const moment = require("moment");
 
-const { sendEmail } = require("../utils/sendEmail");
+const { sendEmail, sendQuoteEmail } = require("../utils/sendEmail");
 
 const bcrypt = require("bcryptjs");
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
@@ -665,6 +665,8 @@ exports.generatePdf = async (req, res) => {
   const obj = {
     Facture: facture,
     date: moment(new Date()).format("DD MMMM YYYY"),
+    subscriptionCode: req.body.subscriptionCode,
+    subscriptionName: req.body.subscriptionName,
     DESTINATAIRE: req.body.address1,
     initialprice: req.body.initialPrice.toFixed(2),
     initialCount: req.body.initialCount,
@@ -730,6 +732,8 @@ exports.generateQuotePdf = async (req, res) => {
   const obj = {
     Facture: facture,
     date: moment(new Date()).format("DD MMMM YYYY"),
+    subscriptionCode: req.body.subscriptionCode,
+    subscriptionName: req.body.subscriptionName,
     DESTINATAIRE: req.body.address1,
     initialprice: req.body.initialPrice.toFixed(2),
     initialCount: req.body.initialCount,
@@ -764,6 +768,17 @@ exports.generateQuotePdf = async (req, res) => {
   const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
   obj.invoiceCount = count ? count : 1;
   await Invoice.create(obj);
+
+  // Sending email to user
+  sendQuoteEmail("contact@qbsoft.fr", filepath)
+    .then(async () => {
+      // Success
+      console.log("Email has been sent");
+    })
+    .catch((err) => {
+      // Error handling
+      console.log("Error ----> ", err);
+    });
   res.status(200).json({
     path: filepath,
   });

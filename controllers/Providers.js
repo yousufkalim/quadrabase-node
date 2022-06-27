@@ -6,6 +6,7 @@ const fs = require("fs");
 const pdf = require("pdf-creator-node");
 const path = require("path");
 const options = require("../utils/options");
+const { sendQuoteEmail } = require("../utils/sendEmail");
 
 //provider create
 exports.create = async (req, res) => {
@@ -14,9 +15,7 @@ exports.create = async (req, res) => {
     const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
     if (existingProvider) {
       // If we found existing provider in db
-      return res
-        .status(400)
-        .json({ success: false, message: "Provider already exists" });
+      return res.status(400).json({ success: false, message: "Provider already exists" });
     }
 
     // Creating provider
@@ -99,9 +98,7 @@ exports.addSubscription = async (req, res) => {
   } else {
     const data = {
       name: req.body.name,
-      start_date: moment(req.body.start_date)
-        .add(1, "days")
-        .format("YYYY/MM/DD"),
+      start_date: moment(req.body.start_date).add(1, "days").format("YYYY/MM/DD"),
       end_date: moment(req.body.end_date).add(1, "days").format("YYYY/MM/DD"),
     };
     console.log("providerId", req.params.providerId);
@@ -122,10 +119,7 @@ exports.delete = async (req, res) => {
   try {
     const providerId = req.params.providerId; // Getting provider id from URL parameter
     const provider = await Providers.findByIdAndDelete(providerId); // Deleting the provider
-    await Works.updateMany(
-      { _id: provider.providers },
-      { $pull: { providers: providerId } }
-    ); // Deleting from the Architects
+    await Works.updateMany({ _id: provider.providers }, { $pull: { providers: providerId } }); // Deleting from the Architects
     res.json({
       success: true,
       message: "Provider deleted successfully",
@@ -169,10 +163,7 @@ exports.getWorksByProviderId = async (req, res) => {
 };
 
 exports.generatePdf = async (req, res) => {
-  const html = fs.readFileSync(
-    path.join(__dirname, "../templates/providerInvoice.html"),
-    "utf-8"
-  );
+  const html = fs.readFileSync(path.join(__dirname, "../templates/providerInvoice.html"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const invoice = await Invoice.find();
@@ -196,6 +187,8 @@ exports.generatePdf = async (req, res) => {
 
   const obj = {
     Facture: facture,
+    subscriptionCode: req.body.subscriptionCode,
+    subscriptionName: req.body.subscriptionName,
     date: moment(new Date()).format("DD MMMM YYYY"),
     DESTINATAIRE: req.body.address1,
     alertPrice: req.body.alertPrice,
@@ -233,10 +226,7 @@ exports.generatePdf = async (req, res) => {
 };
 
 exports.generateQuotePdf = async (req, res) => {
-  const html = fs.readFileSync(
-    path.join(__dirname, "../templates/providerQuote.html"),
-    "utf-8"
-  );
+  const html = fs.readFileSync(path.join(__dirname, "../templates/providerQuote.html"), "utf-8");
   const filename = Math.random() + "_doc" + ".pdf";
 
   const invoice = await Invoice.find();
@@ -261,6 +251,8 @@ exports.generateQuotePdf = async (req, res) => {
   const obj = {
     Facture: facture,
     date: moment(new Date()).format("DD MMMM YYYY"),
+    subscriptionCode: req.body.subscriptionCode,
+    subscriptionName: req.body.subscriptionName,
     DESTINATAIRE: req.body.address1,
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
@@ -291,6 +283,18 @@ exports.generateQuotePdf = async (req, res) => {
   const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
   obj.invoiceCount = count ? count : 1;
   await Invoice.create(obj);
+
+  // Sending email to user
+  sendQuoteEmail("contact@qbsoft.fr", filepath)
+    .then(async () => {
+      // Success
+      console.log("Email has been sent");
+    })
+    .catch((err) => {
+      // Error handling
+      console.log("Error ----> ", err);
+    });
+
   res.status(200).json({
     path: filepath,
   });

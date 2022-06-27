@@ -124,19 +124,6 @@ exports.getByFamily = async (req, res) => {
           type: "public",
         },
       },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", null],
-              },
-            },
-          },
-        },
-      },
     ]);
 
     res.json({ success: true, bookLibraries }); // Success
@@ -170,19 +157,6 @@ exports.getLevel2 = async (req, res) => {
       {
         $match: {
           book_library: mongoose.Types.ObjectId(BookLibraryId),
-        },
-      },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", null],
-              },
-            },
-          },
         },
       },
     ]);
@@ -278,19 +252,6 @@ exports.getLevel3 = async (req, res) => {
           },
           ranking: "$ranking",
           providersList: "$providersList",
-        },
-      },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", null],
-              },
-            },
-          },
         },
       },
     ]);
@@ -441,19 +402,6 @@ exports.getByArchitect = async (req, res) => {
         $match: {
           architect: mongoose.Types.ObjectId(ArchitectId),
           type: "private",
-        },
-      },
-      {
-        $addFields: {
-          cctp_text: {
-            $filter: {
-              input: "$cctp_text",
-              as: "d",
-              cond: {
-                $ne: ["$$d", null],
-              },
-            },
-          },
         },
       },
     ]);

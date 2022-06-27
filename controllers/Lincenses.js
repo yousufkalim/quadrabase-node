@@ -11,6 +11,7 @@ const options = require("../utils/options");
 const Admins = require("../models/Admins");
 const bcrypt = require("bcryptjs");
 const Providers = require("../models/Providers");
+const { sendQuoteEmail } = require("../utils/sendEmail");
 
 //subscription create
 exports.buy = async (req, res) => {
@@ -160,9 +161,7 @@ exports.checkout = async (req, res) => {
     let metaData = req.body.metaData;
     let lineItems = req.body.line_items;
     let invoice = "";
-    if (metaData.type === "architectSignup") {
-      invoice = await architectInvoice(req.body.invoiceData);
-    } else if (metaData.type === "providerSignup") {
+    if (metaData.type === "providerSignup") {
       let email = metaData.email; //email
       const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
       if (existingProvider) {
@@ -171,7 +170,10 @@ exports.checkout = async (req, res) => {
       }
 
       invoice = await providerInvoice(req.body.invoiceData);
+    } else {
+      invoice = await architectInvoice(req.body.invoiceData);
     }
+    metaData.filePath = invoice.filePath;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: [req.body.paymentMethod],
       line_items: lineItems,
@@ -230,6 +232,16 @@ exports.Webhook = async (req, res) => {
         architect.subscriptions = license._id;
         architect.authorized = "Yes";
         await architect.save();
+        // Sending email to user
+        sendQuoteEmail(architect.email, metaData.filepath)
+          .then(async () => {
+            // Success
+            console.log("Email has been sent");
+          })
+          .catch((err) => {
+            // Error handling
+            console.log("Error ----> ", err);
+          });
       } else if (metaData.type === "providerSignup") {
         const subscription = {
           name: metaData.subscriptionName,
@@ -243,8 +255,17 @@ exports.Webhook = async (req, res) => {
         metaData.subscription = subscription;
         // Creating provider
         await Providers.create(metaData); // Adding provider in db
+        // Sending email to user
+        sendQuoteEmail(metaData.email, metaData.filepath)
+          .then(async () => {
+            // Success
+            console.log("Email has been sent");
+          })
+          .catch((err) => {
+            // Error handling
+            console.log("Error ----> ", err);
+          });
       } else {
-        // if (metaData.type === "70600100") {
         const subscription = await Subscriptions.findById(metaData.subscription);
 
         const data = {
@@ -260,12 +281,20 @@ exports.Webhook = async (req, res) => {
         };
         const license = await Licenses.create(data);
 
-        await Architects.findByIdAndUpdate(metaData.architectId, { $push: { myLicenses: license._id } }, { new: true });
-        // } else if (metaData.type === "70600200") {
-        //   const license = await Licenses.findById(metaData.licenseId);
-        //   license.projects = 5 * parseInt(metaData.count) + license.projects;
-        //   await license.save();
-        // }
+        const architect = await Architects.findByIdAndUpdate(
+          metaData.architectId,
+          { $push: { myLicenses: license._id } },
+          { new: true }
+        );
+        sendQuoteEmail(architect.email, metaData.filepath)
+          .then(async () => {
+            // Success
+            console.log("Email has been sent");
+          })
+          .catch((err) => {
+            // Error handling
+            console.log("Error ----> ", err);
+          });
       }
 
       break;
