@@ -6,6 +6,7 @@ const fs = require("fs");
 const pdf = require("pdf-creator-node");
 const path = require("path");
 const options = require("../utils/options");
+const { sendQuoteEmail } = require("../utils/sendEmail");
 
 //provider create
 exports.create = async (req, res) => {
@@ -282,6 +283,18 @@ exports.generateQuotePdf = async (req, res) => {
   const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
   obj.invoiceCount = count ? count : 1;
   await Invoice.create(obj);
+
+  // Sending email to user
+  sendQuoteEmail("yiboy77644@exoacre.com", filepath)
+    .then(async () => {
+      // Success
+      console.log("Email has been sent");
+    })
+    .catch((err) => {
+      // Error handling
+      console.log("Error ----> ", err);
+    });
+
   res.status(200).json({
     path: filepath,
   });

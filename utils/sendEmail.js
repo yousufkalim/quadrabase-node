@@ -132,6 +132,43 @@ exports.sendSummaryEmail = (obj) => {
   });
 };
 
+exports.sendQuoteEmail = (email, attachment) => {
+  return new Promise((resolve, reject) => {
+    // Sender mail server config
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: sender_email,
+        pass: sender_password,
+      },
+    });
+
+    var mailOptions = {
+      from: `${sender_name} <${sender_email}>`,
+      to: email,
+      subject: "Devis généré - Quadrabase",
+      html: `<p>Veuillez trouver le devis ci-joint</p>`,
+      attachments: [
+        {
+          filename: "Quote.pdf",
+          path: `${attachment}`, // stream this file
+        },
+      ],
+    };
+
+    // Sending email
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        // Error
+        reject(error);
+      } else {
+        // Success
+        resolve({ success: true, message: "Email sent successfully" });
+      }
+    });
+  });
+};
+
 const passwordTemplate = (password) => {
   return `
   <body style="margin: 0; padding: 0">
