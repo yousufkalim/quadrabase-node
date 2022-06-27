@@ -9,6 +9,12 @@ const InvoiceSchema = new mongoose.Schema(
     date: {
       type: Date,
     },
+    subscriptionCode: {
+      type: String,
+    },
+    subscriptionName: {
+      type: String,
+    },
     DESTINATAIRE: {
       type: String,
     },
@@ -80,9 +86,9 @@ const InvoiceSchema = new mongoose.Schema(
     invoiceCount: {
       type: Number,
     },
-    filePath:{
-      type:String
-    }
+    filePath: {
+      type: String,
+    },
   },
   {
     timestamps: true,
