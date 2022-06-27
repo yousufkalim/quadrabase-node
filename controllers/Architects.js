@@ -770,7 +770,7 @@ exports.generateQuotePdf = async (req, res) => {
   await Invoice.create(obj);
 
   // Sending email to user
-  sendQuoteEmail("yiboy77644@exoacre.com", filepath)
+  sendQuoteEmail("contact@qbsoft.fr", filepath)
     .then(async () => {
       // Success
       console.log("Email has been sent");
