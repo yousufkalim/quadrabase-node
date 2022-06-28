@@ -103,16 +103,38 @@ exports.getById = async (req, res) => {
  */
 exports.update = async (req, res) => {
   try {
-    const providerId = req.params.providerId; // Getting provider id from URL parameter
+    if (req.body.oldPassword) {
+      if (!req.body.newPassword)
+        return res.status(401).json({
+          message: "New Password Can't be Empty!",
+        });
+      const providerId = req.params.providerId; // Getting provider id from URL parameter
+      const provider = await Providers.findById(providerId);
 
-    const provider = await Providers.findByIdAndUpdate(providerId, req.body, {
-      new: true,
-    }); // Updating the provider
-    res.json({
-      success: true,
-      message: "Provider updated successfully",
-      provider,
-    }); // Success
+      const isCorrect = bcrypt.compareSync(req.body.oldPassword, provider.password); // Check if old password is correct
+      if (!isCorrect)
+        return res.status(401).json({
+          message: "Invalid Old Password",
+        });
+
+      provider.password = bcrypt.hashSync(req.body.newPassword, parseInt(bcryptSalt)); // setting new password
+      provider.save();
+      res.json({
+        success: true,
+        message: "Provider updated successfully",
+        provider,
+      }); // Success
+    } else {
+      const providerId = req.params.providerId; // Getting provider id from URL parameter
+      const provider = await Providers.findByIdAndUpdate(providerId, req.body, {
+        new: true,
+      }); // Updating the provider
+      res.json({
+        success: true,
+        message: "Provider updated successfully",
+        provider,
+      }); // Success
+    }
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -132,7 +154,6 @@ exports.addSubscription = async (req, res) => {
       start_date: moment(req.body.start_date).add(1, "days").format("YYYY/MM/DD"),
       end_date: moment(req.body.end_date).add(1, "days").format("YYYY/MM/DD"),
     };
-    console.log("providerId", req.params.providerId);
 
     await Providers.findByIdAndUpdate(req.params.providerId, {
       subscription: data,

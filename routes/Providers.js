@@ -31,7 +31,7 @@ router.get("/:providerId", Providers.getById); // Get one Provider by it's id
 router.get("/works/:providerId", Auth(), Providers.getWorksByProviderId); // Get all works attached to Provider by it's id
 
 // Update
-router.put("/:providerId", validateProvider, isValidated, Auth(), Providers.update); // Update a specific Provider by it's id
+router.put("/:providerId", validateProvider, isValidated, Providers.update); // Update a specific Provider by it's id
 router.put("/addsubscription/:providerId", Auth(), Providers.addSubscription); /// assign subscription to provider
 
 // Delete
