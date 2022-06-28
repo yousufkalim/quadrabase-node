@@ -11,7 +11,10 @@ const providersSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
-
+    password: {
+      type: String,
+      minlength: 6,
+    },
     contact_no: {
       type: String,
     },
@@ -55,6 +58,10 @@ const providersSchema = new mongoose.Schema(
       type: String,
     },
     subscription: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subscriptions",
+      },
       name: {
         type: String,
       },

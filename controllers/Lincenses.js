@@ -162,13 +162,6 @@ exports.checkout = async (req, res) => {
     let lineItems = req.body.line_items;
     let invoice = "";
     if (metaData.type === "providerSignup") {
-      let email = metaData.email; //email
-      const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
-      if (existingProvider) {
-        // If we found existing provider in db
-        return res.status(400).json({ success: false, message: "Provider already exists" });
-      }
-
       invoice = await providerInvoice(req.body.invoiceData);
     } else {
       invoice = await architectInvoice(req.body.invoiceData);
@@ -211,9 +204,11 @@ exports.Webhook = async (req, res) => {
       // Check if buy subscription
       if (metaData.type === "architectSignup") {
         const subscription = {
+          id: metaData.subscriptionid,
           duration: parseInt(metaData.subscriptionDuration),
           projects: parseInt(metaData.subscriptionProjects),
         };
+        delete metaData.subscriptionid;
         delete metaData.subscriptionDuration;
         delete metaData.subscriptionProjects;
         delete metaData.type;
@@ -222,6 +217,7 @@ exports.Webhook = async (req, res) => {
 
         // assinging subscription
         const data = {
+          subscription: subscription.id,
           start_date: moment(new Date()).format("YYYY/MM/DD"),
           end_date: moment(moment(new Date()).add(subscription.duration, "months").calendar()).format("YYYY/MM/DD"),
           projects: subscription.projects,
@@ -244,19 +240,29 @@ exports.Webhook = async (req, res) => {
           });
       } else if (metaData.type === "providerSignup") {
         const subscription = {
+          id: metaData.subscriptionid,
           name: metaData.subscriptionName,
           start_date: metaData.subscriptionStartDate,
           end_date: metaData.subscriptionEndDate,
         };
-        delete metaData.subscriptionName;
-        delete metaData.subscriptionStartDate;
-        delete metaData.subscriptionEndDate;
-        delete metaData.type;
-        metaData.subscription = subscription;
         // Creating provider
-        await Providers.create(metaData); // Adding provider in db
+        const provider = await Providers.findByIdAndUpdate(metaData.id, { subscription, authorized: "Yes" }, { new: true }); // Adding provider in db
         // Sending email to user
-        sendQuoteEmail(metaData.email, metaData.filepath)
+        sendQuoteEmail(provider.email, metaData.filepath)
+          .then(async () => {
+            // Success
+            console.log("Email has been sent");
+          })
+          .catch((err) => {
+            // Error handling
+            console.log("Error ----> ", err);
+          });
+      } else if (metaData.type === "ProviderOrder") {
+        const provider = await Providers.findById(metaData.providerId); // Adding architect in db
+        let endDate = moment(moment(provider.subscription.end_date).add(metaData.duration, "months")).format("YYYY/MM/DD");
+        provider.subscription.end_date = endDate;
+        provider.save();
+        sendQuoteEmail(provider.email, metaData.filepath)
           .then(async () => {
             // Success
             console.log("Email has been sent");

@@ -1,5 +1,6 @@
 const Architects = require("../models/Architects");
 const Admins = require("../models/Admins");
+const Providers = require("../models/Providers");
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const fr = require("../utils/frLang");
@@ -20,16 +21,34 @@ exports.login = async (req, res) => {
     }); // Finding already existing Architect
     if (!architect) {
       // If we found existing architect in db
-      let email = req.body.email; //email
-      let password = req.body.password; //passcword
       const user = await Admins.findOne({ email }); // Finding already existing admin
+
       if (!user) {
+        const provider = await Providers.findOne({ email }); // Finding already existing Provider
         // If we found existing user in db
-        return res.status(404).json({
-          success: false,
-          message: lang === "fr" ? fr.AuthLoginMsg1 : en.AuthLoginMsg1,
+        if (!provider) {
+          return res.status(404).json({
+            success: false,
+            message: lang === "fr" ? fr.AuthLoginMsg1 : en.AuthLoginMsg1,
+          });
+        }
+        const isCorrect = bcrypt.compareSync(password, provider.password); // Check if user password is correct
+        if (!isCorrect)
+          return res.status(404).json({
+            message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2,
+          });
+        const token = JWT.sign({ email }, process.env.JWT_SECRET, {
+          expiresIn: 60 * 60 * 60,
         });
+        const result = { user: provider, role: "provider", token };
+        // Done
+        return res.json({
+          success: true,
+          message: lang === "fr" ? fr.AuthLoginMsg3 : en.AuthLoginMsg3,
+          result,
+        }); //Success
       }
+
       const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
       if (!isCorrect)
         return res.status(404).json({
@@ -38,7 +57,7 @@ exports.login = async (req, res) => {
       const token = JWT.sign({ email }, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 60,
       });
-      const result = { user, token };
+      const result = { user, role: "admin", token };
       // Done
       return res.json({
         success: true,
@@ -52,7 +71,7 @@ exports.login = async (req, res) => {
     const token = JWT.sign({ email: architect.email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
-    const result = { user: architect, token };
+    const result = { user: architect, role: "architect", token };
     // Done
     res.json({
       success: true,
