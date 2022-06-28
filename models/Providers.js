@@ -58,6 +58,10 @@ const providersSchema = new mongoose.Schema(
       type: String,
     },
     subscription: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subscriptions",
+      },
       name: {
         type: String,
       },

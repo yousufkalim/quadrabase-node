@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
         const token = JWT.sign({ email }, process.env.JWT_SECRET, {
           expiresIn: 60 * 60 * 60,
         });
-        const result = { user: provider, token };
+        const result = { user: provider, role: "provider", token };
         // Done
         return res.json({
           success: true,
@@ -57,7 +57,7 @@ exports.login = async (req, res) => {
       const token = JWT.sign({ email }, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 60,
       });
-      const result = { user, token };
+      const result = { user, role: "admin", token };
       // Done
       return res.json({
         success: true,
@@ -71,7 +71,7 @@ exports.login = async (req, res) => {
     const token = JWT.sign({ email: architect.email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
-    const result = { user: architect, token };
+    const result = { user: architect, role: "architect", token };
     // Done
     res.json({
       success: true,

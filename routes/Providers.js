@@ -27,7 +27,7 @@ router.post("/quote/download", Providers.generateQuotePdf);
 // Read
 router.get("/", Auth(), Providers.getAll); // Get all Providers at once
 router.get("/get/all", Auth(ArchitectsModel), Providers.getAll); // Get all Providers at once
-router.get("/:providerId", Auth(), Providers.getById); // Get one Provider by it's id
+router.get("/:providerId", Providers.getById); // Get one Provider by it's id
 router.get("/works/:providerId", Auth(), Providers.getWorksByProviderId); // Get all works attached to Provider by it's id
 
 // Update
