@@ -34,31 +34,7 @@ const populateQuery = [
 //BookLibrary create
 exports.create = async (req, res) => {
   try {
-    let name = req.body.name; //name
     const familyId = req.body.familyId; // Getting familyId id from body
-
-    if (req.body.type !== "private") {
-      const existingBookLibrary = await BookLibraries.findOne({ name }); // Finding already existing BookLibrary
-      if (existingBookLibrary) {
-        // If we found existing BookLibrary in db
-        return res.status(404).json({
-          success: false,
-          message: "BookLibrary already exists",
-        });
-      }
-    } else {
-      const existingBookLibrary = await BookLibraries.findOne({
-        name,
-        architect: req.body.architect,
-      }); // Finding already existing BookLibrary
-      if (existingBookLibrary) {
-        // If we found existing BookLibrary in db
-        return res.status(404).json({
-          success: false,
-          message: "BookLibrary already exists",
-        });
-      }
-    }
 
     //Creating BookLibrary
     const BookLibrary = await BookLibraries.create(req.body); // Adding BookLibrary in db
@@ -557,16 +533,11 @@ exports.addFamily = async (req, res) => {
 exports.addCategory = async (req, res) => {
   try {
     const BookLibraryId = req.body.libraryId; // Getting BookLibrary id from URL parameter
-    const name = req.body.name;
 
     let BookLibrary = await BookLibraries.findById({ _id: BookLibraryId });
     if (!BookLibrary) {
       return res.status(404).json({ message: "BookLibray id not found" });
     } // double check if bookLibrary id is invalid
-    let categoryExist = await Categories.findOne({ name: name });
-    if (categoryExist) {
-      return res.status(400).json({ message: "Category name exists" });
-    } // double check if category name exists
     let category = await Categories.create(req.body);
     const categoryId = category._id;
     BookLibrary = await BookLibraries.findByIdAndUpdate(
@@ -679,16 +650,11 @@ exports.deleteCategory = async (req, res) => {
 exports.addWork = async (req, res) => {
   try {
     const categoryId = req.body.categoryId; // Getting BookLibrary id from URL parameter
-    const workName = req.body.name;
 
     let category = await Categories.findById({ _id: categoryId });
     if (!category) {
       return res.status(404).json({ message: "Category id not found" });
     } // double check if category id is invalid
-    let workExist = await Works.findOne({ name: workName });
-    if (workExist) {
-      return res.status(400).json({ message: "Work name exists" });
-    } // double check if work name exists
     let work = await Works.create(req.body);
     const workId = work._id;
     category = await Categories.findByIdAndUpdate(
@@ -792,16 +758,11 @@ exports.deleteWork = async (req, res) => {
 exports.addWorkDetail = async (req, res) => {
   try {
     const workId = req.body.workId; // Getting BookLibrary id from URL parameter
-    const workDetail = req.body.name;
 
     let works = await Works.findById({ _id: workId });
     if (!works) {
       return res.status(404).json({ message: "workId id not found" });
     } // double check if works id is invalid
-    let workDetailExist = await WorkDetails.findOne({ name: workDetail });
-    if (workDetailExist) {
-      return res.status(400).json({ message: "Work Detail  exists" });
-    } // double check if work detail  exists
     let workDetails = await WorkDetails.create(req.body);
     const workDetailId = workDetails._id;
     works = await Works.findByIdAndUpdate(
