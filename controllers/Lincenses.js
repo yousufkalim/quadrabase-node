@@ -276,13 +276,17 @@ exports.Webhook = async (req, res) => {
 
         const data = {
           subscription: subscription._id,
-          start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
-          end_date: moment(
-            moment(new Date())
-              .add(subscription.duration * parseInt(metaData.count), "months")
-              .add(1, "days")
-              .calendar()
-          ).format("YYYY/MM/DD"),
+          start_date: subscription.duration > 0 ? moment(new Date()).add(1, "days").format("YYYY/MM/DD") : null,
+          end_date:
+            subscription.duration > 0
+              ? moment(
+                  moment(new Date())
+                    .add(subscription.duration * parseInt(metaData.count), "months")
+                    .add(1, "days")
+                    .calendar()
+                ).format("YYYY/MM/DD")
+              : null,
+          projects: subscription.projects >= 0 ? subscription.projects : 0,
           architect: metaData.architectId,
         };
         const license = await Licenses.create(data);
