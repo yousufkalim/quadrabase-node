@@ -19,6 +19,7 @@ router.post("/createSubFolder/:parentId", Auth(), Folders.createSubFolder);
 // Read
 router.get("/", Auth(), Folders.getAllFolders); // Get all Folders at once
 router.get("/:parentId", Auth(), Folders.getSubFolders); // Get one Folders by it's id
+router.get("/byFoldername/:folderName", Folders.getbyFolderName); // Get one Folders by it's id
 
 // Update
 router.put("/:id", Auth(), Folders.update); // Update Folder
