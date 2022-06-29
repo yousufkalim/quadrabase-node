@@ -53,7 +53,7 @@ exports.createOnSingup = async (req, res) => {
     const provider = await Providers.create(req.body); // Adding provider in db
 
     // Done
-    res.json({ message: "Provider created successfully", provider }); //Success
+    res.json({ success: true, message: "Fournisseur créé avec succès", provider }); //Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
