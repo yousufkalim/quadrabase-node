@@ -18,12 +18,10 @@ exports.create = async (req, res) => {
     }); // Finding already existing Trade
     if (existingTrade) {
       // If we found existing trade in db
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: lang === "fr" ? fr.tradesMsg1 : en.tradesMsg1,
-        });
+      return res.status(404).json({
+        success: false,
+        message: lang === "fr" ? fr.tradesMsg1 : en.tradesMsg1,
+      });
     }
 
     // Creating Trade
@@ -82,6 +80,8 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const tradeId = req.params.tradeId; // Getting tradeId from URL parameter
+    const projectId = req.params.projectId; // Getting tradeId from URL parameter
+    await Projects.findByIdAndUpdate(projectId, { $pull: { works: { trade: tradeId } } }); // Deleting from the project
     const trade = await Trades.findByIdAndDelete(tradeId); // Deleting the trade
     res.json({ success: true, message: "Trade deleted successfully", trade }); // Success
   } catch (err) {

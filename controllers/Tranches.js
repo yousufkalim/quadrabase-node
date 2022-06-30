@@ -15,9 +15,7 @@ exports.create = async (req, res) => {
     }); // Finding already existing Tranch
     if (existingTranch) {
       // If we found existing tranch in db
-      return res
-        .status(404)
-        .json({ success: false, message: "Tranch already exists" });
+      return res.status(404).json({ success: false, message: "Tranch already exists" });
     }
 
     // Creating Tranch
@@ -76,6 +74,8 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const tranchId = req.params.tranchId; // Getting tranchId from URL parameter
+    const projectId = req.params.projectId; // Getting tradeId from URL parameter
+    await Projects.findByIdAndUpdate(projectId, { $pull: { works: { tranch: tranchId } } }); // Deleting from the project
     const tranch = await Tranches.findByIdAndDelete(tranchId); // Deleting the tranch
     res.json({ success: true, message: "Tranch deleted successfully", tranch }); // Success
   } catch (err) {

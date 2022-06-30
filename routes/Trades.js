@@ -14,13 +14,7 @@ const ArchitectsModal = require("../models/Architects");
  */
 
 // create
-router.post(
-  "/create",
-  validateTrades,
-  isValidated,
-  Auth(ArchitectsModal),
-  Trades.create
-);
+router.post("/create", validateTrades, isValidated, Auth(ArchitectsModal), Trades.create);
 
 // Read
 router.get("/:projectId", Auth(ArchitectsModal), Trades.getAll); // Get all Trades at once
@@ -29,7 +23,7 @@ router.get("/:projectId", Auth(ArchitectsModal), Trades.getAll); // Get all Trad
 router.put("/:tradeId", Auth(ArchitectsModal), Trades.update); // Update a specific Trades by it's id
 
 // Delete
-router.delete("/:tradeId", Auth(ArchitectsModal), Trades.delete); // delete a specific Trades by it's id
+router.delete("/:tradeId/:projectId", Auth(ArchitectsModal), Trades.delete); // delete a specific Trades by it's id
 
 // Export
 module.exports = router;
