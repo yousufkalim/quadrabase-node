@@ -161,7 +161,7 @@ exports.checkout = async (req, res) => {
     let metaData = req.body.metaData;
     let lineItems = req.body.line_items;
     let invoice = "";
-    if (metaData.type === "providerSignup") {
+    if (metaData.type === "providerSignup" || metaData.type === "ProviderOrder") {
       invoice = await providerInvoice(req.body.invoiceData);
     } else {
       invoice = await architectInvoice(req.body.invoiceData);
@@ -418,9 +418,9 @@ const providerInvoice = async (data) => {
     alertPrice: data.alertPrice,
     alertCount: data.alertCount,
     alertTotal: data.alertTotal,
-    referenPrice: data.referenPrice,
+    referenPrice: data.referenPrice?.toFixed(2),
     referenCount: data.referenCount,
-    referenTotal: data.referenTotal,
+    referenTotal: data.referenTotal?.toFixed(2),
     totalHT: data.totalHT.toFixed(2),
     tvaPercentage: data.tvaPercentage,
     tvaAmount: data.tvaAmount.toFixed(2),
