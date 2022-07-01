@@ -13,6 +13,7 @@ module.exports = (app) => {
   app.use(express.urlencoded({ extended: true })); // to get url encoded data from requests
   app.use(
     express.json({
+      limit: "50mb",
       verify: function (req, res, buf) {
         var url = req.originalUrl;
         if (url.startsWith("/api/v1/licenses/stripe/webhook")) {
