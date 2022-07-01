@@ -92,6 +92,23 @@ exports.getSubFolders = async (req, res) => {
 };
 
 /**
+ * Get Folders by id
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getbyFolderName = async (req, res) => {
+  try {
+    const folderName = req.params.folderName; // Getting Folders id from URL parameter
+    const folder = (await Folders.findOne({ name: folderName }).populate("subFolders")).subFolders; // Finding Folders by id
+    res.json({ success: true, folder }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
  * Update Folders
  * @param {object} req
  * @param {object} res
