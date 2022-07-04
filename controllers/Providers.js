@@ -236,9 +236,14 @@ exports.generatePdf = async (req, res) => {
   } else {
     facture = `F${currentYear}0001`;
   }
+  const provider = await Providers.findById(req.body.archId);
 
   const obj = {
     Facture: facture,
+    providerName: `${provider.name} ${provider.firstname}`,
+    providerEmail: provider.email,
+    providerPhone: provider.telephone_no,
+    providerAddress: provider.address1,
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,
     date: moment(new Date()).format("DD MMMM YYYY"),
@@ -246,9 +251,9 @@ exports.generatePdf = async (req, res) => {
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
     alertTotal: req.body.alertTotal,
-    referenPrice: req.body.referenPrice,
+    referenPrice: req.body.referenPrice?.toFixed(2),
     referenCount: req.body.referenCount,
-    referenTotal: req.body.referenTotal,
+    referenTotal: req.body.referenTotal?.toFixed(2),
     totalHT: req.body.totalHT.toFixed(2),
     tvaPercentage: req.body.tvaPercentage,
     tvaAmount: req.body.tvaAmount.toFixed(2),
@@ -288,20 +293,26 @@ exports.generateQuotePdf = async (req, res) => {
   if (invoice.length > 0) {
     count = invoice[invoice.length - 1].invoiceCount + 1;
     if (count < 10) {
-      facture = `F${currentYear}000${count}`;
+      facture = `D${currentYear}000${count}`;
     } else if (count < 100) {
-      facture = `F${currentYear}00${count}`;
+      facture = `D${currentYear}00${count}`;
     } else if (count < 1000) {
-      facture = `F${currentYear}0${count}`;
+      facture = `D${currentYear}0${count}`;
     } else if (count > 1000) {
-      facture = `F${currentYear}${count}`;
+      facture = `D${currentYear}${count}`;
     }
   } else {
-    facture = `F${currentYear}0001`;
+    facture = `D${currentYear}0001`;
   }
+
+  const provider = await Providers.findById(req.body.archId);
 
   const obj = {
     Facture: facture,
+    providerName: `${provider.name} ${provider.firstname}`,
+    providerEmail: provider.email,
+    providerPhone: provider.telephone_no,
+    providerAddress: provider.address1,
     date: moment(new Date()).format("DD MMMM YYYY"),
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,
@@ -309,9 +320,9 @@ exports.generateQuotePdf = async (req, res) => {
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
     alertTotal: req.body.alertTotal,
-    referenPrice: req.body.referenPrice,
+    referenPrice: req.body.referenPrice?.toFixed(2),
     referenCount: req.body.referenCount,
-    referenTotal: req.body.referenTotal,
+    referenTotal: req.body.referenTotal?.toFixed(2),
     totalHT: req.body.totalHT.toFixed(2),
     tvaPercentage: req.body.tvaPercentage,
     tvaAmount: req.body.tvaAmount.toFixed(2),

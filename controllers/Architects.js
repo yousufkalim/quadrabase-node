@@ -662,8 +662,13 @@ exports.generatePdf = async (req, res) => {
     facture = `F${currentYear}0001`;
   }
 
+  const architect = await Architects.findById(req.body.archId);
   const obj = {
     Facture: facture,
+    architectName: `${architect.last_name} ${architect.first_name}`,
+    architectEmail: architect.email,
+    architectPhone: architect.phone,
+    architectAddress: architect.address_1,
     date: moment(new Date()).format("DD MMMM YYYY"),
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,
@@ -717,20 +722,25 @@ exports.generateQuotePdf = async (req, res) => {
   if (invoice.length > 0) {
     count = invoice[invoice.length - 1].invoiceCount + 1;
     if (count < 10) {
-      facture = `F${currentYear}000${count}`;
+      facture = `D${currentYear}000${count}`;
     } else if (count < 100) {
-      facture = `F${currentYear}00${count}`;
+      facture = `D${currentYear}00${count}`;
     } else if (count < 1000) {
-      facture = `F${currentYear}0${count}`;
+      facture = `D${currentYear}0${count}`;
     } else if (count > 1000) {
-      facture = `F${currentYear}${count}`;
+      facture = `D${currentYear}${count}`;
     }
   } else {
-    facture = `F${currentYear}0001`;
+    facture = `D${currentYear}0001`;
   }
 
+  const architect = await Architects.findById(req.body.archId);
   const obj = {
     Facture: facture,
+    architectName: `${architect.last_name} ${architect.first_name}`,
+    architectEmail: architect.email,
+    architectPhone: architect.phone,
+    architectAddress: architect.address_1,
     date: moment(new Date()).format("DD MMMM YYYY"),
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,

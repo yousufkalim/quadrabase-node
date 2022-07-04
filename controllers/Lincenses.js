@@ -161,7 +161,7 @@ exports.checkout = async (req, res) => {
     let metaData = req.body.metaData;
     let lineItems = req.body.line_items;
     let invoice = "";
-    if (metaData.type === "providerSignup") {
+    if (metaData.type === "providerSignup" || metaData.type === "ProviderOrder") {
       invoice = await providerInvoice(req.body.invoiceData);
     } else {
       invoice = await architectInvoice(req.body.invoiceData);
@@ -337,9 +337,13 @@ const architectInvoice = async (data) => {
   } else {
     facture = `F${currentYear}0001`;
   }
-
+  const architect = await Architects.findById(data.archId);
   const obj = {
     Facture: facture,
+    architectName: `${architect.last_name} ${architect.first_name}`,
+    architectEmail: architect.email,
+    architectPhone: architect.phone,
+    architectAddress: architect.address_1,
     date: moment(new Date()).format("DD MMMM YYYY"),
     DESTINATAIRE: data.address1,
     initialprice: data.initialPrice.toFixed(2),
@@ -401,17 +405,22 @@ const providerInvoice = async (data) => {
   } else {
     facture = `F${currentYear}0001`;
   }
+  const provider = await Providers.findById(data.archId);
 
   const obj = {
     Facture: facture,
+    providerName: `${provider.name} ${provider.firstname}`,
+    providerEmail: provider.email,
+    providerPhone: provider.telephone_no,
+    providerAddress: provider.address1,
     date: moment(new Date()).format("DD MMMM YYYY"),
     DESTINATAIRE: data.address1,
     alertPrice: data.alertPrice,
     alertCount: data.alertCount,
     alertTotal: data.alertTotal,
-    referenPrice: data.referenPrice,
+    referenPrice: data.referenPrice?.toFixed(2),
     referenCount: data.referenCount,
-    referenTotal: data.referenTotal,
+    referenTotal: data.referenTotal?.toFixed(2),
     totalHT: data.totalHT.toFixed(2),
     tvaPercentage: data.tvaPercentage,
     tvaAmount: data.tvaAmount.toFixed(2),

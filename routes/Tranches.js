@@ -14,13 +14,7 @@ const ArchitectsModal = require("../models/Architects");
  */
 
 // create
-router.post(
-  "/create",
-  validateTranches,
-  isValidated,
-  Auth(ArchitectsModal),
-  Tranches.create
-);
+router.post("/create", validateTranches, isValidated, Auth(ArchitectsModal), Tranches.create);
 
 // Read
 router.get("/:projectId", Auth(ArchitectsModal), Tranches.getAll); // Get all Tranches at once
@@ -29,7 +23,7 @@ router.get("/:projectId", Auth(ArchitectsModal), Tranches.getAll); // Get all Tr
 router.put("/:tranchId", Auth(ArchitectsModal), Tranches.update); // Update a specific Tranches by it's id
 
 // Delete
-router.delete("/:tranchId", Auth(ArchitectsModal), Tranches.delete); // delete a specific Tranches by it's id
+router.delete("/:tranchId/:projectId", Auth(ArchitectsModal), Tranches.delete); // delete a specific Tranches by it's id
 
 // Export
 module.exports = router;
