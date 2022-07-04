@@ -42,11 +42,9 @@ exports.validateAdminUpdate = [
 
 // Provider Register Validation
 exports.validateProvider = [
-  check("name", " Name is required.").notEmpty().trim(),
-  check("email", "Email is required.").notEmpty().isEmail().trim(),
-  // check("address1", " Address1 is required.").notEmpty().trim(),
+  check("address1", " Address1 is required.").notEmpty().trim(),
   // check("address2", " Address2 is required.").notEmpty().trim(),
-  // check("zipcode", " ZipCode is required.").notEmpty(),
+  check("zipcode", " ZipCode is required.").notEmpty(),
   // check("city", " City is required.").notEmpty(),
   // check("contact_no", " Contact No. is required.").notEmpty(),
   // check("telephone_no", " Telephone No. is required.").notEmpty(),
