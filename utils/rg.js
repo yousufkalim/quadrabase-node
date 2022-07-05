@@ -36,15 +36,15 @@ const devSizes = {
 const prodSizes = {
   '2s': {
     text: '100px',
-    text_main: '680px',
+    text_main: '670px',
   },
   '3s': {
     text: '160px',
-    text_main: '460px',
+    text_main: '450px',
   },
   '3w': {
     text: '80px',
-    text_main: '620px',
+    text_main: '610px',
   },
   '6s': {
     text: '60px',
