@@ -3,13 +3,6 @@ const Chap0 = require("../models/Chap0");
 //chap0 create
 exports.create = async (req, res) => {
   try {
-    let title = req.body.title; //title
-    const existingChap = await Chap0.findOne({ title }); // Finding already existing Chap0
-    if (existingChap) {
-      // If we found existing Chap0 in db
-      return res.status(404).json({ success: false, message: "Chap already exists" });
-    }
-
     // Creating Chap0
     const chap0 = await Chap0.create(req.body); // Adding Chap0 in db
 
