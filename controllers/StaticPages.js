@@ -23,7 +23,7 @@ exports.create = async (req, res) => {
 exports.getTerms = async (req, res) => {
   try {
     const staticPages = await StaticPages.find(); // Finding all the StaticPages from db
-    res.json({ success: true, terms: staticPages[0].terms }); // Success
+    res.json({ success: true, data: staticPages[0] }); // Success
   } catch (err) {
     // Error handling
     console.log('Error ----> ', err.message);
@@ -39,7 +39,7 @@ exports.getTerms = async (req, res) => {
 exports.getPrivacy = async (req, res) => {
   try {
     const staticPages = await StaticPages.find(); // Finding all the StaticPages from db
-    res.json({ success: true, terms: staticPages[0].privacy }); // Success
+    res.json({ success: true, data: staticPages[0] }); // Success
   } catch (err) {
     // Error handlings
     console.log('Error ----> ', err.message);
@@ -56,7 +56,7 @@ exports.update = async (req, res) => {
   try {
     const staticPageId = req.params.StaticPageId;
     const staticPages = await StaticPages.findByIdAndUpdate(staticPageId, req.body, { new: true }); // Finding all the StaticPages from db
-    res.json({ success: true, terms: staticPages }); // Success
+    res.json({ success: true, message: 'Updated successfully', data: staticPages }); // Success
   } catch (err) {
     // Error handlings
     console.log('Error ----> ', err.message);
