@@ -34,6 +34,10 @@
         font-size: {{this.sizes.f12}}
         font-weight: normal;
       }
+
+      .body_table {
+        width: {{this.sizes.full}}
+      }
     </style>
     <table style="margin-bottom: 20px;">
       <tr>
@@ -46,9 +50,9 @@
         </td>
       </tr>
     <table>
-    <table>
+    <table class="body_table">
       <tr>
-        <td align="left" valign="top">
+        <td align="left" valign="top" class="body_text">
           {{#each this.bodyValuesArr}}
           {{{this}}}
           {{/each}}
