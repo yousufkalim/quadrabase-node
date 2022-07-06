@@ -30,9 +30,11 @@ const devSizes = {
   },
   f12: '12px',
   f14: '14px',
+  full: '700px',
 };
 
-// 780 in total
+// 780 in total pre
+// 770 in total post1
 const prodSizes = {
   '2s': {
     text: '100px',
@@ -52,6 +54,7 @@ const prodSizes = {
   },
   f12: '10px',
   f14: '12px',
+  full: '770px',
 };
 
 module.exports = {
