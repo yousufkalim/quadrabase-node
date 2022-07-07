@@ -122,7 +122,7 @@ exports.signup = async (req, res) => {
 
     // Done
     res.json({
-      message: lang === 'fr' ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
+      message: 'Prescripteur créé avec succès',
       architect,
     }); //Success
   } catch (err) {
@@ -165,7 +165,7 @@ exports.createOnSingup = async (req, res) => {
     // Done
     res.json({
       success: true,
-      message: lang === 'fr' ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
+      message: 'Prescripteur créé avec succès',
       architect,
     }); //Success
   } catch (err) {
