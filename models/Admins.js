@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Schema
 const adminsSchema = new mongoose.Schema(
@@ -11,8 +11,6 @@ const adminsSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: true,
-      lowercase: true,
     },
     password: {
       type: String,
@@ -23,8 +21,8 @@ const adminsSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "super_admin"],
-      default: "admin",
+      enum: ['admin', 'super_admin'],
+      default: 'admin',
     },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: String },
@@ -35,4 +33,4 @@ const adminsSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("Admins", adminsSchema);
+module.exports = mongoose.model('Admins', adminsSchema);

@@ -150,25 +150,26 @@
               </td>
               
           </tr>
+          {{#each subscriptionsData}}
           <tr >
-            <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.subscriptionCode}}
+            <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;padding-top: 10px;">
+              {{this.reference}}
             </td>
-            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 270px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.subscriptionName}}
-  
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 270px;padding-top: 10px;">
+              {{this.name}}
             </td>
-            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.initialprice}}
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;padding-top: 10px;">
+              {{this.price}}
             </td>
-            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 35px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.initialCount}}
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 35px;padding-top: 10px;">
+              {{this.count}}
             </td>
-            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.initialTotal}}
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;padding-top: 10px;">
+              {{this.subTotal}}
             </td>
-            
-        </tr>
+          </tr>
+          {{/each}}
+
         <tr >
           <!-- <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;">
             70600200
@@ -208,10 +209,10 @@
     </table>
           <table width="100%" border="0" cellspacing="0" cellpadding="0" " style="margin-top: 10px;">
             <tr >
-              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;width: 85%;">
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;width: 85%; border-top: 1px solid rgba(16, 15, 15,0.5)">
                 <strong>Total H.T. : </strong>
               </td>
-              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;">
+              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; border-top: 1px solid rgba(16, 15, 15,0.5)">
                 <strong>{{this.totalHT}}</strong>
               </td>
             </tr>

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Schema
 const providersSchema = new mongoose.Schema(
@@ -7,9 +7,6 @@ const providersSchema = new mongoose.Schema(
     name: { type: String },
     email: {
       type: String,
-
-      unique: true,
-      lowercase: true,
     },
     password: {
       type: String,
@@ -24,7 +21,7 @@ const providersSchema = new mongoose.Schema(
     works: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Works",
+        ref: 'Works',
       },
     ],
     address1: {
@@ -60,7 +57,7 @@ const providersSchema = new mongoose.Schema(
     subscription: {
       id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Subscriptions",
+        ref: 'Subscriptions',
       },
       name: {
         type: String,
@@ -74,7 +71,7 @@ const providersSchema = new mongoose.Schema(
     },
     authorized: {
       type: String,
-      default: "No",
+      default: 'No',
     },
   },
   {
@@ -83,4 +80,4 @@ const providersSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("Providers", providersSchema);
+module.exports = mongoose.model('Providers', providersSchema);

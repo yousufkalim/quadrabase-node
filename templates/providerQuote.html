@@ -190,24 +190,29 @@
     </table>
     <table width="100%" border="0" cellspacing="0" cellpadding="0" " style="margin-top: 10px;">
       <tr >
-        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;">
-          <strong>Total H.T. : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{this.totalHT}}</strong>
+        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;width: 85%; border-top: 1px solid rgba(16, 15, 15,0.5)">
+          <strong>Total H.T. : </strong>
+        </td>
+        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; border-top: 1px solid rgba(16, 15, 15,0.5)">
+          <strong>{{this.totalHT}}</strong>
         </td>
       </tr>
       <tr >
+        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; border-bottom: 1px solid rgba(16, 15, 15,0.5);padding-bottom: 4px; width: 85%;">
+          <strong>T.V.A. ({{this.tvaPercentage}}%) : </strong>
+        </td>
         <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; border-bottom: 1px solid rgba(16, 15, 15,0.5);padding-bottom: 4px;">
-          <strong>T.V.A. ({{this.tvaPercentage}}%) : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{this.tvaAmount}}</strong>
+          <strong>{{this.tvaAmount}}</strong>
         </td>
       </tr>
       <tr >
+        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; padding-top: 4px; width: 85%;">
+          <strong>Total T.T.C. : </strong>
+        </td>
         <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; padding-top: 4px;">
-          <strong>Total T.T.C. : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{this.totalTTC}}</strong>
+          <strong>{{this.totalTTC}}</strong>
         </td>
       </tr>
-      </table>
-        </div>
-      </td>
-    </tr>
   </table>
   <div style="margin-top: 50px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>Conditions</strong> </div>
   <div style="margin-top: 10px;padding: 0px 15px;width: 530px; background-color: #fff;">Conditions de règlement : <strong> A réception de la facture. </strong></div>
