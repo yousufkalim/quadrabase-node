@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Schema
 const InvoiceSchema = new mongoose.Schema(
@@ -19,36 +19,15 @@ const InvoiceSchema = new mongoose.Schema(
       type: String,
     },
     // for architect
-    initialprice: {
-      type: Number,
-    },
-    initialCount: {
-      type: Number,
-    },
-    initialTotal: {
-      type: Number,
-    },
-    reprice: {
-      type: Number,
-    },
-    reCount: {
-      type: Number,
-    },
-    reTotal: {
-      type: Number,
-    },
-    packprice: {
-      type: Number,
-    },
-    packCount: {
-      type: Number,
-    },
-    packTotal: {
-      type: Number,
-    },
-    projects: {
-      type: Number,
-    },
+    subscriptionsData: [
+      {
+        subscription: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Subscriptions',
+        },
+        count: Number,
+      },
+    ],
     // for provider
     alertPrice: {
       type: Number,
@@ -96,4 +75,4 @@ const InvoiceSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("Invoice", InvoiceSchema);
+module.exports = mongoose.model('Invoice', InvoiceSchema);

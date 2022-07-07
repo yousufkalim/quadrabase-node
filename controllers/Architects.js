@@ -1,39 +1,39 @@
-const Architects = require("../models/Architects");
-const ArchitectsChap0 = require("../models/ArchitectsChap0");
-const Categories = require("../models/Categories");
-const Works = require("../models/Works");
-const Admins = require("../models/Admins");
+const Architects = require('../models/Architects');
+const ArchitectsChap0 = require('../models/ArchitectsChap0');
+const Categories = require('../models/Categories');
+const Works = require('../models/Works');
+const Admins = require('../models/Admins');
 
-const Projects = require("../models/Projects");
-const Families = require("../models/Families");
+const Projects = require('../models/Projects');
+const Families = require('../models/Families');
 
-const BookLibraries = require("../models/BookLibraries");
-const WorkDetails = require("../models/WorkDetails");
-const Stakeholders = require("../models/Stakeholders");
+const BookLibraries = require('../models/BookLibraries');
+const WorkDetails = require('../models/WorkDetails');
+const Stakeholders = require('../models/Stakeholders');
 
-const Subscriptions = require("../models/Subscriptions");
-const Licenses = require("../models/Licenses");
-const Invoice = require("../models/Invoice");
+const Subscriptions = require('../models/Subscriptions');
+const Licenses = require('../models/Licenses');
+const Invoice = require('../models/Invoice');
 
-const moment = require("moment");
+const moment = require('moment');
 
-const { sendEmail, sendQuoteEmail } = require("../utils/sendEmail");
+const { sendEmail, sendQuoteEmail } = require('../utils/sendEmail');
 
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
-const JWT = require("jsonwebtoken");
-const fs = require("fs");
-const pdf = require("pdf-creator-node");
-const path = require("path");
-const options = require("../utils/options");
+const JWT = require('jsonwebtoken');
+const fs = require('fs');
+const pdf = require('pdf-creator-node');
+const path = require('path');
+const options = require('../utils/options');
 
-const fr = require("../utils/frLang");
-const en = require("../utils/enLang");
+const fr = require('../utils/frLang');
+const en = require('../utils/enLang');
 
 //architect create
 exports.create = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     let email = req.body.email; //email
     let password = req.body.password; //password
 
@@ -44,14 +44,14 @@ exports.create = async (req, res) => {
       // If we found existing architect in db
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
       });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
       });
     }
     if (req.file) {
@@ -64,10 +64,10 @@ exports.create = async (req, res) => {
     const architect = await Architects.create(req.body); // Adding architect in db
 
     // Done
-    res.json({ message: "Architecte créé avec succès", architect }); //Success
+    res.json({ message: 'Architecte créé avec succès', architect }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -75,7 +75,7 @@ exports.create = async (req, res) => {
 //architect create
 exports.signup = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     const subscription = req.body.subscription;
     delete req.body.subscription;
 
@@ -89,14 +89,14 @@ exports.signup = async (req, res) => {
       // If we found existing architect in db
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
       });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
       });
     }
     let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
@@ -107,8 +107,10 @@ exports.signup = async (req, res) => {
 
     // assinging subscription
     const data = {
-      start_date: moment(new Date()).add(1, "days").format("YYYY/MM/DD"),
-      end_date: moment(moment(new Date()).add(subscription.duration, "months").add(1, "days").calendar()).format("YYYY/MM/DD"),
+      start_date: moment(new Date()).add(1, 'days').format('YYYY/MM/DD'),
+      end_date: moment(
+        moment(new Date()).add(subscription.duration, 'months').add(1, 'days').calendar()
+      ).format('YYYY/MM/DD'),
       projects: subscription.projects,
       assigned_to: architect._id,
     };
@@ -120,19 +122,19 @@ exports.signup = async (req, res) => {
 
     // Done
     res.json({
-      message: lang === "fr" ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
+      message: lang === 'fr' ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
       architect,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
 
 exports.createOnSingup = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     let email = req.body.email; //email
     let password = req.body.password; //password
 
@@ -143,14 +145,14 @@ exports.createOnSingup = async (req, res) => {
       // If we found existing architect in db
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
       });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
       });
     }
     let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
@@ -163,12 +165,12 @@ exports.createOnSingup = async (req, res) => {
     // Done
     res.json({
       success: true,
-      message: lang === "fr" ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
+      message: lang === 'fr' ? fr.ArchitectSignUp2 : en.ArchitectSignUp2,
       architect,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -182,7 +184,7 @@ exports.createBookLibrary = async (req, res) => {
     const existingBookLibrary = await BookLibraries.findOne({ name }); // Finding already existing BookLibrary
     if (existingBookLibrary) {
       // If we found existing BookLibrary in db
-      return res.status(404).json({ success: false, message: "BookLibrary already exists" });
+      return res.status(404).json({ success: false, message: 'BookLibrary already exists' });
     }
 
     // Creating BookLibrary
@@ -198,12 +200,12 @@ exports.createBookLibrary = async (req, res) => {
     ); //update architect to push bookLibrary
     // Done
     res.json({
-      message: "BookLibrary created successfully",
+      message: 'BookLibrary created successfully',
       BookLibrary,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -213,19 +215,19 @@ exports.login = async (req, res) => {
     let email = req.body.email; //email
     let password = req.body.password; //password
     const user = await Architects.findOne({ email }).populate({
-      path: "subscriptions",
+      path: 'subscriptions',
       populate: {
-        path: "subscription",
-        model: "Subscriptions",
+        path: 'subscription',
+        model: 'Subscriptions',
       },
     }); // Finding already existing Architect
     if (!user) {
       // If we found existing user in db
-      return res.status(404).json({ success: false, message: "Utilisateur non trouvé!" });
+      return res.status(404).json({ success: false, message: 'Utilisateur non trouvé!' });
     }
 
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
-    if (!isCorrect) return res.status(401).json({ message: "Mot de passe incorrect" });
+    if (!isCorrect) return res.status(401).json({ message: 'Mot de passe incorrect' });
     const token = JWT.sign({ email: user.email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
@@ -238,7 +240,7 @@ exports.login = async (req, res) => {
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -250,14 +252,14 @@ exports.login = async (req, res) => {
  */
 exports.forgotPassword = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     let email = req.body.email;
     let architect = await Architects.findOne({ email });
 
     if (!architect) {
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+        message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
       });
     }
 
@@ -274,23 +276,23 @@ exports.forgotPassword = async (req, res) => {
         // Done
         res.json({
           success: true,
-          message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+          message: lang === 'fr' ? fr.AdminForgetPass2 : en.AdminForgetPass2,
         });
       })
       .catch((err) => {
         // Error handling
-        console.log("Error ----> ", err);
+        console.log('Error ----> ', err);
         res.status(500).json({
           success: false,
-          message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+          message: lang === 'fr' ? fr.AdminForgetPass3 : en.AdminForgetPass3,
         });
       });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({
       success: false,
-      message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+      message: lang === 'fr' ? fr.AdminForgetPass3 : en.AdminForgetPass3,
     });
   }
 };
@@ -306,11 +308,11 @@ exports.resetPassword = async (req, res) => {
     let user = await Architects.findOne({ resetPasswordToken }); // Finding already existing Architect
     if (!user) {
       // If we not found existing user in db
-      return res.status(401).json({ success: false, message: "Invalid Token!" });
+      return res.status(401).json({ success: false, message: 'Invalid Token!' });
     }
     let isExpired = Number(user.restPasswordExpires);
     if (isExpired < Date.now()) {
-      return res.status(401).json({ success: false, message: "Token Expired!" });
+      return res.status(401).json({ success: false, message: 'Token Expired!' });
     }
     password = bcrypt.hashSync(password, parseInt(bcryptSalt));
     user = await Architects.findOneAndUpdate(
@@ -323,10 +325,10 @@ exports.resetPassword = async (req, res) => {
       { new: true }
     );
     // Done
-    res.json({ message: "Password Updated successfully", user }); //Success
+    res.json({ message: 'Password Updated successfully', user }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -338,18 +340,18 @@ exports.resetPassword = async (req, res) => {
 exports.getAll = async (req, res) => {
   try {
     const architects = await Architects.find()
-      .sort([["createdAt", -1]])
+      .sort([['createdAt', -1]])
       .populate({
-        path: "subscriptions",
+        path: 'subscriptions',
         populate: {
-          path: "subscription",
-          model: "Subscriptions",
+          path: 'subscription',
+          model: 'Subscriptions',
         },
       }); // Finding all the Architects from db
     res.json({ success: true, architects }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -366,7 +368,7 @@ exports.getById = async (req, res) => {
     res.json({ success: true, architect }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -377,7 +379,7 @@ exports.loggedIn = async (req, res) => {
     res.status(200).json({ success: true, user: req.user });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -386,16 +388,16 @@ exports.loggedIn = async (req, res) => {
 exports.getStakeholders = async (req, res) => {
   try {
     const architect = await Architects.findById(req.userId).populate({
-      path: "stakeholders",
+      path: 'stakeholders',
       populate: {
-        path: "type",
-        model: "StakeholderTypes",
+        path: 'type',
+        model: 'StakeholderTypes',
       },
     });
     res.status(200).json({ success: true, stakeholders: architect.stakeholders });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -416,12 +418,12 @@ exports.update = async (req, res) => {
     }); // Updating the architect
     res.json({
       success: true,
-      message: "Architect updated successfully",
+      message: 'Architect updated successfully',
       architect,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -433,16 +435,16 @@ exports.update = async (req, res) => {
  */
 exports.updateByArchitect = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     if (req.body.oldPassword) {
       if (!req.body.newPassword)
         return res.status(401).json({
-          message: lang === "fr" ? fr.ArchitectSignUp4 : en.ArchitectSignUp4,
+          message: lang === 'fr' ? fr.ArchitectSignUp4 : en.ArchitectSignUp4,
         });
       const isCorrect = bcrypt.compareSync(req.body.oldPassword, req.user.password); // Check if old password is correct
       if (!isCorrect)
         return res.status(401).json({
-          message: lang === "fr" ? fr.ArchitectSignUp5 : en.ArchitectSignUp5,
+          message: lang === 'fr' ? fr.ArchitectSignUp5 : en.ArchitectSignUp5,
         });
 
       req.body.password = bcrypt.hashSync(req.body.newPassword, parseInt(bcryptSalt)); // setting new password
@@ -458,7 +460,7 @@ exports.updateByArchitect = async (req, res) => {
       }); // Updating the architect
       res.json({
         success: true,
-        message: "Updated successfully",
+        message: 'Updated successfully',
         architect,
       }); // Success
     } else {
@@ -471,13 +473,13 @@ exports.updateByArchitect = async (req, res) => {
       }); // Updating the architect
       res.json({
         success: true,
-        message: "Updated successfully",
+        message: 'Updated successfully',
         architect,
       }); // Success
     }
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -489,14 +491,14 @@ exports.updateByArchitect = async (req, res) => {
  */
 exports.delete = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     const architectId = req.params.architectId; // Getting architect id from URL parameter
     let architect = await Architects.findOne({ _id: architectId }); // Finding already existing Architect
     if (!architect) {
       // If we not found existing architect in db
       return res.status(401).json({
         success: false,
-        message: lang === "fr" ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+        message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
       });
     }
 
@@ -521,11 +523,14 @@ exports.delete = async (req, res) => {
     if (bookLibraries.length == 0) {
       return res.json({
         success: true,
-        message: "Architect Deleted Successfully",
+        message: 'Architect Deleted Successfully',
         architect,
       }); // Success
     }
-    await Families.updateMany({ _id: bookLibraries.families }, { $pull: { book_libraries: bookLibraries._id } }); // Deleting from the Families
+    await Families.updateMany(
+      { _id: bookLibraries.families },
+      { $pull: { book_libraries: bookLibraries._id } }
+    ); // Deleting from the Families
 
     let categories = await Categories.findOneAndDelete({
       book_library: bookLibraries._id,
@@ -534,7 +539,7 @@ exports.delete = async (req, res) => {
     if (categories.length == 0) {
       return res.json({
         success: true,
-        message: "Architect Deleted Successfully",
+        message: 'Architect Deleted Successfully',
         architect,
       }); // Success
     }
@@ -547,12 +552,12 @@ exports.delete = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Architect Deleted Successfully",
+      message: 'Architect Deleted Successfully',
       architect,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -566,7 +571,7 @@ exports.deleteBookLibrary = async (req, res) => {
     const BookLibraryId = req.params.BookLibraryId; // Getting BookLibrary id from URL parameter
     let bookLibrary = await BookLibraries.findById(BookLibraryId);
     if (!bookLibrary) {
-      return res.status(404).json({ message: "BookLibraries  not found" });
+      return res.status(404).json({ message: 'BookLibraries  not found' });
     } // double check if BookLibraries id is invalid
     await BookLibraries.findByIdAndDelete(BookLibraryId); // Deleting the BookLibrary
     let architectId = bookLibrary.architect;
@@ -590,12 +595,12 @@ exports.deleteBookLibrary = async (req, res) => {
 
     res.json({
       success: true,
-      message: "BookLibrary deleted successfully",
+      message: 'BookLibrary deleted successfully',
       BookLibrary: bookLibrary,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -606,16 +611,16 @@ exports.addSubscription = async (req, res) => {
     if (!req.body.subscriptionId) {
       await Architects.findByIdAndUpdate(req.params.architectId, {
         subscriptions: [],
-        authorized: "No",
+        authorized: 'No',
       });
-      res.json({ success: true, message: "Subscription Removed!" });
+      res.json({ success: true, message: 'Subscription Removed!' });
     } else {
       const subscription = await Subscriptions.findById(req.body.subscriptionId);
 
       const data = {
         subscription: subscription._id,
-        start_date: moment(req.body.start_date).format("YYYY/MM/DD"),
-        end_date: moment(req.body.end_date).format("YYYY/MM/DD"),
+        start_date: moment(req.body.start_date).format('YYYY/MM/DD'),
+        end_date: moment(req.body.end_date).format('YYYY/MM/DD'),
         credit: subscription.credit,
         projects: req.body.projects,
         assigned_to: req.params.architectId,
@@ -630,23 +635,23 @@ exports.addSubscription = async (req, res) => {
         },
         { new: true }
       );
-      res.json({ success: true, message: "Subscription Updated!" });
+      res.json({ success: true, message: 'Subscription Updated!' });
     }
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
 exports.generatePdf = async (req, res) => {
-  const html = fs.readFileSync(path.join(__dirname, "../templates/invoice.html"), "utf-8");
-  const filename = Math.random() + "_doc" + ".pdf";
+  const html = fs.readFileSync(path.join(__dirname, '../templates/invoice.html'), 'utf-8');
+  const filename = Math.random() + '_doc' + '.pdf';
 
   const invoice = await Invoice.find();
-  let facture = "";
-  let count = "";
-  let currentYear = moment().format("YYYY");
+  let facture = '';
+  let count = '';
+  let currentYear = moment().format('YYYY');
   if (invoice.length > 0) {
     count = invoice[invoice.length - 1].invoiceCount + 1;
     if (count < 10) {
@@ -669,20 +674,8 @@ exports.generatePdf = async (req, res) => {
     architectEmail: architect.email,
     architectPhone: architect.phone,
     architectAddress: architect.address_1,
-    date: moment(new Date()).format("DD MMMM YYYY"),
-    subscriptionCode: req.body.subscriptionCode,
-    subscriptionName: req.body.subscriptionName,
-    DESTINATAIRE: req.body.address1,
-    initialprice: req.body.initialPrice.toFixed(2),
-    initialCount: req.body.initialCount,
-    initialTotal: (req.body.initialPrice * req.body.initialCount).toFixed(2),
-    reprice: req.body.extendedPrice.toFixed(2),
-    reCount: req.body.extendedCount,
-    reTotal: (req.body.extendedPrice * req.body.extendedCount).toFixed(2),
-    packprice: req.body.packPrice.toFixed(2),
-    packCount: req.body.packCount,
-    packTotal: (req.body.packPrice * req.body.packCount).toFixed(2),
-    projects: req.body.packCount * 5,
+    date: moment(new Date()).format('DD MMMM YYYY'),
+    subscriptionsData: req.body.subscriptionsData,
     totalHT: req.body.totalHT.toFixed(2),
     tvaPercentage: req.body.tvaPercentage,
     tvaAmount: req.body.tvaAmount.toFixed(2),
@@ -705,6 +698,11 @@ exports.generatePdf = async (req, res) => {
     });
   const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
   obj.invoiceCount = count ? count : 1;
+  obj.filePath = filepath;
+  let temp = req.body.subscriptionsData.map((item) => {
+    return { subscription: item._id, count: item.count };
+  });
+  obj.subscriptionsData = temp;
   await Invoice.create(obj);
   res.status(200).json({
     path: filepath,
@@ -712,13 +710,13 @@ exports.generatePdf = async (req, res) => {
 };
 
 exports.generateQuotePdf = async (req, res) => {
-  const html = fs.readFileSync(path.join(__dirname, "../templates/quote.html"), "utf-8");
-  const filename = Math.random() + "_doc" + ".pdf";
+  const html = fs.readFileSync(path.join(__dirname, '../templates/quote.html'), 'utf-8');
+  const filename = Math.random() + '_doc' + '.pdf';
 
   const invoice = await Invoice.find();
-  let facture = "";
-  let count = "";
-  let currentYear = moment().format("YYYY");
+  let facture = '';
+  let count = '';
+  let currentYear = moment().format('YYYY');
   if (invoice.length > 0) {
     count = invoice[invoice.length - 1].invoiceCount + 1;
     if (count < 10) {
@@ -741,20 +739,8 @@ exports.generateQuotePdf = async (req, res) => {
     architectEmail: architect.email,
     architectPhone: architect.phone,
     architectAddress: architect.address_1,
-    date: moment(new Date()).format("DD MMMM YYYY"),
-    subscriptionCode: req.body.subscriptionCode,
-    subscriptionName: req.body.subscriptionName,
-    DESTINATAIRE: req.body.address1,
-    initialprice: req.body.initialPrice.toFixed(2),
-    initialCount: req.body.initialCount,
-    initialTotal: (req.body.initialPrice * req.body.initialCount).toFixed(2),
-    reprice: req.body.extendedPrice.toFixed(2),
-    reCount: req.body.extendedCount,
-    reTotal: (req.body.extendedPrice * req.body.extendedCount).toFixed(2),
-    packprice: req.body.packPrice.toFixed(2),
-    packCount: req.body.packCount,
-    packTotal: (req.body.packPrice * req.body.packCount).toFixed(2),
-    projects: req.body.packCount * 5,
+    date: moment(new Date()).format('DD MMMM YYYY'),
+    subscriptionsData: req.body.subscriptionsData,
     totalHT: req.body.totalHT.toFixed(2),
     tvaPercentage: req.body.tvaPercentage,
     tvaAmount: req.body.tvaAmount.toFixed(2),
@@ -777,17 +763,22 @@ exports.generateQuotePdf = async (req, res) => {
     });
   const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
   obj.invoiceCount = count ? count : 1;
+  obj.filePath = filepath;
+  let temp = req.body.subscriptionsData.map((item) => {
+    return { subscription: item._id, count: item.count };
+  });
+  obj.subscriptionsData = temp;
   await Invoice.create(obj);
 
   // Sending email to user
-  sendQuoteEmail("contact@qbsoft.fr", filepath)
+  sendQuoteEmail('contact@qbsoft.fr', filepath)
     .then(async () => {
       // Success
-      console.log("Email has been sent");
+      console.log('Email has been sent');
     })
     .catch((err) => {
       // Error handling
-      console.log("Error ----> ", err);
+      console.log('Error ----> ', err);
     });
   res.status(200).json({
     path: filepath,
