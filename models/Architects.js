@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Schema
 const architectsSchema = new mongoose.Schema(
@@ -13,8 +13,6 @@ const architectsSchema = new mongoose.Schema(
     last_name: String,
     email: {
       type: String,
-      unique: true,
-      lowercase: true,
     },
     password: {
       type: String,
@@ -26,40 +24,40 @@ const architectsSchema = new mongoose.Schema(
     client_code: String,
     authorized: {
       type: String,
-      default: "No",
+      default: 'No',
     },
     subscriptions: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Licenses",
+      ref: 'Licenses',
     },
     myLicenses: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Licenses",
+        ref: 'Licenses',
       },
     ],
     projects: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Projects",
+        ref: 'Projects',
       },
     ],
     stakeholders: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Stakeholders",
+        ref: 'Stakeholders',
       },
     ],
     chap0part2: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ArchitectsChap0",
+        ref: 'ArchitectsChap0',
       },
     ],
     libraries: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "BookLibraries",
+        ref: 'BookLibraries',
       },
     ],
     resetPasswordToken: { type: String },
@@ -71,4 +69,4 @@ const architectsSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("Architects", architectsSchema);
+module.exports = mongoose.model('Architects', architectsSchema);

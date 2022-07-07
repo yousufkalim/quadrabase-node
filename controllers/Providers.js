@@ -1,35 +1,37 @@
-const Providers = require("../models/Providers");
-const Architects = require("../models/Architects");
-const Admins = require("../models/Admins");
-const Works = require("../models/Works");
-const moment = require("moment");
-const Invoice = require("../models/Invoice");
-const fs = require("fs");
-const pdf = require("pdf-creator-node");
-const path = require("path");
-const options = require("../utils/options");
-const { sendQuoteEmail } = require("../utils/sendEmail");
-const bcrypt = require("bcryptjs");
+const Providers = require('../models/Providers');
+const Architects = require('../models/Architects');
+const Admins = require('../models/Admins');
+const Works = require('../models/Works');
+const moment = require('moment');
+const Invoice = require('../models/Invoice');
+const fs = require('fs');
+const pdf = require('pdf-creator-node');
+const path = require('path');
+const options = require('../utils/options');
+const { sendQuoteEmail } = require('../utils/sendEmail');
+const bcrypt = require('bcryptjs');
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 
 //provider create
 exports.create = async (req, res) => {
   try {
     let email = req.body.email; //email
-    const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
-    if (existingProvider) {
-      // If we found existing provider in db
-      return res.status(400).json({ success: false, message: "Provider already exists" });
+    if (email) {
+      const existingProvider = await Providers.findOne({ email }); // Finding already existing provider
+      if (existingProvider) {
+        // If we found existing provider in db
+        return res.status(400).json({ success: false, message: 'Provider already exists' });
+      }
     }
 
     // Creating provider
     const provider = await Providers.create(req.body); // Adding provider in db
 
     // Done
-    res.json({ message: "Provider created successfully", provider }); //Success
+    res.json({ message: 'Provider created successfully', provider }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -43,7 +45,7 @@ exports.createOnSingup = async (req, res) => {
     const existingAdmin = await Admins.findOne({ email }); // Finding already existing architect
     if (existingProvider || existingArchitect || existingAdmin) {
       // If we found existing provider in db
-      return res.status(400).json({ success: false, message: "Email déjà utilisé" });
+      return res.status(400).json({ success: false, message: 'Email déjà utilisé' });
     }
 
     let password = req.body.password; //password
@@ -53,10 +55,10 @@ exports.createOnSingup = async (req, res) => {
     const provider = await Providers.create(req.body); // Adding provider in db
 
     // Done
-    res.json({ success: true, message: "Fournisseur créé avec succès", provider }); //Success
+    res.json({ success: true, message: 'Fournisseur créé avec succès', provider }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -69,12 +71,12 @@ exports.createOnSingup = async (req, res) => {
 exports.getAll = async (req, res) => {
   try {
     const providers = await Providers.find()
-      .sort([["createdAt", -1]])
-      .populate("works"); // Finding all the Providers from db
+      .sort([['createdAt', -1]])
+      .populate('works'); // Finding all the Providers from db
     res.json({ success: true, providers }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -91,7 +93,7 @@ exports.getById = async (req, res) => {
     res.json({ success: true, provider }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -114,14 +116,14 @@ exports.update = async (req, res) => {
       const isCorrect = bcrypt.compareSync(req.body.oldPassword, provider.password); // Check if old password is correct
       if (!isCorrect)
         return res.status(401).json({
-          message: "Invalid Old Password",
+          message: 'Invalid Old Password',
         });
 
       provider.password = bcrypt.hashSync(req.body.newPassword, parseInt(bcryptSalt)); // setting new password
       provider.save();
       res.json({
         success: true,
-        message: "Provider updated successfully",
+        message: 'Provider updated successfully',
         provider,
       }); // Success
     } else {
@@ -131,13 +133,13 @@ exports.update = async (req, res) => {
       }); // Updating the provider
       res.json({
         success: true,
-        message: "Provider updated successfully",
+        message: 'Provider updated successfully',
         provider,
       }); // Success
     }
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -147,18 +149,18 @@ exports.addSubscription = async (req, res) => {
     await Providers.findByIdAndUpdate(req.params.providerId, {
       subscription: {},
     });
-    res.json({ success: true, message: "Subscription Removed!" });
+    res.json({ success: true, message: 'Subscription Removed!' });
   } else {
     const data = {
       name: req.body.name,
-      start_date: moment(req.body.start_date).add(1, "days").format("YYYY/MM/DD"),
-      end_date: moment(req.body.end_date).add(1, "days").format("YYYY/MM/DD"),
+      start_date: moment(req.body.start_date).add(1, 'days').format('YYYY/MM/DD'),
+      end_date: moment(req.body.end_date).add(1, 'days').format('YYYY/MM/DD'),
     };
 
     await Providers.findByIdAndUpdate(req.params.providerId, {
       subscription: data,
     });
-    res.json({ success: true, message: "Subscription Updated!" });
+    res.json({ success: true, message: 'Subscription Updated!' });
   }
 };
 
@@ -174,12 +176,12 @@ exports.delete = async (req, res) => {
     await Works.updateMany({ _id: provider.providers }, { $pull: { providers: providerId } }); // Deleting from the Architects
     res.json({
       success: true,
-      message: "Provider deleted successfully",
+      message: 'Provider deleted successfully',
       provider,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -194,34 +196,34 @@ exports.getWorksByProviderId = async (req, res) => {
     const providerId = req.params.providerId; // Getting provider id from URL parameter
     const populateQuery = [
       {
-        path: "providers",
+        path: 'providers',
         populate: [
           {
-            path: "provider",
+            path: 'provider',
           },
         ],
       },
     ];
     let works = await Works.find({
-      "providers.provider": providerId,
+      'providers.provider': providerId,
     }).populate(populateQuery);
-    console.log(works, "works");
+    console.log(works, 'works');
     res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
 exports.generatePdf = async (req, res) => {
-  const html = fs.readFileSync(path.join(__dirname, "../templates/providerInvoice.html"), "utf-8");
-  const filename = Math.random() + "_doc" + ".pdf";
+  const html = fs.readFileSync(path.join(__dirname, '../templates/providerInvoice.html'), 'utf-8');
+  const filename = Math.random() + '_doc' + '.pdf';
 
   const invoice = await Invoice.find();
-  let facture = "";
-  let count = "";
-  let currentYear = moment().format("YYYY");
+  let facture = '';
+  let count = '';
+  let currentYear = moment().format('YYYY');
   if (invoice.length > 0) {
     count = invoice[invoice.length - 1].invoiceCount + 1;
     if (count < 10) {
@@ -246,7 +248,7 @@ exports.generatePdf = async (req, res) => {
     providerAddress: provider.address1,
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,
-    date: moment(new Date()).format("DD MMMM YYYY"),
+    date: moment(new Date()).format('DD MMMM YYYY'),
     DESTINATAIRE: req.body.address1,
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
@@ -283,13 +285,13 @@ exports.generatePdf = async (req, res) => {
 };
 
 exports.generateQuotePdf = async (req, res) => {
-  const html = fs.readFileSync(path.join(__dirname, "../templates/providerQuote.html"), "utf-8");
-  const filename = Math.random() + "_doc" + ".pdf";
+  const html = fs.readFileSync(path.join(__dirname, '../templates/providerQuote.html'), 'utf-8');
+  const filename = Math.random() + '_doc' + '.pdf';
 
   const invoice = await Invoice.find();
-  let facture = "";
-  let count = "";
-  let currentYear = moment().format("YYYY");
+  let facture = '';
+  let count = '';
+  let currentYear = moment().format('YYYY');
   if (invoice.length > 0) {
     count = invoice[invoice.length - 1].invoiceCount + 1;
     if (count < 10) {
@@ -313,7 +315,7 @@ exports.generateQuotePdf = async (req, res) => {
     providerEmail: provider.email,
     providerPhone: provider.telephone_no,
     providerAddress: provider.address1,
-    date: moment(new Date()).format("DD MMMM YYYY"),
+    date: moment(new Date()).format('DD MMMM YYYY'),
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,
     DESTINATAIRE: req.body.address1,
@@ -348,14 +350,14 @@ exports.generateQuotePdf = async (req, res) => {
   await Invoice.create(obj);
 
   // Sending email to user
-  sendQuoteEmail("contact@qbsoft.fr", filepath)
+  sendQuoteEmail('contact@qbsoft.fr', filepath)
     .then(async () => {
       // Success
-      console.log("Email has been sent");
+      console.log('Email has been sent');
     })
     .catch((err) => {
       // Error handling
-      console.log("Error ----> ", err);
+      console.log('Error ----> ', err);
     });
 
   res.status(200).json({

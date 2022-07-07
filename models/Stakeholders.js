@@ -1,13 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Schema
 const stakeholdersSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-
-      // unique: true,
-      // lowercase: true,
     },
     establishment: {
       type: String,
@@ -49,11 +46,11 @@ const stakeholdersSchema = new mongoose.Schema(
     },
     type: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "StakeholderTypes",
+      ref: 'StakeholderTypes',
     },
     architect: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Architects",
+      ref: 'Architects',
     },
   },
   {
@@ -62,4 +59,4 @@ const stakeholdersSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("Stakeholders", stakeholdersSchema);
+module.exports = mongoose.model('Stakeholders', stakeholdersSchema);
