@@ -1,7 +1,7 @@
-const ArchitectsChap0 = require("../models/ArchitectsChap0");
-const Architects = require("../models/Architects");
-const Chap0 = require("../models/Chap0");
-const Projects = require("../models/Projects");
+const ArchitectsChap0 = require('../models/ArchitectsChap0');
+const Architects = require('../models/Architects');
+const Chap0 = require('../models/Chap0');
+const Projects = require('../models/Projects');
 
 //ArchitectsChap0 create
 exports.create = async (req, res) => {
@@ -12,9 +12,7 @@ exports.create = async (req, res) => {
     }); // Finding already existing ArchitectsChap0
     if (existingTitle) {
       // If we found existing ArchitectsChap0 in db
-      return res
-        .status(401)
-        .json({ success: false, message: "ArchitectsChap0 already exists" });
+      return res.status(401).json({ success: false, message: 'ArchitectsChap0 already exists' });
     }
 
     const architectsChap0 = await ArchitectsChap0.create(req.body);
@@ -26,12 +24,12 @@ exports.create = async (req, res) => {
     );
 
     res.json({
-      message: "ArchitectsChap0 created successfully",
+      message: 'ArchitectsChap0 created successfully',
       architectsChap0,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -43,7 +41,7 @@ exports.create = async (req, res) => {
  */
 exports.createLevel = async (req, res) => {
   try {
-    if (req.body.type === "level0") {
+    if (req.body.type === 'level0') {
       await ArchitectsChap0.findByIdAndUpdate(
         req.params.id,
         {
@@ -59,7 +57,7 @@ exports.createLevel = async (req, res) => {
           new: true,
         }
       ); // Updating the ArchitectsChap0
-    } else if (req.body.type === "level1") {
+    } else if (req.body.type === 'level1') {
       const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
       architectsChap0.level2.map((item) => {
         if (item._id.toString() === req.body.id.toString()) {
@@ -73,11 +71,11 @@ exports.createLevel = async (req, res) => {
       architectsChap0.save();
     }
     res.json({
-      message: "Level created successfully",
+      message: 'Level created successfully',
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -93,7 +91,7 @@ exports.getAll = async (req, res) => {
     res.json({ success: true, architectsChap0 }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -110,7 +108,7 @@ exports.getById = async (req, res) => {
     res.json({ success: true, architectsChap0 }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -124,12 +122,12 @@ exports.getByIdArchitectId = async (req, res) => {
   try {
     const architectsChap0 = await ArchitectsChap0.find({
       architect: req.userId,
-      type: "private",
+      type: 'private',
     }); // Finding architectsChap0 by architectId
     res.json({ success: true, architectsChap0 }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -138,12 +136,12 @@ exports.getPrivate = async (req, res) => {
   try {
     const architectsChap0 = await ArchitectsChap0.find({
       architect: req.userId,
-      type: "private",
+      type: 'private',
     }); // Finding architectsChap0 by architectId
     res.json({ success: true, architectsChap0 }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -161,7 +159,7 @@ exports.getByProject = async (req, res) => {
     res.json({ success: true, data }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -175,28 +173,24 @@ exports.update = async (req, res) => {
   try {
     const architectsChap0Id = req.params.architectsChap0Id; // Getting architectsChap0Id from URL parameter
 
-    const architectsChap0 = await ArchitectsChap0.findByIdAndUpdate(
-      architectsChap0Id,
-      req.body,
-      {
-        new: true,
-      }
-    ); // Updating the ArchitectsChap0
+    const architectsChap0 = await ArchitectsChap0.findByIdAndUpdate(architectsChap0Id, req.body, {
+      new: true,
+    }); // Updating the ArchitectsChap0
     res.json({
       success: true,
-      message: "ArchitectsChap0 updated successfully",
+      message: 'ArchitectsChap0 updated successfully',
       architectsChap0,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
 exports.updateByProject = async (req, res) => {
   try {
-    if (req.body.status === "modified") {
+    if (req.body.status === 'modified') {
       const architectsChap0Id = req.params.architectsChap0Id; // Getting architectsChap0Id from URL parameter
 
       const architectsChap0 = await ArchitectsChap0.findByIdAndUpdate(
@@ -208,10 +202,10 @@ exports.updateByProject = async (req, res) => {
       ); // Updating the ArchitectsChap0
       res.json({
         success: true,
-        message: "ArchitectsChap0 updated successfully",
+        message: 'ArchitectsChap0 updated successfully',
         architectsChap0,
       }); // Success
-    } else if (req.body.status === "selected") {
+    } else if (req.body.status === 'selected') {
       const architectsChap0 = await ArchitectsChap0.create({
         title: req.body.title,
         text: req.body.text,
@@ -230,7 +224,7 @@ exports.updateByProject = async (req, res) => {
         {
           chap0part2: {
             id: architectsChap0._id,
-            status: "modified",
+            status: 'modified',
           },
         },
         {
@@ -239,35 +233,36 @@ exports.updateByProject = async (req, res) => {
       ); // Updating the project
       res.json({
         success: true,
-        message: "ArchitectsChap0 updated successfully",
+        message: 'ArchitectsChap0 updated successfully',
         architectsChap0,
       }); // Success
     }
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
 exports.updateLevel = async (req, res) => {
   try {
-    if (req.body.type === "level0") {
+    if (req.body.type === 'level0') {
       await ArchitectsChap0.findByIdAndUpdate(
         req.params.id,
         {
           title: req.body.title,
           text: req.body.text,
+          ranking: req.body.ranking,
         },
         {
           new: true,
         }
       ); // Updating the ArchitectsChap0
-    } else if (req.body.type === "level1") {
+    } else if (req.body.type === 'level1') {
       const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
       architectsChap0.level2.map((item) => {
         if (item._id.toString() === req.body.id.toString()) {
-          if (typeof req.body.ranking === "number") {
+          if (typeof req.body.ranking === 'number') {
             item.ranking = req.body.ranking;
           } else {
             item.title = req.body.title;
@@ -276,12 +271,12 @@ exports.updateLevel = async (req, res) => {
         }
       });
       architectsChap0.save();
-    } else if (req.body.type === "level2") {
+    } else if (req.body.type === 'level2') {
       const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
       architectsChap0.level2.map((item) => {
         item.level3.map((item2) => {
           if (item2._id.toString() === req.body.id.toString()) {
-            if (typeof req.body.ranking === "number") {
+            if (typeof req.body.ranking === 'number') {
               item2.ranking = req.body.ranking;
             } else {
               item2.title = req.body.title;
@@ -294,11 +289,11 @@ exports.updateLevel = async (req, res) => {
     }
     res.json({
       success: true,
-      message: "Updated successfully",
+      message: 'Updated successfully',
     });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -310,14 +305,14 @@ exports.updateLevel = async (req, res) => {
  */
 exports.deleteLevel = async (req, res) => {
   try {
-    if (req.body.type === "level1") {
+    if (req.body.type === 'level1') {
       let architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
       let temp = architectsChap0.level2.filter((item) => {
         return item._id.toString() !== req.body.id.toString();
       });
       architectsChap0.level2 = temp;
       architectsChap0.save();
-    } else if (req.body.type === "level2") {
+    } else if (req.body.type === 'level2') {
       const architectsChap0 = await ArchitectsChap0.findById(req.params.id); // Finding the ArchitectsChap0
       architectsChap0.level2.map((item) => {
         let temp = [];
@@ -330,11 +325,40 @@ exports.deleteLevel = async (req, res) => {
     }
     res.json({
       success: true,
-      message: "Deleted successfully",
+      message: 'Deleted successfully',
     });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * Delete ArchitectsChap0
+ * @param {object} req
+ * @param {object} res
+ */
+exports.deleteParentChap = async (req, res) => {
+  try {
+    const chapId = req.params.chapId; // Getting architectsChap0Id from URL parameter
+    const projectId = req.params.projectId; // Getting architectsChap0Id from URL parameter
+
+    await Projects.findByIdAndUpdate(projectId, { $pull: { chap0part2: { id: chapId } } });
+
+    const architectsChap0 = await ArchitectsChap0.findByIdAndDelete(chapId); // Deleting the architectsChap0
+
+    await Architects.findByIdAndUpdate(architectsChap0.architect, {
+      $pull: { chap0part2: chapId },
+    });
+
+    res.json({
+      success: true,
+      message: 'ArchitectsChap0 deleted successfully',
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -349,19 +373,17 @@ exports.delete = async (req, res) => {
     const architectsChap0Id = req.params.architectsChap0Id; // Getting architectsChap0Id from URL parameter
 
     const inUseChap0part2 = await Projects.findOne({
-      "chap0part2.id": architectsChap0Id,
+      'chap0part2.id': architectsChap0Id,
     });
     if (inUseChap0part2) {
       // If we found existing stakeholder in db
       return res.status(401).json({
         success: false,
-        message: "ArchitectsChap0 in use of a project",
+        message: 'ArchitectsChap0 in use of a project',
       });
     }
 
-    const architectsChap0 = await ArchitectsChap0.findByIdAndDelete(
-      architectsChap0Id
-    ); // Deleting the architectsChap0
+    const architectsChap0 = await ArchitectsChap0.findByIdAndDelete(architectsChap0Id); // Deleting the architectsChap0
 
     await Architects.findByIdAndUpdate(
       architectsChap0.architect,
@@ -371,11 +393,11 @@ exports.delete = async (req, res) => {
 
     res.json({
       success: true,
-      message: "ArchitectsChap0 deleted successfully",
+      message: 'ArchitectsChap0 deleted successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };

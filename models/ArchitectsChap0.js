@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Child level 2 schema
 const chap0Level3 = new mongoose.Schema({
@@ -42,15 +42,20 @@ const architectChap0Schema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["private", "duplicate"],
+      enum: ['private', 'duplicate'],
+    },
+    ranking: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     chap0: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Chap0",
+      ref: 'Chap0',
     },
     architect: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Architects",
+      ref: 'Architects',
     },
     level2: [chap0Level2],
   },
@@ -60,4 +65,4 @@ const architectChap0Schema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("ArchitectsChap0", architectChap0Schema);
+module.exports = mongoose.model('ArchitectsChap0', architectChap0Schema);
