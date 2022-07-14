@@ -12,6 +12,7 @@ const providersSchema = new mongoose.Schema(
       type: String,
       minlength: 6,
     },
+    profile_pic: String,
     contact_no: {
       type: String,
     },
