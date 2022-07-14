@@ -3,6 +3,7 @@ const Architects = require('../models/Architects');
 const Admins = require('../models/Admins');
 const Works = require('../models/Works');
 const moment = require('moment');
+moment.locale('fr');
 const Invoice = require('../models/Invoice');
 const fs = require('fs');
 const pdf = require('pdf-creator-node');
@@ -242,24 +243,27 @@ exports.generatePdf = async (req, res) => {
 
   const obj = {
     Facture: facture,
+    providerEstablishment: provider.establishment,
+    providerAddress: provider.address1,
+    providerPostalcode: provider.zipcode,
+    providerCity: provider.city,
     providerName: `${provider.name} ${provider.firstname}`,
     providerEmail: provider.email,
     providerPhone: provider.telephone_no,
-    providerAddress: provider.address1,
+    date: moment(new Date()).format('DD MMMM YYYY'),
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,
-    date: moment(new Date()).format('DD MMMM YYYY'),
     DESTINATAIRE: req.body.address1,
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
     alertTotal: req.body.alertTotal,
-    referenPrice: req.body.referenPrice?.toFixed(2),
+    referenPrice: req.body.referenPrice,
     referenCount: req.body.referenCount,
-    referenTotal: req.body.referenTotal?.toFixed(2),
-    totalHT: req.body.totalHT.toFixed(2),
+    referenTotal: req.body.referenTotal,
+    totalHT: req.body.totalHT,
     tvaPercentage: req.body.tvaPercentage,
-    tvaAmount: req.body.tvaAmount.toFixed(2),
-    totalTTC: req.body.TotalCost.toFixed(2),
+    tvaAmount: req.body.tvaAmount,
+    totalTTC: req.body.TotalCost,
     paymentMode: req.body.paymentMode,
   };
 
@@ -292,29 +296,33 @@ exports.generateQuotePdf = async (req, res) => {
   let facture = '';
   let count = '';
   let currentYear = moment().format('YYYY');
+  let currentMonth = moment().format('MM');
   if (invoice.length > 0) {
     count = invoice[invoice.length - 1].invoiceCount + 1;
     if (count < 10) {
-      facture = `D${currentYear}000${count}`;
+      facture = `D${currentYear}${currentMonth}000${count}`;
     } else if (count < 100) {
-      facture = `D${currentYear}00${count}`;
+      facture = `D${currentYear}${currentMonth}00${count}`;
     } else if (count < 1000) {
-      facture = `D${currentYear}0${count}`;
+      facture = `D${currentYear}${currentMonth}0${count}`;
     } else if (count > 1000) {
-      facture = `D${currentYear}${count}`;
+      facture = `D${currentYear}${currentMonth}${count}`;
     }
   } else {
-    facture = `D${currentYear}0001`;
+    facture = `D${currentYear}${currentMonth}0001`;
   }
 
   const provider = await Providers.findById(req.body.archId);
 
   const obj = {
     Facture: facture,
+    providerEstablishment: provider.establishment,
+    providerAddress: provider.address1,
+    providerPostalcode: provider.zipcode,
+    providerCity: provider.city,
     providerName: `${provider.name} ${provider.firstname}`,
     providerEmail: provider.email,
     providerPhone: provider.telephone_no,
-    providerAddress: provider.address1,
     date: moment(new Date()).format('DD MMMM YYYY'),
     subscriptionCode: req.body.subscriptionCode,
     subscriptionName: req.body.subscriptionName,
@@ -322,13 +330,13 @@ exports.generateQuotePdf = async (req, res) => {
     alertPrice: req.body.alertPrice,
     alertCount: req.body.alertCount,
     alertTotal: req.body.alertTotal,
-    referenPrice: req.body.referenPrice?.toFixed(2),
+    referenPrice: req.body.referenPrice,
     referenCount: req.body.referenCount,
-    referenTotal: req.body.referenTotal?.toFixed(2),
-    totalHT: req.body.totalHT.toFixed(2),
+    referenTotal: req.body.referenTotal,
+    totalHT: req.body.totalHT,
     tvaPercentage: req.body.tvaPercentage,
-    tvaAmount: req.body.tvaAmount.toFixed(2),
-    totalTTC: req.body.TotalCost.toFixed(2),
+    tvaAmount: req.body.tvaAmount,
+    totalTTC: req.body.TotalCost,
     paymentMode: req.body.paymentMode,
   };
 
