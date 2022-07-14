@@ -7,7 +7,7 @@ const InvoiceSchema = new mongoose.Schema(
       type: String,
     },
     date: {
-      type: Date,
+      type: String,
     },
     subscriptionCode: {
       type: String,
@@ -25,39 +25,39 @@ const InvoiceSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Subscriptions',
         },
-        count: Number,
+        count: String,
       },
     ],
     // for provider
     alertPrice: {
-      type: Number,
+      type: String,
     },
     alertCount: {
       type: Number,
     },
     alertTotal: {
-      type: Number,
+      type: String,
     },
     referenPrice: {
-      type: Number,
+      type: String,
     },
     referenCount: {
       type: Number,
     },
     referenTotal: {
-      type: Number,
+      type: String,
     },
     totalHT: {
-      type: Number,
+      type: String,
     },
     tvaPercentage: {
       type: Number,
     },
     tvaAmount: {
-      type: Number,
+      type: String,
     },
     totalTTC: {
-      type: Number,
+      type: String,
     },
     paymentMode: {
       type: String,

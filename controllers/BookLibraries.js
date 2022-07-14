@@ -1,32 +1,32 @@
-const BookLibraries = require("../models/BookLibraries");
-const Families = require("../models/Families");
-const Categories = require("../models/Categories");
-const Works = require("../models/Works");
-const WorkDetails = require("../models/WorkDetails");
-const mongoose = require("mongoose");
+const BookLibraries = require('../models/BookLibraries');
+const Families = require('../models/Families');
+const Categories = require('../models/Categories');
+const Works = require('../models/Works');
+const WorkDetails = require('../models/WorkDetails');
+const mongoose = require('mongoose');
 
 const populateQuery = [
   {
-    path: "families",
+    path: 'families',
     populate: [
       {
-        path: "Families",
+        path: 'Families',
       },
     ],
   },
   {
-    path: "categories",
+    path: 'categories',
     populate: [
       {
-        path: "Categories",
+        path: 'Categories',
       },
     ],
   },
   {
-    path: "works",
+    path: 'works',
     populate: [
       {
-        path: "Works",
+        path: 'Works',
       },
     ],
   },
@@ -50,12 +50,12 @@ exports.create = async (req, res) => {
     }
     // Done
     res.json({
-      message: "BookLibrary created successfully",
+      message: 'BookLibrary created successfully',
       BookLibrary,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -67,24 +67,24 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    let bookLibraries = await BookLibraries.find({ type: "public" });
+    let bookLibraries = await BookLibraries.find({ type: 'public' });
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
 
 exports.getAllPrivate = async (req, res) => {
   try {
-    let bookLibraries = await BookLibraries.find({ type: "private" }).populate("architect");
+    let bookLibraries = await BookLibraries.find({ type: 'private' }).populate('architect');
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -95,9 +95,9 @@ exports.getByFamily = async (req, res) => {
       {
         $match: {
           $expr: {
-            $in: [mongoose.Types.ObjectId(req.params.FamilyId), "$families"],
+            $in: [mongoose.Types.ObjectId(req.params.FamilyId), '$families'],
           },
-          type: "public",
+          type: 'public',
         },
       },
     ]);
@@ -105,7 +105,7 @@ exports.getByFamily = async (req, res) => {
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -113,15 +113,15 @@ exports.getByFamily = async (req, res) => {
 exports.getPrivateLibByFamily = async (req, res) => {
   try {
     let bookLibraries = await BookLibraries.find({
-      type: "private",
+      type: 'private',
       families: { $all: [req.params.FamilyId] },
-    }).populate("architect");
-    console.log("bookLibraries", bookLibraries[0]);
+    }).populate('architect');
+    console.log('bookLibraries', bookLibraries[0]);
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -140,7 +140,7 @@ exports.getLevel2 = async (req, res) => {
     res.json({ success: true, categories }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -156,78 +156,78 @@ exports.getLevel3 = async (req, res) => {
       },
       {
         $unwind: {
-          path: "$providers",
+          path: '$providers',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "providers",
-          localField: "providers.provider",
-          foreignField: "_id",
-          as: "providersList",
+          from: 'providers',
+          localField: 'providers.provider',
+          foreignField: '_id',
+          as: 'providersList',
         },
       },
       {
         $unwind: {
-          path: "$providersList",
+          path: '$providersList',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $group: {
-          _id: "$_id",
+          _id: '$_id',
           cctp_text: {
-            $first: "$cctp_text",
+            $first: '$cctp_text',
           },
           bpu_text: {
-            $first: "$bpu_text",
+            $first: '$bpu_text',
           },
           ranking: {
-            $first: "$ranking",
+            $first: '$ranking',
           },
           unit_price: {
-            $first: "$unit_price",
+            $first: '$unit_price',
           },
           work_details: {
-            $first: "$work_details",
+            $first: '$work_details',
           },
           name: {
-            $first: "$name",
+            $first: '$name',
           },
           providers: {
-            $push: "$providers",
+            $push: '$providers',
           },
           providersList: {
-            $push: "$providersList",
+            $push: '$providersList',
           },
           category: {
-            $first: "$category",
+            $first: '$category',
           },
           unit: {
-            $first: "$unit",
+            $first: '$unit',
           },
         },
       },
       {
         $project: {
-          _id: "$_id",
-          name: "$name",
-          cctp_text: "$cctp_text",
-          bpu_text: "$bpu_text",
-          unit_price: "$unit_price",
-          providers: "$providers",
-          unit: "$unit",
-          category: "$category",
+          _id: '$_id',
+          name: '$name',
+          cctp_text: '$cctp_text',
+          bpu_text: '$bpu_text',
+          unit_price: '$unit_price',
+          providers: '$providers',
+          unit: '$unit',
+          category: '$category',
           numberOfWorkDetails: {
             $cond: {
-              if: { $isArray: "$work_details" },
-              then: { $size: "$work_details" },
-              else: "NA",
+              if: { $isArray: '$work_details' },
+              then: { $size: '$work_details' },
+              else: 'NA',
             },
           },
-          ranking: "$ranking",
-          providersList: "$providersList",
+          ranking: '$ranking',
+          providersList: '$providersList',
         },
       },
     ]);
@@ -235,7 +235,7 @@ exports.getLevel3 = async (req, res) => {
     res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -261,7 +261,7 @@ exports.getLevel4 = async (req, res) => {
     res.json({ success: true, workDetails }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -270,13 +270,13 @@ exports.getLevel4 = async (req, res) => {
 exports.getTwoLevels = async (req, res) => {
   try {
     let bookLibraries = await BookLibraries.find({
-      type: "public",
-    }).populate("categories");
+      type: 'public',
+    }).populate('categories');
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -293,7 +293,7 @@ exports.getById = async (req, res) => {
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -302,16 +302,16 @@ exports.getById = async (req, res) => {
 exports.search = async (req, res) => {
   try {
     // using RegExp for search
-    const regex = new RegExp(req.query.q, "i");
+    const regex = new RegExp(req.query.q, 'i');
     let bookLibraries = await BookLibraries.find({
       name: { $regex: regex },
-      type: "public",
-    }).populate("categories");
+      type: 'public',
+    }).populate('categories');
 
     res.json({ success: true, bookLibraries }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -329,32 +329,32 @@ exports.getByArchitectId = async (req, res) => {
       {
         $match: {
           architect: mongoose.Types.ObjectId(ArchitectId),
-          type: "private",
+          type: 'private',
         },
       },
       {
         $lookup: {
-          from: "categories",
-          localField: "_id",
+          from: 'categories',
+          localField: '_id',
 
-          foreignField: "book_library",
-          as: "categories",
+          foreignField: 'book_library',
+          as: 'categories',
         },
       },
       {
         $lookup: {
-          from: "works",
-          localField: "categories._id",
-          foreignField: "category",
-          as: "works",
+          from: 'works',
+          localField: 'categories._id',
+          foreignField: 'category',
+          as: 'works',
         },
       },
       {
         $lookup: {
-          from: "workdetails",
-          localField: "works._id",
-          foreignField: "work",
-          as: "work_details",
+          from: 'workdetails',
+          localField: 'works._id',
+          foreignField: 'work',
+          as: 'work_details',
         },
       },
 
@@ -363,7 +363,7 @@ exports.getByArchitectId = async (req, res) => {
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -377,7 +377,7 @@ exports.getByArchitect = async (req, res) => {
       {
         $match: {
           architect: mongoose.Types.ObjectId(ArchitectId),
-          type: "private",
+          type: 'private',
         },
       },
     ]);
@@ -385,7 +385,7 @@ exports.getByArchitect = async (req, res) => {
     res.json({ success: true, bookLibrary }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -403,12 +403,12 @@ exports.update = async (req, res) => {
     }); // Updating the BookLibrary
     res.json({
       success: true,
-      message: "BookLibrary updated successfully",
+      message: 'BookLibrary updated successfully',
       BookLibrary,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -430,26 +430,26 @@ exports.delete = async (req, res) => {
       },
       {
         $lookup: {
-          from: "categories",
-          localField: "_id",
+          from: 'categories',
+          localField: '_id',
 
-          foreignField: "book_library",
-          as: "categories",
+          foreignField: 'book_library',
+          as: 'categories',
         },
       },
       {
         $lookup: {
-          from: "works",
-          localField: "categories._id",
-          foreignField: "category",
-          as: "works",
+          from: 'works',
+          localField: 'categories._id',
+          foreignField: 'category',
+          as: 'works',
         },
       },
 
       { $sort: { ranking: 1 } },
     ]);
     if (!bookLibrary) {
-      return res.status(404).json({ message: "BookLibraries  not found" });
+      return res.status(404).json({ message: 'BookLibraries  not found' });
     } // double check if BookLibraries id is invalid
     await BookLibraries.findByIdAndDelete(BookLibraryId); // Deleting the BookLibrary
 
@@ -469,15 +469,18 @@ exports.delete = async (req, res) => {
       work: { $in: tempWorks },
     }); // Deleting the WorkDetails
 
-    await Families.updateMany({ _id: { $in: bookLibrary.families } }, { $pull: { book_libraries: bookLibrary._id } }); // Deleting from the Families
+    await Families.updateMany(
+      { _id: { $in: bookLibrary.families } },
+      { $pull: { book_libraries: bookLibrary._id } }
+    ); // Deleting from the Families
     res.json({
       success: true,
-      message: "BookLibrary deleted successfully",
+      message: 'BookLibrary deleted successfully',
       BookLibrary: bookLibrary,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -493,11 +496,11 @@ exports.addFamily = async (req, res) => {
 
     let BookLibrary = await BookLibraries.findById({ _id: BookLibraryId });
     if (!BookLibrary) {
-      return res.status(404).json({ message: "BookLibray id not found" });
+      return res.status(404).json({ message: 'BookLibray id not found' });
     } // double check if bookLibrary id is invalid
     let family = await Families.findById(familyId);
     if (!family) {
-      return res.status(404).json({ message: "Family id not found" });
+      return res.status(404).json({ message: 'Family id not found' });
     } // double check if bookLibrary id is invalid
     BookLibrary = await BookLibraries.findByIdAndUpdate(
       BookLibraryId,
@@ -515,12 +518,12 @@ exports.addFamily = async (req, res) => {
     ); // Updating the Families Schema
     res.json({
       success: true,
-      message: "Family added Successfully",
+      message: 'Family added Successfully',
       BookLibrary,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -536,7 +539,7 @@ exports.addCategory = async (req, res) => {
 
     let BookLibrary = await BookLibraries.findById({ _id: BookLibraryId });
     if (!BookLibrary) {
-      return res.status(404).json({ message: "BookLibray id not found" });
+      return res.status(404).json({ message: 'BookLibray id not found' });
     } // double check if bookLibrary id is invalid
     let category = await Categories.create(req.body);
     const categoryId = category._id;
@@ -557,12 +560,12 @@ exports.addCategory = async (req, res) => {
     ); // Updating the Families Schema
     res.json({
       success: true,
-      message: "Category added Successfully",
+      message: 'Category added Successfully',
       category,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -576,7 +579,7 @@ exports.editCategory = async (req, res) => {
     const categoryId = req.params.categoryId; // Getting Category id from URL parameter
     let categoryExist = await Categories.findById({ _id: categoryId });
     if (!categoryExist) {
-      return res.status(404).json({ message: "Category id not found" });
+      return res.status(404).json({ message: 'Category id not found' });
     } // double check if category id exists
     let Category = await Categories.findByIdAndUpdate(
       categoryId,
@@ -588,12 +591,12 @@ exports.editCategory = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Category updated Successfully",
+      message: 'Category updated Successfully',
       Category,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -608,7 +611,7 @@ exports.deleteCategory = async (req, res) => {
     const categoryId = req.params.categoryId; // Getting Category id from URL parameter
     let categoryExist = await Categories.findById({ _id: categoryId });
     if (!categoryExist) {
-      return res.status(404).json({ message: "Category  not found" });
+      return res.status(404).json({ message: 'Category  not found' });
     } // double check if Category id is invalid
     const Category = await Categories.findByIdAndDelete(categoryId); // Deleting the Category
     let BookLibraryId = Category.book_library; //bookLibraryId in Category collection
@@ -625,19 +628,19 @@ exports.deleteCategory = async (req, res) => {
     if (!workList) {
       return res.json({
         success: true,
-        message: "Category deleted successfully",
+        message: 'Category deleted successfully',
         Category,
       }); // Success
     }
     await WorkDetails.deleteOne({ work: workList._id }); // delete work details
     res.json({
       success: true,
-      message: "Category deleted successfully",
+      message: 'Category deleted successfully',
       Category,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -653,8 +656,11 @@ exports.addWork = async (req, res) => {
 
     let category = await Categories.findById({ _id: categoryId });
     if (!category) {
-      return res.status(404).json({ message: "Category id not found" });
+      return res.status(404).json({ message: 'Category id not found' });
     } // double check if category id is invalid
+    let maxRanking = (await Works.find({ category: categoryId }).sort({ ranking: -1 }).limit(1))[0]
+      .ranking;
+    req.body.ranking = maxRanking + 1;
     let work = await Works.create(req.body);
     const workId = work._id;
     category = await Categories.findByIdAndUpdate(
@@ -675,12 +681,12 @@ exports.addWork = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work added Successfully",
+      message: 'Work added Successfully',
       work,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -694,7 +700,7 @@ exports.editWork = async (req, res) => {
     const workId = req.params.workId; // Getting Category id from URL parameter
     let workExist = await Works.findById({ _id: workId });
     if (!workExist) {
-      return res.status(404).json({ message: "Work id not found" });
+      return res.status(404).json({ message: 'Work id not found' });
     } // double check if work id exists
 
     let Work = await Works.findByIdAndUpdate(
@@ -707,12 +713,12 @@ exports.editWork = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work updated Successfully",
+      message: 'Work updated Successfully',
       Work,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -727,7 +733,7 @@ exports.deleteWork = async (req, res) => {
     const workId = req.params.workId; // Getting Category id from URL parameter
     let workExist = await Works.findById({ _id: workId });
     if (!workExist) {
-      return res.status(404).json({ message: "Work  not found" });
+      return res.status(404).json({ message: 'Work  not found' });
     } // double check if work detail id is invalid
     const Work = await Works.findByIdAndDelete(workId); // Deleting the Work
     let categoryId = Work.category;
@@ -741,12 +747,12 @@ exports.deleteWork = async (req, res) => {
     await WorkDetails.deleteOne({ work: workId }); // delete work details
     res.json({
       success: true,
-      message: "Work deleted successfully",
+      message: 'Work deleted successfully',
       Work,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -761,7 +767,7 @@ exports.addWorkDetail = async (req, res) => {
 
     let works = await Works.findById({ _id: workId });
     if (!works) {
-      return res.status(404).json({ message: "workId id not found" });
+      return res.status(404).json({ message: 'workId id not found' });
     } // double check if works id is invalid
     let workDetails = await WorkDetails.create(req.body);
     const workDetailId = workDetails._id;
@@ -782,12 +788,12 @@ exports.addWorkDetail = async (req, res) => {
     ); // Updating the Families Schema
     res.json({
       success: true,
-      message: "Work Detail added Successfully",
+      message: 'Work Detail added Successfully',
       workDetails,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -801,7 +807,7 @@ exports.editWorkDetail = async (req, res) => {
     const workDetailId = req.params.workDetailId; // Getting Category id from URL parameter
     let workDetailExist = await WorkDetails.findById({ _id: workDetailId });
     if (!workDetailExist) {
-      return res.status(404).json({ message: "Work id not found" });
+      return res.status(404).json({ message: 'Work id not found' });
     } // double check if work id exists
     let WorkDetail = await WorkDetails.findByIdAndUpdate(
       workDetailId,
@@ -813,12 +819,12 @@ exports.editWorkDetail = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work Detail updated Successfully",
+      message: 'Work Detail updated Successfully',
       WorkDetail,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -833,7 +839,7 @@ exports.deleteWorkDetail = async (req, res) => {
     const workDetailId = req.params.workDetailId; // Getting Category id from URL parameter
     let workDetailExist = await WorkDetails.findById({ _id: workDetailId });
     if (!workDetailExist) {
-      return res.status(404).json({ message: "Work Detail  not found" });
+      return res.status(404).json({ message: 'Work Detail  not found' });
     } // double check if work detail id is invalid
     const WorkDetail = await WorkDetails.findByIdAndDelete(workDetailId); // Deleting the Work
     let workId = WorkDetail.work;
@@ -847,12 +853,12 @@ exports.deleteWorkDetail = async (req, res) => {
 
     res.json({
       success: true,
-      message: "WorkDetail deleted successfully",
+      message: 'WorkDetail deleted successfully',
       WorkDetail,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
