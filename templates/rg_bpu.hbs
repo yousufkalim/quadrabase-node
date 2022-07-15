@@ -71,13 +71,6 @@
     <table>
     <table>
       <tr>
-        <td align="left" valign="top">
-          <tr style="background-color: #c0c0c0;">
-            {{#each this.bodyKeysArr}}
-            <td align="center"class={{#ifCond this.i '!=' 1}} body_header_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_header_name_text {{/ifCond}}>{{this.v}}</td>
-            {{/each}}
-          </tr>
-        </td>
         {{#each this.bodyValuesArr}}
           <td align="left" valign="top">
             <tr style="background-color: #FFFFFF;">
