@@ -15,11 +15,15 @@ const Auth = require('../middleware/auth');
 router.post('/create', Auth(), StaticPages.create);
 
 // Read
-router.get('/terms', StaticPages.getTerms); // Get all StaticPages at once
-router.get('/privacy', StaticPages.getPrivacy); // Get all StaticPages at once
+router.get('/', StaticPages.getStaticPages); // Get all StaticPages at once
 
 // Update
 router.put('/:StaticPageId', Auth(), StaticPages.update); // Update a specific StaticPages by it's id
+router.put('/addSupport/:StaticPageId', Auth(), StaticPages.addSupport); // Update a specific StaticPages by it's id
+router.put('/editSupport/:StaticPageId/:supportId', Auth(), StaticPages.editSupport); // Update a specific StaticPages by it's id
+
+// delete support
+router.delete('/deleteSupport/:StaticPageId/:supportId', Auth(), StaticPages.deleteSupport); // Update a specific StaticPages by it's id
 
 // Export
 module.exports = router;
