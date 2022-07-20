@@ -1,14 +1,26 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Schema
 const staticPagesSchema = new mongoose.Schema(
   {
-    terms: {
+    cgu: {
+      type: String,
+    },
+    cgv: {
       type: String,
     },
     privacy: {
       type: String,
     },
+    product: {
+      type: String,
+    },
+    supports: [
+      {
+        title: String,
+        text: String,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -16,4 +28,4 @@ const staticPagesSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("StaticPages", staticPagesSchema);
+module.exports = mongoose.model('StaticPages', staticPagesSchema);
