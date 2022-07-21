@@ -11,7 +11,6 @@
       crossorigin="anonymous"
     />
   </head>
-
   <body style="font-size: 12px">
     <style>
       .header_text {
@@ -57,6 +56,24 @@
         border: 1px solid black;
         width: {{this.sizes.6s.text_main}}
       }
+
+      .footer_key_text {
+        font-size: {{this.sizes.f12}};
+        font-weight: bold;
+        border: 1px solid black;
+        width: {{this.sizes.3s.text}}
+      }
+
+      .footer_value_text {
+        font-size: {{this.sizes.f12}};
+        font-weight: normal;
+        border: 1px solid black;
+        width: {{this.sizes.3s.text}}
+      }
+
+      .footer_table {
+        margin-left: {{this.sizes.tt_table_margin}};
+      }
     </style>
     <table style="margin-bottom: 20px;">
       <tr>
@@ -69,7 +86,7 @@
         </td>
       </tr>
     <table>
-    <table>
+    <table style="margin-bottom: 20px;">
       <tr>
         <td align="left" valign="top">
           <tr style="background-color: #c0c0c0;">
@@ -82,7 +99,20 @@
           <td align="left" valign="top">
             <tr style="background-color: #FFFFFF;">
               {{#each this.v}}
-              <td align="center" class={{#ifCond this.i '!=' 1}} body_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_name_text {{/ifCond}}>{{this.v}}</td>
+              <td align={{#ifCond this.i '!=' 1}} center {{/ifCond}} {{#ifCond this.i '==' 1}} left {{/ifCond}} class={{#ifCond this.i '!=' 1}} body_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_name_text {{/ifCond}}>{{this.v}}</td>
+              {{/each}}
+            </tr>
+          </td>
+        {{/each}}
+      </tr>
+    <table>
+    <table class="footer_table">
+      <tr>
+        {{#each this.footerArr}}
+          <td align="left" valign="top">
+            <tr style="background-color: #FFFFFF;">
+              {{#each this}}
+              <td align="center" class={{#ifCond this.i '==' 0}} footer_key_text {{/ifCond}} {{#ifCond this.i '==' 1}} footer_value_text {{/ifCond}}>{{this.v}}</td>
               {{/each}}
             </tr>
           </td>

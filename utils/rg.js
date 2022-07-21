@@ -31,6 +31,7 @@ const devSizes = {
   f12: '12px',
   f14: '14px',
   full: '700px',
+  tt_table_margin: '400px',
 };
 
 // 780 in total pre
@@ -55,6 +56,7 @@ const prodSizes = {
   f12: '10px',
   f14: '12px',
   full: '770px',
+  tt_table_margin: '450px',
 };
 
 module.exports = {

@@ -65,15 +65,21 @@ exports.simpleEstimation = async (req, res) => {
 };
 
 exports.ttEstimation = async (req, res) => {
-  const { headerArr, bodyKeysArr, bodyValuesArr } = req.body;
+  const { headerArr, bodyKeysArr, bodyValuesArr, footerKeysArr, footerValuesArr } = req.body;
 
   const html = fs.readFileSync(path.join(__dirname, '../templates/rg_tt_estimation.hbs'), 'utf-8');
   const filename = Math.random() + '_doc' + '.pdf';
+
+  const footerArr = [];
+  for (let i = 0; i < footerKeysArr.length; i++) {
+    footerArr.push([footerKeysArr[i], footerValuesArr[i]]);
+  }
 
   const body = {
     headerArr,
     bodyKeysArr,
     bodyValuesArr,
+    footerArr,
     sizes: rgConfig.sizes,
   };
 
@@ -81,6 +87,9 @@ exports.ttEstimation = async (req, res) => {
   indexArr(body.bodyKeysArr);
   for (let i = 0; i < body.bodyValuesArr.length; i++) {
     indexArr(body.bodyValuesArr[i]);
+  }
+  for (let i = 0; i < body.footerArr.length; i++) {
+    indexArr(body.footerArr[i]);
   }
   indexArr(body.bodyValuesArr);
 
