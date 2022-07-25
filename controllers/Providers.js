@@ -56,7 +56,7 @@ exports.createOnSingup = async (req, res) => {
     const provider = await Providers.create(req.body); // Adding provider in db
 
     // Done
-    res.json({ success: true, message: 'Fournisseur créé avec succès', provider }); //Success
+    res.json({ success: true, message: 'Fabricant créé avec succès', provider }); //Success
   } catch (err) {
     // Error handling
     console.log('Error ----> ', err.message);
@@ -154,8 +154,8 @@ exports.addSubscription = async (req, res) => {
   } else {
     const data = {
       name: req.body.name,
-      start_date: moment(req.body.start_date).add(1, 'days').format('YYYY/MM/DD'),
-      end_date: moment(req.body.end_date).add(1, 'days').format('YYYY/MM/DD'),
+      start_date: moment(req.body.start_date).format('YYYY/MM/DD'),
+      end_date: moment(req.body.end_date).format('YYYY/MM/DD'),
     };
 
     await Providers.findByIdAndUpdate(req.params.providerId, {
