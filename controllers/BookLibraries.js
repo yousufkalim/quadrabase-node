@@ -658,8 +658,8 @@ exports.addWork = async (req, res) => {
     if (!category) {
       return res.status(404).json({ message: 'Category id not found' });
     } // double check if category id is invalid
-    let maxRanking = (await Works.find({ category: categoryId }).sort({ ranking: -1 }).limit(1))[0]
-      .ranking;
+    let topWork = (await Works.find({ category: categoryId }).sort({ ranking: -1 }).limit(1))[0];
+    let maxRanking = topWork ? topWork.ranking : 0;
     req.body.ranking = maxRanking + 1;
     let work = await Works.create(req.body);
     const workId = work._id;
