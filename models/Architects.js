@@ -14,6 +14,9 @@ const architectsSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    email_address_client: {
+      type: String,
+    },
     password: {
       type: String,
       minlength: 6,
