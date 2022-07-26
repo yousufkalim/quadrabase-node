@@ -624,6 +624,7 @@ exports.addSubscription = async (req, res) => {
         end_date: moment(req.body.end_date).format('YYYY/MM/DD'),
         credit: subscription.credit,
         projects: req.body.projects,
+        architect: req.params.architectId,
         assigned_to: req.params.architectId,
       };
 

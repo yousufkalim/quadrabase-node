@@ -2,7 +2,7 @@
  * Send email service for forgot password
  * @author Ali Asad
  */
-var nodemailer = require("nodemailer");
+var nodemailer = require('nodemailer');
 const sender_name = process.env.MAILER_DOMAIN;
 const sender_email = process.env.MAILER_EMAIL;
 const sender_password = process.env.MAILER_PASSWORD;
@@ -17,7 +17,7 @@ exports.sendEmail = (email, password) => {
   return new Promise((resolve, reject) => {
     // Sender mail server config
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: 'gmail',
       auth: {
         user: sender_email,
         pass: sender_password,
@@ -28,7 +28,7 @@ exports.sendEmail = (email, password) => {
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
       to: email,
-      subject: "Your password has been changed",
+      subject: 'votre mot de passe a été changé',
       html: passwordTemplate(password),
     };
 
@@ -39,7 +39,7 @@ exports.sendEmail = (email, password) => {
         reject(error);
       } else {
         // Success
-        resolve({ success: true, message: "Email sent successfully" });
+        resolve({ success: true, message: 'Email sent successfully' });
       }
     });
   });
@@ -49,7 +49,7 @@ exports.contactUs = (name, phone, email, message) => {
   return new Promise((resolve, reject) => {
     // Sender mail server config
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: 'gmail',
       auth: {
         user: sender_email,
         pass: sender_password,
@@ -59,8 +59,8 @@ exports.contactUs = (name, phone, email, message) => {
     // Send email options
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
-      to: "contact@qbsoft.fr",
-      subject: "Nouveau formulaire en ligne - Quadrabase",
+      to: 'contact@qbsoft.fr',
+      subject: 'Nouveau formulaire en ligne - Quadrabase',
       html: `<div>
         <p>Un visiteur a rempli le formulaire en ligne, voici les informations :</p>
         <ul>
@@ -79,7 +79,7 @@ exports.contactUs = (name, phone, email, message) => {
         reject(error);
       } else {
         // Success
-        resolve({ success: true, message: "Email sent successfully" });
+        resolve({ success: true, message: 'Email sent successfully' });
       }
     });
   });
@@ -89,7 +89,7 @@ exports.sendSummaryEmail = (obj) => {
   return new Promise((resolve, reject) => {
     // Sender mail server config
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: 'gmail',
       auth: {
         user: sender_email,
         pass: sender_password,
@@ -115,7 +115,7 @@ exports.sendSummaryEmail = (obj) => {
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
       to: obj.providerEmail,
-      subject: "Résumé des nouveaux projets sur Quadrabase",
+      subject: 'Résumé des nouveaux projets sur Quadrabase',
       html: html,
     };
 
@@ -126,7 +126,7 @@ exports.sendSummaryEmail = (obj) => {
         reject(error);
       } else {
         // Success
-        resolve({ success: true, message: "Email sent successfully" });
+        resolve({ success: true, message: 'Email sent successfully' });
       }
     });
   });
@@ -136,7 +136,7 @@ exports.sendQuoteEmail = (email, attachment) => {
   return new Promise((resolve, reject) => {
     // Sender mail server config
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: 'gmail',
       auth: {
         user: sender_email,
         pass: sender_password,
@@ -146,11 +146,11 @@ exports.sendQuoteEmail = (email, attachment) => {
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
       to: email,
-      subject: "Devis généré - Quadrabase",
+      subject: 'Devis généré - Quadrabase',
       html: `<p>Veuillez trouver le devis ci-joint</p>`,
       attachments: [
         {
-          filename: "Quote.pdf",
+          filename: 'Quote.pdf',
           path: `${attachment}`, // stream this file
         },
       ],
@@ -163,7 +163,7 @@ exports.sendQuoteEmail = (email, attachment) => {
         reject(error);
       } else {
         // Success
-        resolve({ success: true, message: "Email sent successfully" });
+        resolve({ success: true, message: 'Email sent successfully' });
       }
     });
   });
@@ -200,7 +200,7 @@ const passwordTemplate = (password) => {
               style="padding: 20px 5px 10px 5px; background: rgb(255, 255, 255)"
             >
               <img
-                src="https://www.quadrabase.fr/Portals/0/BlockBuilderImages/464/Logo_QBSoft_12.png"
+                src="https://quadrabase.falconit.com.pk/uploads/code_generation/logo.png"
                 alt=""
                 width="150px"
                 style="height: auto; display: block"
