@@ -8,7 +8,10 @@ const rgConfig = require('../utils/rg');
 exports.simpleEstimation = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr, footerKeysArr, footerValuesArr } = req.body;
 
-  const html = fs.readFileSync(path.join(__dirname, '../templates/rg_simple_estimation.hbs'), 'utf-8');
+  const html = fs.readFileSync(
+    path.join(__dirname, '../templates/rg_simple_estimation.hbs'),
+    'utf-8'
+  );
   const filename = Math.random() + '_doc' + '.pdf';
 
   const footerArr = [];
@@ -75,10 +78,33 @@ exports.ttEstimation = async (req, res) => {
     footerArr.push([footerKeysArr[i], footerValuesArr[i]]);
   }
 
+  let values = [];
+  bodyValuesArr.map((item) => {
+    let obj = {
+      data: item,
+      type: '',
+    };
+    if (req.body.type === 'tranches') {
+      if (item[0].length === 1) {
+        obj.type = 'title';
+      } else if (item[0].length === 3) {
+        obj.type = 'title';
+      } else if (item[0].length === 0) {
+        obj.type = 'total';
+      }
+    } else if (req.body.type === 'trades') {
+      if (item[0].length === 1) {
+        obj.type = 'title';
+      } else if (item[0].length === 0) {
+        obj.type = 'total';
+      }
+    }
+    values.push(obj);
+  });
   const body = {
     headerArr,
     bodyKeysArr,
-    bodyValuesArr,
+    bodyValuesArr: values,
     footerArr,
     sizes: rgConfig.sizes,
   };
