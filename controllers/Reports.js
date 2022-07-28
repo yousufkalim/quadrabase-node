@@ -146,9 +146,28 @@ exports.BPU = async (req, res) => {
   const html = fs.readFileSync(path.join(__dirname, '../templates/rg_bpu.hbs'), 'utf-8');
   const filename = Math.random() + '_doc' + '.pdf';
 
+  let values = [];
+  bodyValuesArr.map((item) => {
+    let obj = {
+      data: item,
+      type: '',
+    };
+    if (req.body.type === 'tranches') {
+      if (item[0].length === 1) {
+        obj.type = 'title';
+      } else if (item[0].length === 3) {
+        obj.type = 'title';
+      }
+    } else if (req.body.type === 'trades') {
+      if (item[0].length === 1) {
+        obj.type = 'title';
+      }
+    }
+    values.push(obj);
+  });
   const body = {
     headerArr,
-    bodyValuesArr,
+    bodyValuesArr: values,
     sizes: rgConfig.sizes,
   };
 
