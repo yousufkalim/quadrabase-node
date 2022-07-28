@@ -63,7 +63,7 @@
         <td align="left" valign="top">
           <tr style="background-color: #c0c0c0; padding: 10px 20px">
             {{#each this.headerArr}}
-            <td align="center" class={{#ifCond this.i '!=' 1}} header_text {{/ifCond}} {{#ifCond this.i '==' 1}} header_center_text {{/ifCond}}>{{this.v}}</td>
+            <td align="center" class={{#ifCond this.i '!=' 1}} header_text {{/ifCond}} {{#ifCond this.i '==' 1}} header_center_text {{/ifCond}}><strong>{{this.v}}</strong></td>
             {{/each}}
           </tr>
         </td>
@@ -74,8 +74,8 @@
         {{#each this.bodyValuesArr}}
           <td align="left" valign="top">
             <tr style="background-color: #FFFFFF;">
-              {{#each this.v}}
-              <td align={{#ifCond this.i '!=' 1}} center {{/ifCond}} {{#ifCond this.i '==' 1}} left {{/ifCond}} class={{#ifCond this.i '!=' 1}} body_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_name_text {{/ifCond}}>{{{this.v}}}</td>
+              {{#each this.v.data as |child childIndex|}}
+              <td align={{#ifCond childIndex '!=' 1}} center {{/ifCond}} {{#ifCond childIndex '==' 1}} left {{/ifCond}} class={{#ifCond childIndex '!=' 1}} body_text {{/ifCond}} {{#ifCond childIndex '==' 1}} body_name_text {{/ifCond}}> {{#ifCond ../this.v.type '==' 'title'}}<strong> {{{this}}}</strong>{{/ifCond}}{{#ifCond ../this.v.type '!=' 'title'}} {{{this}}} {{/ifCond}} </td>
               {{/each}}
             </tr>
           </td>
