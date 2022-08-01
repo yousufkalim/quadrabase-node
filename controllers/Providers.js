@@ -5,6 +5,7 @@ const Works = require('../models/Works');
 const moment = require('moment');
 moment.locale('fr');
 const Invoice = require('../models/Invoice');
+const Subscriptions = require('../models/Subscriptions');
 const fs = require('fs');
 const pdf = require('pdf-creator-node');
 const path = require('path');
@@ -73,7 +74,8 @@ exports.getAll = async (req, res) => {
   try {
     const providers = await Providers.find()
       .sort([['createdAt', -1]])
-      .populate('works'); // Finding all the Providers from db
+      .populate('works')
+      .populate('subscription.id'); // Finding all the Providers from db
     res.json({ success: true, providers }); // Success
   } catch (err) {
     // Error handling
@@ -146,22 +148,28 @@ exports.update = async (req, res) => {
 };
 
 exports.addSubscription = async (req, res) => {
-  if (!req.body.name) {
-    await Providers.findByIdAndUpdate(req.params.providerId, {
-      subscription: {},
-    });
-    res.json({ success: true, message: 'Subscription Removed!' });
-  } else {
-    const data = {
-      name: req.body.name,
-      start_date: moment(req.body.start_date).format('YYYY/MM/DD'),
-      end_date: moment(req.body.end_date).format('YYYY/MM/DD'),
-    };
+  try {
+    if (!req.body.subscriptionId) {
+      await Providers.findByIdAndUpdate(req.params.providerId, {
+        subscription: {},
+      });
+      res.json({ success: true, message: 'Subscription Removed!' });
+    } else {
+      const subscription = await Subscriptions.findById(req.body.subscriptionId);
+      const data = {
+        id: subscription._id,
+        name: subscription.name,
+        start_date: moment(req.body.start_date).format('YYYY/MM/DD'),
+        end_date: moment(req.body.end_date).format('YYYY/MM/DD'),
+      };
 
-    await Providers.findByIdAndUpdate(req.params.providerId, {
-      subscription: data,
-    });
-    res.json({ success: true, message: 'Subscription Updated!' });
+      await Providers.findByIdAndUpdate(req.params.providerId, {
+        subscription: data,
+      });
+      res.json({ success: true, message: 'Subscription Updated!' });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
