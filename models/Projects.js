@@ -1,11 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Work Schema
 const workSchema = new mongoose.Schema({
   name: { type: String },
   cctp_text: [{ type: String }],
   bpu_text: [{ type: String }],
-  unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
+  unit: { type: mongoose.Schema.Types.ObjectId, ref: 'Units' },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+  },
   unit_price: { type: Number },
   quantity: { type: Number },
   ranking: {
@@ -13,16 +17,16 @@ const workSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
-  tranch: { type: mongoose.Schema.Types.ObjectId, ref: "Tranches" },
+  tranch: { type: mongoose.Schema.Types.ObjectId, ref: 'Tranches' },
   trade: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Trades",
+    ref: 'Trades',
   },
   providers: [
     {
       provider: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Providers",
+        ref: 'Providers',
       },
       documents: [{ uri: String }],
     },
@@ -30,7 +34,7 @@ const workSchema = new mongoose.Schema({
   work_details: [
     {
       name: { type: String },
-      unit: { type: mongoose.Schema.Types.ObjectId, ref: "Units" },
+      unit: { type: mongoose.Schema.Types.ObjectId, ref: 'Units' },
       unit_price: { type: Number },
       quantity: { type: Number },
       ranking: {
@@ -47,30 +51,30 @@ const projectsSchema = new mongoose.Schema(
   {
     client: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Stakeholders",
+      ref: 'Stakeholders',
     },
     architect: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Architects",
+      ref: 'Architects',
     },
     prescriber: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Stakeholders",
+      ref: 'Stakeholders',
     },
     name: {
       type: String,
     },
     vat: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "VAT",
+      ref: 'VAT',
     },
     market_type: {
       type: String,
-      enum: ["Simple", "Trades", "TradesAndTranches", "PurchaseOrder"],
+      enum: ['Simple', 'Trades', 'TradesAndTranches', 'PurchaseOrder'],
     },
     structure: {
       type: String,
-      enum: ["DQEAndBPU", "DPGF"],
+      enum: ['DQEAndBPU', 'DPGF'],
     },
     reference: {
       type: String,
@@ -91,25 +95,25 @@ const projectsSchema = new mongoose.Schema(
       {
         id: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "ArchitectsChap0",
+          ref: 'ArchitectsChap0',
         },
         status: {
           type: String,
-          enum: ["selected", "modified"],
+          enum: ['selected', 'modified'],
         },
       },
     ],
     stakeholders: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Stakeholders",
+        ref: 'Stakeholders',
       },
     ],
     works: [workSchema],
     status: {
       type: String,
-      enum: ["En cours", "Complété", "Archivé"],
-      default: "En cours",
+      enum: ['En cours', 'Complété', 'Archivé'],
+      default: 'En cours',
     },
     date: {
       type: Date,
@@ -121,4 +125,4 @@ const projectsSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("Projects", projectsSchema);
+module.exports = mongoose.model('Projects', projectsSchema);

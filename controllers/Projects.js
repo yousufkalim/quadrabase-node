@@ -1,13 +1,13 @@
-const Projects = require("../models/Projects");
-const Architects = require("../models/Architects");
-const WorkDetails = require("../models/WorkDetails");
-const Works = require("../models/Works");
-const mongoose = require("mongoose");
-const ArchitectsChap0 = require("../models/ArchitectsChap0");
-const Chap0 = require("../models/Chap0");
-const Chap0Level2 = require("../models/Chap0Level2");
-const Trades = require("../models/Trades");
-const Tranches = require("../models/Tranches");
+const Projects = require('../models/Projects');
+const Architects = require('../models/Architects');
+const WorkDetails = require('../models/WorkDetails');
+const Works = require('../models/Works');
+const mongoose = require('mongoose');
+const ArchitectsChap0 = require('../models/ArchitectsChap0');
+const Chap0 = require('../models/Chap0');
+const Chap0Level2 = require('../models/Chap0Level2');
+const Trades = require('../models/Trades');
+const Tranches = require('../models/Tranches');
 
 //Projects create
 exports.create = async (req, res) => {
@@ -19,31 +19,35 @@ exports.create = async (req, res) => {
     }); // Finding already existing Projects
     if (existingProjects) {
       // If we found existing Projects in db
-      return res.status(401).json({ success: false, message: "Project already exists" });
+      return res.status(401).json({ success: false, message: 'Project already exists' });
     }
 
     const project = await Projects.create(req.body);
 
-    let architect = await Architects.findByIdAndUpdate(req.body.architect, { $push: { projects: project._id } }, { new: true });
+    let architect = await Architects.findByIdAndUpdate(
+      req.body.architect,
+      { $push: { projects: project._id } },
+      { new: true }
+    );
 
-    if (project.market_type === "Trades") {
+    if (project.market_type === 'Trades') {
       // Creating Trade
       const tradeData = {
-        name: "Lot n°1",
+        name: 'Lot n°1',
         ranking: 0,
         project: project._id,
       };
       await Trades.create(tradeData); // Adding Trade in db
-    } else if (project.market_type === "TradesAndTranches") {
+    } else if (project.market_type === 'TradesAndTranches') {
       // Creating Trade
       const tradeData = {
-        name: "Lot n°1",
+        name: 'Lot n°1',
         ranking: 0,
         project: project._id,
       };
       const trade = await Trades.create(tradeData); // Adding Trade in db
       const tranchData = {
-        name: "Tranche Ferme",
+        name: 'Tranche Ferme',
         ranking: 0,
         project: project._id,
         trade: trade._id,
@@ -52,12 +56,12 @@ exports.create = async (req, res) => {
     }
 
     res.json({
-      message: "Project created successfully",
+      message: 'Project created successfully',
       project,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -73,7 +77,7 @@ exports.getAll = async (req, res) => {
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -88,13 +92,13 @@ exports.getByArchitect = async (req, res) => {
     const project = await Projects.find({
       architect: req.params.architectId,
     })
-      .populate("vat")
-      .populate("prescriber")
-      .populate("client"); // Finding all the Project from db
+      .populate('vat')
+      .populate('prescriber')
+      .populate('client'); // Finding all the Project from db
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -107,15 +111,15 @@ exports.getById = async (req, res) => {
   try {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
     const project = await Projects.findById(projectId)
-      .populate("vat")
-      .populate("chap0part2.id")
-      .populate("prescriber")
-      .populate("stakeholders")
-      .populate("client"); // Finding project by id
+      .populate('vat')
+      .populate('chap0part2.id')
+      .populate('prescriber')
+      .populate('stakeholders')
+      .populate('client'); // Finding project by id
     res.json({ success: true, project }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -132,59 +136,89 @@ exports.getWorks = async (req, res) => {
       },
       {
         $unwind: {
-          path: "$works",
+          path: '$works',
         },
       },
       {
         $lookup: {
-          from: "units",
-          localField: "works.unit",
-          foreignField: "_id",
-          as: "work_unit",
+          from: 'units',
+          localField: 'works.unit',
+          foreignField: '_id',
+          as: 'work_unit',
         },
       },
       {
         $unwind: {
-          path: "$work_unit",
+          path: '$work_unit',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $unwind: {
-          path: "$works.work_details",
+          path: '$works.work_details',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "units",
-          localField: "works.work_details.unit",
-          foreignField: "_id",
-          as: "work_details_unit",
+          from: 'units',
+          localField: 'works.work_details.unit',
+          foreignField: '_id',
+          as: 'work_details_unit',
+        },
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'works.category',
+          foreignField: '_id',
+          as: 'work_category',
         },
       },
       {
         $unwind: {
-          path: "$work_details_unit",
+          path: '$work_category',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'booklibraries',
+          localField: 'work_category.book_library',
+          foreignField: '_id',
+          as: 'work_library',
+        },
+      },
+      {
+        $unwind: {
+          path: '$work_library',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$work_details_unit',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $project: {
-          work: "$works",
-          workUnit: "$work_unit",
-          workDetails: "$works.work_details",
-          workDetailsUnit: "$work_details_unit",
+          work: '$works',
+          work_category: '$work_category',
+          work_library: '$work_library',
+          workUnit: '$work_unit',
+          workDetails: '$works.work_details',
+          workDetailsUnit: '$work_details_unit',
         },
       },
       {
-        $unset: ["work.work_details"],
+        $unset: ['work.work_details'],
       },
     ]); // Finding works project by id
     res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -201,75 +235,105 @@ exports.getWorksByTrades = async (req, res) => {
       },
       {
         $unwind: {
-          path: "$works",
+          path: '$works',
         },
       },
       {
         $lookup: {
-          from: "trades",
-          localField: "works.trade",
-          foreignField: "_id",
-          as: "trade",
+          from: 'trades',
+          localField: 'works.trade',
+          foreignField: '_id',
+          as: 'trade',
         },
       },
       {
         $unwind: {
-          path: "$trade",
+          path: '$trade',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "units",
-          localField: "works.unit",
-          foreignField: "_id",
-          as: "work_unit",
+          from: 'units',
+          localField: 'works.unit',
+          foreignField: '_id',
+          as: 'work_unit',
         },
       },
       {
         $unwind: {
-          path: "$work_unit",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $unwind: {
-          path: "$works.work_details",
+          path: '$work_unit',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "units",
-          localField: "works.work_details.unit",
-          foreignField: "_id",
-          as: "work_details_unit",
+          from: 'categories',
+          localField: 'works.category',
+          foreignField: '_id',
+          as: 'work_category',
         },
       },
       {
         $unwind: {
-          path: "$work_details_unit",
+          path: '$work_category',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'booklibraries',
+          localField: 'work_category.book_library',
+          foreignField: '_id',
+          as: 'work_library',
+        },
+      },
+      {
+        $unwind: {
+          path: '$work_library',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$works.work_details',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'units',
+          localField: 'works.work_details.unit',
+          foreignField: '_id',
+          as: 'work_details_unit',
+        },
+      },
+      {
+        $unwind: {
+          path: '$work_details_unit',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $project: {
-          work: "$works",
-          workUnit: "$work_unit",
-          workDetails: "$works.work_details",
-          workDetailsUnit: "$work_details_unit",
-          trade: "$trade",
+          work: '$works',
+          work_category: '$work_category',
+          work_library: '$work_library',
+          workUnit: '$work_unit',
+          workDetails: '$works.work_details',
+          workDetailsUnit: '$work_details_unit',
+          trade: '$trade',
         },
       },
       {
-        $unset: ["work.work_details"],
+        $unset: ['work.work_details'],
       },
       {
         $group: {
-          _id: "$trade.name",
-          ranking: { $first: "$trade.ranking" },
+          _id: '$trade.name',
+          ranking: { $first: '$trade.ranking' },
           data: {
-            $push: "$$ROOT",
+            $push: '$$ROOT',
           },
         },
       },
@@ -277,7 +341,7 @@ exports.getWorksByTrades = async (req, res) => {
     res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -294,90 +358,120 @@ exports.getWorksByTranches = async (req, res) => {
       },
       {
         $unwind: {
-          path: "$works",
+          path: '$works',
         },
       },
       {
         $lookup: {
-          from: "trades",
-          localField: "works.trade",
-          foreignField: "_id",
-          as: "trade",
+          from: 'trades',
+          localField: 'works.trade',
+          foreignField: '_id',
+          as: 'trade',
         },
       },
       {
         $unwind: {
-          path: "$trade",
+          path: '$trade',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "units",
-          localField: "works.unit",
-          foreignField: "_id",
-          as: "work_unit",
+          from: 'units',
+          localField: 'works.unit',
+          foreignField: '_id',
+          as: 'work_unit',
         },
       },
       {
         $unwind: {
-          path: "$work_unit",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $unwind: {
-          path: "$works.work_details",
+          path: '$work_unit',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "units",
-          localField: "works.work_details.unit",
-          foreignField: "_id",
-          as: "work_details_unit",
+          from: 'categories',
+          localField: 'works.category',
+          foreignField: '_id',
+          as: 'work_category',
         },
       },
       {
         $unwind: {
-          path: "$work_details_unit",
+          path: '$work_category',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "tranches",
-          localField: "works.tranch",
-          foreignField: "_id",
-          as: "tranch",
+          from: 'booklibraries',
+          localField: 'work_category.book_library',
+          foreignField: '_id',
+          as: 'work_library',
         },
       },
       {
         $unwind: {
-          path: "$tranch",
+          path: '$work_library',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$works.work_details',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'units',
+          localField: 'works.work_details.unit',
+          foreignField: '_id',
+          as: 'work_details_unit',
+        },
+      },
+      {
+        $unwind: {
+          path: '$work_details_unit',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'tranches',
+          localField: 'works.tranch',
+          foreignField: '_id',
+          as: 'tranch',
+        },
+      },
+      {
+        $unwind: {
+          path: '$tranch',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $project: {
-          work: "$works",
-          workUnit: "$work_unit",
-          workDetails: "$works.work_details",
-          workDetailsUnit: "$work_details_unit",
-          trade: "$trade",
-          tranch: "$tranch",
+          work: '$works',
+          work_category: '$work_category',
+          work_library: '$work_library',
+          workUnit: '$work_unit',
+          workDetails: '$works.work_details',
+          workDetailsUnit: '$work_details_unit',
+          trade: '$trade',
+          tranch: '$tranch',
         },
       },
       {
-        $unset: ["work.work_details"],
+        $unset: ['work.work_details'],
       },
       {
         $group: {
-          _id: "$trade.name",
-          ranking: { $first: "$trade.ranking" },
+          _id: '$trade.name',
+          ranking: { $first: '$trade.ranking' },
           data: {
-            $push: "$$ROOT",
+            $push: '$$ROOT',
           },
         },
       },
@@ -385,7 +479,7 @@ exports.getWorksByTranches = async (req, res) => {
     res.json({ success: true, works }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -406,10 +500,10 @@ const createArchChap = async (item, req) => {
     },
     {
       $lookup: {
-        from: "chap0level3",
-        localField: "_id",
-        foreignField: "parentLevel",
-        as: "level3",
+        from: 'chap0level3',
+        localField: '_id',
+        foreignField: 'parentLevel',
+        as: 'level3',
       },
     },
   ]);
@@ -420,10 +514,14 @@ const createArchChap = async (item, req) => {
     level2: chap0Level2,
     chap0: chap0._id,
   });
-  await Architects.findByIdAndUpdate(req.body.architect, { $push: { chap0part2: architectsChap0._id } }, { new: true });
+  await Architects.findByIdAndUpdate(
+    req.body.architect,
+    { $push: { chap0part2: architectsChap0._id } },
+    { new: true }
+  );
   return {
     id: architectsChap0._id,
-    status: "modified",
+    status: 'modified',
   };
 };
 
@@ -433,7 +531,7 @@ exports.update = async (req, res) => {
     if (req.body.chap0part2?.length > 0) {
       let temp = [];
       req.body.chap0part2.map((item) => {
-        if (item.status === "modified") {
+        if (item.status === 'modified') {
           temp.push(createArchChap(item, req));
         }
       });
@@ -450,12 +548,12 @@ exports.update = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Project updated successfully",
+      message: 'Project updated successfully',
       project,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -481,11 +579,11 @@ exports.updateWork = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work updated Successfully",
+      message: 'Work updated Successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -513,11 +611,11 @@ exports.updateWorkDetail = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Work Detail updated Successfully",
+      message: 'Work Detail updated Successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -538,11 +636,11 @@ exports.updateWorkRanking = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Ranking updated successfully",
+      message: 'Ranking updated successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -566,11 +664,11 @@ exports.updateWorkDetailRanking = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Ranking updated successfully",
+      message: 'Ranking updated successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -585,15 +683,19 @@ exports.delete = async (req, res) => {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
     const project = await Projects.findByIdAndDelete(projectId); // Deleting the project
 
-    let architect = await Architects.findByIdAndUpdate(project.architect, { $pull: { projects: projectId } }, { new: true });
+    let architect = await Architects.findByIdAndUpdate(
+      project.architect,
+      { $pull: { projects: projectId } },
+      { new: true }
+    );
 
     res.json({
       success: true,
-      message: "Project deleted successfully",
+      message: 'Project deleted successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -603,14 +705,18 @@ exports.deleteWork = async (req, res) => {
   try {
     const projectId = req.params.projectId;
     const workId = req.body.workId;
-    await Projects.findByIdAndUpdate(projectId, { $pull: { works: { _id: workId } } }, { new: true });
+    await Projects.findByIdAndUpdate(
+      projectId,
+      { $pull: { works: { _id: workId } } },
+      { new: true }
+    );
     res.json({
       success: true,
-      message: "Work deleted successfully",
+      message: 'Work deleted successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -622,7 +728,7 @@ exports.deleteWorkDetail = async (req, res) => {
     const workDetailId = req.body.workDetailId;
     let project = await Projects.findById(projectId);
 
-    let workId = "";
+    let workId = '';
     project.works.map((item1) => {
       item1.work_details.pull({ _id: workDetailId });
       if (item1.work_details.length < 1 && !item1.unit) {
@@ -632,16 +738,20 @@ exports.deleteWorkDetail = async (req, res) => {
     });
     project.save();
     if (workId) {
-      await Projects.findByIdAndUpdate(projectId, { $pull: { works: { _id: workId } } }, { new: true });
+      await Projects.findByIdAndUpdate(
+        projectId,
+        { $pull: { works: { _id: workId } } },
+        { new: true }
+      );
     }
 
     res.json({
       success: true,
-      message: "WorkDetail deleted successfully",
+      message: 'WorkDetail deleted successfully',
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -667,15 +777,19 @@ exports.addWork = async (req, res) => {
       });
     }
 
-    const project = await Projects.findByIdAndUpdate(req.params.projectId, { $push: { works: req.body } }, { new: true });
+    const project = await Projects.findByIdAndUpdate(
+      req.params.projectId,
+      { $push: { works: req.body } },
+      { new: true }
+    );
     res.json({
       success: true,
-      message: "Work added to project",
+      message: 'Work added to project',
       project,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -733,12 +847,12 @@ exports.duplicateWork = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Duplicate work created",
+      message: 'Duplicate work created',
       work,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -777,12 +891,12 @@ exports.duplicateWorkDetail = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Duplicate work Detail created",
+      message: 'Duplicate work Detail created',
       project,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
