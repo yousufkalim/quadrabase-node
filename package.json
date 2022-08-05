@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "deploy": "sudo chmod 644 .git/index && git pull origin main && npm install && sudo pm2 restart 12 && sudo pm2 logs 12"
+    "deploy": "sudo chmod 644 .git/index && git pull origin main && npm install && sudo pm2 restart 12 && sudo pm2 logs 12",
+    "prod": "git pull origin main && npm install && pm2 restart 0 && pm2 logs 0"
   },
   "repository": {
     "type": "git",
