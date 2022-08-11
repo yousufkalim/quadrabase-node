@@ -7,6 +7,17 @@ const sender_name = process.env.MAILER_DOMAIN;
 const sender_email = process.env.MAILER_EMAIL;
 const sender_password = process.env.MAILER_PASSWORD;
 
+// Sender mail server config
+var transporter = nodemailer.createTransport({
+  host: 'smtp.mail.ovh.net',
+  port: 465,
+  secure: true,
+  auth: {
+    user: sender_email,
+    pass: sender_password,
+  },
+});
+
 /**
  * sendEmail
  * @param {string} email
@@ -15,15 +26,6 @@ const sender_password = process.env.MAILER_PASSWORD;
  */
 exports.sendEmail = (email, password) => {
   return new Promise((resolve, reject) => {
-    // Sender mail server config
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: sender_email,
-        pass: sender_password,
-      },
-    });
-
     // Send email options
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
@@ -47,15 +49,6 @@ exports.sendEmail = (email, password) => {
 
 exports.contactUs = (name, phone, email, message) => {
   return new Promise((resolve, reject) => {
-    // Sender mail server config
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: sender_email,
-        pass: sender_password,
-      },
-    });
-
     // Send email options
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
@@ -87,15 +80,6 @@ exports.contactUs = (name, phone, email, message) => {
 
 exports.sendSummaryEmail = (obj) => {
   return new Promise((resolve, reject) => {
-    // Sender mail server config
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: sender_email,
-        pass: sender_password,
-      },
-    });
-
     const html = `
     <body>
       <p>Bonjour ${obj.providerName},</p><br>
@@ -134,15 +118,6 @@ exports.sendSummaryEmail = (obj) => {
 
 exports.sendQuoteEmail = (email, attachment) => {
   return new Promise((resolve, reject) => {
-    // Sender mail server config
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: sender_email,
-        pass: sender_password,
-      },
-    });
-
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
       to: email,
