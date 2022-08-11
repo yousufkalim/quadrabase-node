@@ -110,9 +110,7 @@ exports.signup = async (req, res) => {
     // assinging subscription
     const data = {
       start_date: moment(new Date()).add(1, 'days').format('YYYY/MM/DD'),
-      end_date: moment(
-        moment(new Date()).add(subscription.duration, 'months').add(1, 'days').calendar()
-      ).format('YYYY/MM/DD'),
+      end_date: moment(moment(new Date()).add(subscription.duration, 'months').add(1, 'days').calendar()).format('YYYY/MM/DD'),
       projects: subscription.projects,
       assigned_to: architect._id,
     };
@@ -531,10 +529,7 @@ exports.delete = async (req, res) => {
         architect,
       }); // Success
     }
-    await Families.updateMany(
-      { _id: bookLibraries.families },
-      { $pull: { book_libraries: bookLibraries._id } }
-    ); // Deleting from the Families
+    await Families.updateMany({ _id: bookLibraries.families }, { $pull: { book_libraries: bookLibraries._id } }); // Deleting from the Families
 
     let categories = await Categories.findOneAndDelete({
       book_library: bookLibraries._id,
@@ -718,81 +713,72 @@ exports.generatePdf = async (req, res) => {
 };
 
 exports.generateQuotePdf = async (req, res) => {
-  const html = fs.readFileSync(path.join(__dirname, '../templates/quote.html'), 'utf-8');
-  const filename = Math.random() + '_doc' + '.pdf';
+  try {
+    const html = fs.readFileSync(path.join(__dirname, '../templates/quote.html'), 'utf-8');
+    const filename = Math.random() + '_doc' + '.pdf';
 
-  const invoice = await Invoice.find();
-  let facture = '';
-  let count = '';
-  let currentYear = moment().format('YYYY');
-  let currentMonth = moment().format('MM');
-  if (invoice.length > 0) {
-    count = invoice[invoice.length - 1].invoiceCount + 1;
-    if (count < 10) {
-      facture = `D${currentYear}${currentMonth}000${count}`;
-    } else if (count < 100) {
-      facture = `D${currentYear}${currentMonth}00${count}`;
-    } else if (count < 1000) {
-      facture = `D${currentYear}${currentMonth}0${count}`;
-    } else if (count > 1000) {
-      facture = `D${currentYear}${currentMonth}${count}`;
+    const invoice = await Invoice.find();
+    let facture = '';
+    let count = '';
+    let currentYear = moment().format('YYYY');
+    let currentMonth = moment().format('MM');
+    if (invoice.length > 0) {
+      count = invoice[invoice.length - 1].invoiceCount + 1;
+      if (count < 10) {
+        facture = `D${currentYear}${currentMonth}000${count}`;
+      } else if (count < 100) {
+        facture = `D${currentYear}${currentMonth}00${count}`;
+      } else if (count < 1000) {
+        facture = `D${currentYear}${currentMonth}0${count}`;
+      } else if (count > 1000) {
+        facture = `D${currentYear}${currentMonth}${count}`;
+      }
+    } else {
+      facture = `D${currentYear}${currentMonth}0001`;
     }
-  } else {
-    facture = `D${currentYear}${currentMonth}0001`;
+
+    const architect = await Architects.findById(req.body.archId);
+    const obj = {
+      Facture: facture,
+      architectEstablishment: architect.establishment,
+      architectAddress: architect.address_1,
+      architectPostalcode: architect.postal_code,
+      architectCity: architect.city,
+      architectName: `${architect.last_name} ${architect.first_name}`,
+      architectEmail: architect.email,
+      architectPhone: architect.phone,
+      date: moment(new Date()).format('DD MMMM YYYY'),
+      subscriptionsData: req.body.subscriptionsData,
+      totalHT: req.body.totalHT,
+      tvaPercentage: req.body.tvaPercentage,
+      tvaAmount: req.body.tvaAmount,
+      totalTTC: req.body.TotalCost,
+      paymentMode: req.body.paymentMode,
+    };
+
+    const document = {
+      html: html,
+      data: obj,
+      path: `./uploads/invoice/${filename}`,
+    };
+    await pdf.create(document, options);
+
+    const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
+    obj.invoiceCount = count ? count : 1;
+    obj.filePath = filepath;
+    let temp = req.body.subscriptionsData.map((item) => {
+      return { subscription: item._id, count: item.count };
+    });
+    obj.subscriptionsData = temp;
+    await Invoice.create(obj);
+
+    // Sending email to user
+    await sendQuoteEmail('contact@qbsoft.fr', filepath);
+
+    res.status(200).json({
+      path: filepath,
+    });
+  } catch (err) {
+    console.log('Error occured ---> ', { ...err });
   }
-
-  const architect = await Architects.findById(req.body.archId);
-  const obj = {
-    Facture: facture,
-    architectEstablishment: architect.establishment,
-    architectAddress: architect.address_1,
-    architectPostalcode: architect.postal_code,
-    architectCity: architect.city,
-    architectName: `${architect.last_name} ${architect.first_name}`,
-    architectEmail: architect.email,
-    architectPhone: architect.phone,
-    date: moment(new Date()).format('DD MMMM YYYY'),
-    subscriptionsData: req.body.subscriptionsData,
-    totalHT: req.body.totalHT,
-    tvaPercentage: req.body.tvaPercentage,
-    tvaAmount: req.body.tvaAmount,
-    totalTTC: req.body.TotalCost,
-    paymentMode: req.body.paymentMode,
-  };
-
-  const document = {
-    html: html,
-    data: obj,
-    path: `./uploads/invoice/${filename}`,
-  };
-  await pdf
-    .create(document, options)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
-  obj.invoiceCount = count ? count : 1;
-  obj.filePath = filepath;
-  let temp = req.body.subscriptionsData.map((item) => {
-    return { subscription: item._id, count: item.count };
-  });
-  obj.subscriptionsData = temp;
-  await Invoice.create(obj);
-
-  // Sending email to user
-  sendQuoteEmail('contact@qbsoft.fr', filepath)
-    .then(async () => {
-      // Success
-      console.log('Email has been sent');
-    })
-    .catch((err) => {
-      // Error handling
-      console.log('Error ----> ', err);
-    });
-  res.status(200).json({
-    path: filepath,
-  });
 };
