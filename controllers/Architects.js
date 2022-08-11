@@ -1,4 +1,5 @@
 const Architects = require('../models/Architects');
+const Providers = require('../models/Providers');
 const ArchitectsChap0 = require('../models/ArchitectsChap0');
 const Categories = require('../models/Categories');
 const Works = require('../models/Works');
@@ -255,13 +256,15 @@ exports.forgotPassword = async (req, res) => {
   try {
     let lang = req.headers.lang ? req.headers.lang : 'fr';
     let email = req.body.email;
-    let architect = await Architects.findOne({ email });
+    let user = await Architects.findOne({ email });
 
-    if (!architect) {
-      return res.status(404).json({
-        success: false,
-        message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
-      });
+    if (!user) {
+      user = await Providers.findOne({ email }); // Finding already existing Provider
+      if (!user)
+        return res.status(404).json({
+          success: false,
+          message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+        });
     }
 
     // Generating random password
@@ -271,8 +274,8 @@ exports.forgotPassword = async (req, res) => {
     sendEmail(email, randomPassword)
       .then(async () => {
         // If email is sent then we have to update the password in db
-        architect.password = await bcrypt.hash(randomPassword, parseInt(bcryptSalt));
-        await architect.save();
+        user.password = await bcrypt.hash(randomPassword, parseInt(bcryptSalt));
+        await user.save();
 
         // Done
         res.json({

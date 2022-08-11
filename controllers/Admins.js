@@ -1,15 +1,15 @@
-const Admins = require("../models/Admins");
-const bcrypt = require("bcryptjs");
+const Admins = require('../models/Admins');
+const bcrypt = require('bcryptjs');
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
-const JWT = require("jsonwebtoken");
-const { sendEmail } = require("../utils/sendEmail");
-const fr = require("../utils/frLang");
-const en = require("../utils/enLang");
+const JWT = require('jsonwebtoken');
+const { sendEmail } = require('../utils/sendEmail');
+const fr = require('../utils/frLang');
+const en = require('../utils/enLang');
 
 //admin register
 exports.register = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     let email = req.body.email; //email
     let password = req.body.password; //password
     const existingAdmin = await Admins.findOne({ email }); // Finding already existing admin
@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
       // If we found existing user in db
       return res.status(401).json({
         success: false,
-        message: lang === "fr" ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
       });
     }
 
@@ -32,12 +32,12 @@ exports.register = async (req, res) => {
 
     // Done
     res.json({
-      message: lang === "fr" ? fr.AdminRegisterMsg2 : en.AdminRegisterMsg2,
+      message: lang === 'fr' ? fr.AdminRegisterMsg2 : en.AdminRegisterMsg2,
       user,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -45,7 +45,7 @@ exports.register = async (req, res) => {
 //admin login
 exports.login = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     let email = req.body.email; //email
     let password = req.body.password; //password
     const user = await Admins.findOne({ email }); // Finding already existing admin
@@ -53,11 +53,12 @@ exports.login = async (req, res) => {
       // If we found existing user in db
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.AuthLoginMsg1 : en.AuthLoginMsg1,
+        message: lang === 'fr' ? fr.AuthLoginMsg1 : en.AuthLoginMsg1,
       });
     }
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
-    if (!isCorrect) return res.status(404).json({ message: lang === "fr" ? fr.AuthLoginMsg2 : en.AuthLoginMsg2 });
+    if (!isCorrect)
+      return res.status(404).json({ message: lang === 'fr' ? fr.AuthLoginMsg2 : en.AuthLoginMsg2 });
     const token = JWT.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 60,
     });
@@ -65,12 +66,12 @@ exports.login = async (req, res) => {
     // Done
     res.json({
       success: true,
-      message: lang === "fr" ? fr.AuthLoginMsg3 : en.AuthLoginMsg3,
+      message: lang === 'fr' ? fr.AuthLoginMsg3 : en.AuthLoginMsg3,
       result,
     }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -82,14 +83,14 @@ exports.login = async (req, res) => {
  */
 exports.forgotPassword = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     let email = req.body.email;
     let admin = await Admins.findOne({ email });
 
     if (!admin) {
       return res.status(404).json({
         success: false,
-        message: lang === "fr" ? fr.AdminForgetPass1 : en.AdminForgetPass1,
+        message: lang === 'fr' ? fr.AdminForgetPass1 : en.AdminForgetPass1,
       });
     }
 
@@ -105,20 +106,20 @@ exports.forgotPassword = async (req, res) => {
         // Done
         res.json({
           success: true,
-          message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+          message: lang === 'fr' ? fr.AdminForgetPass2 : en.AdminForgetPass2,
         });
       })
       .catch((err) => {
         // Error handling
-        console.log("Error ----> ", err);
+        console.log('Error ----> ', err);
         res.status(500).json({
           success: false,
-          message: lang === "fr" ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+          message: lang === 'fr' ? fr.AdminForgetPass3 : en.AdminForgetPass3,
         });
       });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -134,11 +135,11 @@ exports.resetPassword = async (req, res) => {
     let user = await Admins.findOne({ resetPasswordToken }); // Finding already existing admin
     if (!user) {
       // If we not found existing user in db
-      return res.status(401).json({ success: false, message: "Invalid Token!" });
+      return res.status(401).json({ success: false, message: 'Invalid Token!' });
     }
     let isExpired = Number(user.restPasswordExpires);
     if (isExpired < Date.now()) {
-      return res.status(401).json({ success: false, message: "Token Expired!" });
+      return res.status(401).json({ success: false, message: 'Token Expired!' });
     }
     password = bcrypt.hashSync(password, parseInt(bcryptSalt));
     user = await Admins.findOneAndUpdate(
@@ -151,10 +152,10 @@ exports.resetPassword = async (req, res) => {
       { new: true }
     );
     // Done
-    res.json({ message: "Password Updated successfully", user }); //Success
+    res.json({ message: 'Password Updated successfully', user }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -165,11 +166,11 @@ exports.resetPassword = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const admins = await Admins.find().sort([["createdAt", -1]]); // Finding all the admins from db
+    const admins = await Admins.find().sort([['createdAt', -1]]); // Finding all the admins from db
     res.json({ success: true, admins }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -185,7 +186,7 @@ exports.getById = async (req, res) => {
     res.json({ success: true, admin }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -197,23 +198,48 @@ exports.getById = async (req, res) => {
  */
 exports.update = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
-    const adminId = req.params.adminId; // Getting admin id from URL parameter
-    if (req.file) {
-      req.body.profile_pic = req.file.path;
+    if (req.body.oldPassword) {
+      if (!req.body.newPassword)
+        return res.status(401).json({
+          message: "New Password Can't be Empty!",
+        });
+      const isCorrect = bcrypt.compareSync(req.body.oldPassword, req.user.password); // Check if old password is correct
+      if (!isCorrect)
+        return res.status(401).json({
+          message: 'Invalid Old Password',
+        });
+
+      req.body.password = bcrypt.hashSync(req.body.newPassword, parseInt(bcryptSalt)); // setting new password
+      delete req.body.newPassword;
+      delete req.body.oldPassword;
+
+      if (req.file) {
+        req.body.profile_pic = req.file.path;
+      } // checking for file
+
+      const admin = await Admins.findByIdAndUpdate(req.params.adminId, req.body, {
+        new: true,
+      }); // Updating the architect
+      res.json({
+        success: true,
+        message: 'Updated successfully',
+        admin,
+      }); // Success
+    } else {
+      if (req.file) {
+        req.body.profile_pic = req.file.path;
+      }
+      const admin = await Admins.findByIdAndUpdate(req.params.adminId, req.body, {
+        new: true,
+      }); // Updating the admin
+      res.json({ success: true, message: 'Updated successfully', admin }); // Success
     }
-    delete req.body.password; //delete password
-    delete req.body.confirm_password; //delete confirm_password
-    const admin = await Admins.findByIdAndUpdate(adminId, req.body, {
-      new: true,
-    }); // Updating the admin
-    res.json({ success: true, message: "Admin updated successfully", admin }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({
       success: false,
-      message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+      message: lang === 'fr' ? fr.AdminForgetPass2 : en.AdminForgetPass2,
     });
   }
 };
@@ -225,21 +251,21 @@ exports.update = async (req, res) => {
  */
 exports.delete = async (req, res) => {
   try {
-    let lang = req.headers.lang ? req.headers.lang : "fr";
+    let lang = req.headers.lang ? req.headers.lang : 'fr';
     const adminId = req.params.adminId; // Getting admin id from URL parameter
     const user = await Admins.findByIdAndDelete(adminId); // Deleting the admin
     res.json({
       success: true,
-      message: "Admin deleted successfully",
+      message: 'Admin deleted successfully',
 
       user,
     }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({
       success: false,
-      message: lang === "fr" ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+      message: lang === 'fr' ? fr.AdminForgetPass2 : en.AdminForgetPass2,
     });
   }
 };
