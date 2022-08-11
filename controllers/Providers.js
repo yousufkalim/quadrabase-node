@@ -13,6 +13,7 @@ const options = require('../utils/options');
 const { sendQuoteEmail } = require('../utils/sendEmail');
 const bcrypt = require('bcryptjs');
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
+const { logo, screenshot } = require('../templates/logo');
 
 //provider create
 exports.create = async (req, res) => {
@@ -273,6 +274,8 @@ exports.generatePdf = async (req, res) => {
     tvaAmount: req.body.tvaAmount,
     totalTTC: req.body.TotalCost,
     paymentMode: req.body.paymentMode,
+    logo,
+    screenshot,
   };
 
   const document = {
@@ -346,6 +349,8 @@ exports.generateQuotePdf = async (req, res) => {
     tvaAmount: req.body.tvaAmount,
     totalTTC: req.body.TotalCost,
     paymentMode: req.body.paymentMode,
+    logo,
+    screenshot,
   };
 
   const document = {

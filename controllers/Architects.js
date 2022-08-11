@@ -32,6 +32,8 @@ const options = require('../utils/options');
 const fr = require('../utils/frLang');
 const en = require('../utils/enLang');
 
+const { logo, screenshot } = require('../templates/logo');
+
 //architect create
 exports.create = async (req, res) => {
   try {
@@ -684,6 +686,8 @@ exports.generatePdf = async (req, res) => {
     tvaAmount: req.body.tvaAmount,
     totalTTC: req.body.TotalCost,
     paymentMode: req.body.paymentMode,
+    logo,
+    screenshot,
   };
 
   const document = {
@@ -754,6 +758,8 @@ exports.generateQuotePdf = async (req, res) => {
       tvaAmount: req.body.tvaAmount,
       totalTTC: req.body.TotalCost,
       paymentMode: req.body.paymentMode,
+      logo,
+      screenshot,
     };
 
     const document = {

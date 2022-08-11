@@ -1,179 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pdf Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 </head>
-<body style="font-size: 12px;">
-  <table>
-    <tr>
-      <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width:270px;">
-        <div><img height="85" width="85" src="https://quadrabase.falconit.com.pk/uploads/code_generation/logo.png" alt=""></div>
-    
-        <div style="margin-top: 7px;padding: 5px 10px;width: 265px; background-color: #C0C0C0;"><strong>EMETTEUR</strong> </div>
 
-        <div style="position: relative; margin-top: 7px;padding: 5px;width: 280px;">
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 130px;font-size: 10px;">
-                  Société :
-                </td>
-                <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                  <strong>QBSoft Sas</strong>
-                </td>
-            </tr>
-            <tr>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 130px;font-size: 10px;">
-                Adresse :
-              </td>
-              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                <strong>20 av Félix Raybaud
-                  06130 GRASSE</strong>
-              </td>
-            </tr>
-            <tr>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 130px;font-size: 10px;">
-                Pays :
-              </td>
-              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                <strong>France</strong>
-              </td>
-            </tr>
-            <tr>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 130px;font-size: 10px;">
-                SIRET du siège :
-              </td>
-              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                <strong>898 885 058 00021</strong>
-              </td>
-            </tr>
-            <tr>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 130px;font-size: 10px;">
-                Code activité :
-              </td>
-              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                <strong>62.01Z</strong>
-              </td>
-            </tr>
-            <tr>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 130px;font-size: 10px;">
-                N° TVA :
-              </td>
-              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                <strong>Fr90898885058</strong>
-              </td>
-            </tr>
-            <tr>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 130px;font-size: 10px;">
-                Adresse Email :
-              </td>
-              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                <strong>contact@qbsoft.fr</strong>
-              </td>
-            </tr>
-            <tr>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width: 130px;font-size: 10px;">
-                Site internet :
-              </td>
-              <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 210px;font-size: 10px;">
-                <strong>www.qbsoft.fr</strong>
-              </td>
-            </tr>
-            </table>
-        </div>
-      </td>
-     <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin-left: 10px;">
-        <div style="margin-top: 7px;padding: 5px 10px;width: 250px; background-color: #C0C0C0;margin-top: 22px;"> <strong>Facture n° : {{this.Facture}}</strong> </div>
-        <div style="margin-top: 7px;padding: 5px 10px;width: 250px; "><strong> Date : {{this.date}}</strong></div>
-        <div style="margin-top: 7px;padding: 5px 10px;width: 250px; background-color: #C0C0C0;"> <strong>DESTINATAIRE</strong> </div>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px">
-          <tr>
-            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
-              Etablissement :
+<body style="font-size: 12px;">
+    <table>
+        <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; width:270px;">
+                <div><img height="85" width="85" src={{this.logo}} alt=""></div>
+
+                <div style="margin-top: 7px;padding: 5px 10px;width: 265px; background-color: #C0C0C0;">
+                    <strong>EMETTEUR</strong> </div>
+
+                <div style="position: relative; margin-top: 7px;padding: 5px;width: 280px;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; margin: 10px; width: 130px;font-size: 10px;">
+                                Société :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>QBSoft Sas</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; width: 130px;font-size: 10px;">
+                                Adresse :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>20 av Félix Raybaud
+                                    06130 GRASSE</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; width: 130px;font-size: 10px;">
+                                Pays :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>France</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; width: 130px;font-size: 10px;">
+                                SIRET du siège :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>898 885 058 00021</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; width: 130px;font-size: 10px;">
+                                Code activité :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>62.01Z</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; width: 130px;font-size: 10px;">
+                                N° TVA :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>Fr90898885058</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; width: 130px;font-size: 10px;">
+                                Adresse Email :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>contact@qbsoft.fr</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" bgcolor="#ffe77b"
+                                style="background-color:#fff; width: 130px;font-size: 10px;">
+                                Site internet :
+                            </td>
+                            <td align="left" bgcolor="#ffe77b"
+                                style="background-color: #fff; width: 210px;font-size: 10px;">
+                                <strong>www.qbsoft.fr</strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </td>
-            <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;font-size: 10px;">
-              <strong>{{this.providerEstablishment}}</strong>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin-left: 10px;">
+                <div
+                    style="margin-top: 7px;padding: 5px 10px;width: 250px; background-color: #C0C0C0;margin-top: 22px;">
+                    <strong>Facture n° : {{this.Facture}}</strong> </div>
+                <div style="margin-top: 7px;padding: 5px 10px;width: 250px; "><strong> Date : {{this.date}}</strong>
+                </div>
+                <div style="margin-top: 7px;padding: 5px 10px;width: 250px; background-color: #C0C0C0;">
+                    <strong>DESTINATAIRE</strong> </div>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px">
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#ffe77b"
+                            style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
+                            Etablissement :
+                        </td>
+                        <td align="left" bgcolor="#ffe77b"
+                            style="background-color: #fff; width: 250px;font-size: 10px;">
+                            <strong>{{this.providerEstablishment}}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#ffe77b"
+                            style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
+                            Adresse :
+                        </td>
+                        <td align="left" bgcolor="#ffe77b"
+                            style="background-color: #fff; width: 250px;font-size: 10px;">
+                            <strong>{{this.providerAddress}}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#ffe77b"
+                            style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
+                            Code Postal :
+                        </td>
+                        <td align="left" bgcolor="#ffe77b"
+                            style="background-color: #fff; width: 250px;font-size: 10px;">
+                            <strong>{{this.providerPostalcode}}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#ffe77b"
+                            style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
+                            Ville :
+                        </td>
+                        <td align="left" bgcolor="#ffe77b"
+                            style="background-color: #fff; width: 250px;font-size: 10px;">
+                            <strong>{{this.providerCity}}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#ffe77b"
+                            style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
+                            Nom :
+                        </td>
+                        <td align="left" bgcolor="#ffe77b"
+                            style="background-color: #fff; width: 250px;font-size: 10px;">
+                            <strong>{{this.providerName}}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#ffe77b"
+                            style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
+                            Email :
+                        </td>
+                        <td align="left" bgcolor="#ffe77b"
+                            style="background-color: #fff; width: 250px;font-size: 10px;">
+                            <strong>{{this.providerEmail}}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#ffe77b"
+                            style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
+                            N° Tél. :
+                        </td>
+                        <td align="left" bgcolor="#ffe77b"
+                            style="background-color: #fff; width: 250px;font-size: 10px;">
+                            <strong>{{this.providerPhone}}</strong>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
+    </table>
+    <table>
         <tr>
-          <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
-            Adresse :
-          </td>
-          <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;font-size: 10px;">
-            <strong>{{this.providerAddress}}</strong>
-          </td>
-      </tr>
-        <tr>
-          <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
-            Code Postal :
-          </td>
-          <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;font-size: 10px;">
-            <strong>{{this.providerPostalcode}}</strong>
-          </td>
-      </tr>
-      <tr>
-        <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
-          Ville :
-        </td>
-        <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;font-size: 10px;">
-          <strong>{{this.providerCity}}</strong>
-        </td>
-    </tr>
-        <tr>
-          <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
-            Nom :
-          </td>
-          <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;font-size: 10px;">
-            <strong>{{this.providerName}}</strong>
-          </td>
-      </tr>
-        <tr>
-          <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
-            Email :
-          </td>
-          <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;font-size: 10px;">
-            <strong>{{this.providerEmail}}</strong>
-          </td>
-      </tr>
-      <tr>
-        <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 120px;font-size: 10px;">
-          N° Tél. : 
-        </td>
-        <td align="left" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;font-size: 10px;">
-          <strong>{{this.providerPhone}}</strong>
-        </td>
-    </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  <table>
-    <tr>
-      <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff;">
-        <div style="margin-top: 7px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>Details</strong> </div>
-        <div style="position: relative; margin-top: 7px;padding: 5px;width: 530px;">
-          <table width="100%" border="0" cellspacing="0" cellpadding="0" ">
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff;">
+                <div style="margin-top: 7px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;">
+                    <strong>Details</strong> </div>
+                <div style="position: relative; margin-top: 7px;padding: 5px;width: 530px;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" ">
             <tr >
-              <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
-               <strong> Code</strong>
-              </td>
-              <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 250px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
+              <td align=" center" valign="top" bgcolor="#ffe77b"
+                        style="background-color:#fff; margin: 10px; width: 95px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
+                        <strong> Code</strong>
+            </td>
+            <td align="left" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 250px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
                 <strong> Description</strong>
-              </td>
-              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 85px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
                 <strong> P.U. H.T</strong>
-              </td>
-              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 45px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
-              <strong> Qté</strong>
-              </td>
-              <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 45px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
+                <strong> Qté</strong>
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 65px;border-bottom: 1px solid rgba(16, 15, 15,0.5);">
                 <strong> Total H.T.</strong>
-              </td>
-              
-          </tr>
-          <!-- <tr >
+            </td>
+
+        </tr>
+        <!-- <tr >
             <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;">
               80600100
             </td>
@@ -191,59 +235,77 @@
             </td>
             
         </tr> -->
-        <tr >
-            <td align="center" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; width: 95px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.subscriptionCode}}
+        <tr>
+            <td align="center" valign="top" bgcolor="#ffe77b"
+                style="background-color:#fff; margin: 10px; width: 95px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
+                {{this.subscriptionCode}}
             </td>
-            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 270px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.subscriptionName}}
-  
+            <td align="left" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 270px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
+                {{this.subscriptionName}}
+
             </td>
-            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 85px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.referenPrice}}
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 85px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
+                {{this.referenPrice}}
             </td>
-            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 45px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.referenCount}}
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 45px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
+                {{this.referenCount}}
             </td>
-            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color: #fff; width: 65px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
-              {{this.referenTotal}}
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color: #fff; width: 65px;border-bottom: 1px solid rgba(16, 15, 15,0.7);padding: 10px 0;">
+                {{this.referenTotal}}
             </td>
-            
+
         </tr>
     </table>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0"  style="margin-top: 10px;">
-      <tr >
-        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;width: 85%;">
-          <strong>Total H.T. : </strong>
-        </td>
-        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;">
-          <strong>{{this.totalHT}}</strong>
-        </td>
-      </tr>
-      <tr >
-        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; border-bottom: 1px solid rgba(16, 15, 15,0.5);padding-bottom: 4px; width: 85%;">
-          <strong>T.V.A. ({{this.tvaPercentage}}%) : </strong>
-        </td>
-        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; border-bottom: 1px solid rgba(16, 15, 15,0.5);padding-bottom: 4px;">
-          <strong>{{this.tvaAmount}}</strong>
-        </td>
-      </tr>
-      <tr >
-        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; padding-top: 4px; width: 85%;">
-          <strong>Total T.T.C. : </strong>
-        </td>
-        <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px; padding-top: 4px;">
-          <strong>{{this.totalTTC}}</strong>
-        </td>
-      </tr>
-  </table>
-  <div style="margin-top: 50px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>Conditions</strong> </div>
-  <div style="margin-top: 10px;padding: 0px 15px;width: 530px; background-color: #fff;">Conditions de règlement : <strong> A réception de la facture. </strong></div>
-  <div style="padding: 0px 15px;width: 530px; background-color: #fff;">Mode de règlement : <strong> {{paymentMode}}</strong></div>
-  <div style="padding: 0px 15px;width: 530px; background-color: #fff; font-size: 10px; font-style: italic;">Toute somme non payée à sa date d’exigibilité entrainera de plein droit l’arrêt immédiat du service.</div>
-  <div style="margin-top: 25px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>RIB</strong> </div>
-  <div style="margin-top: 10px;padding: 0px 15px;width: 530px; background-color: #fff;font-size: 10px;">IBAN : <strong>FR76 1695 8000 0115 4724 0729 575</strong> </div>
-  <div style="padding: 0px 15px;width: 530px; background-color: #fff;font-size: 10px;">BIC/SWIFT : <strong> QNTOFRP1XXX</strong></div>
-  <div style="padding: 0px 15px;width: 320px; background-color: #fff;font-size: 10px;">Titulaire : <strong> QBSoft 20 av. Felix Raybaud 06130 GRASSE</strong></div></td>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
+        <tr>
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;width: 85%;">
+                <strong>Total H.T. : </strong>
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b" style="background-color:#fff; margin: 10px;">
+                <strong>{{this.totalHT}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color:#fff; margin: 10px; border-bottom: 1px solid rgba(16, 15, 15,0.5);padding-bottom: 4px; width: 85%;">
+                <strong>T.V.A. ({{this.tvaPercentage}}%) : </strong>
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color:#fff; margin: 10px; border-bottom: 1px solid rgba(16, 15, 15,0.5);padding-bottom: 4px;">
+                <strong>{{this.tvaAmount}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color:#fff; margin: 10px; padding-top: 4px; width: 85%;">
+                <strong>Total T.T.C. : </strong>
+            </td>
+            <td align="right" valign="top" bgcolor="#ffe77b"
+                style="background-color:#fff; margin: 10px; padding-top: 4px;">
+                <strong>{{this.totalTTC}}</strong>
+            </td>
+        </tr>
+    </table>
+    <div style="margin-top: 50px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>Conditions</strong>
+    </div>
+    <div style="margin-top: 10px;padding: 0px 15px;width: 530px; background-color: #fff;">Conditions de règlement :
+        <strong> A réception de la facture. </strong></div>
+    <div style="padding: 0px 15px;width: 530px; background-color: #fff;">Mode de règlement : <strong>
+            {{paymentMode}}</strong></div>
+    <div style="padding: 0px 15px;width: 530px; background-color: #fff; font-size: 10px; font-style: italic;">Toute
+        somme non payée à sa date d’exigibilité entrainera de plein droit l’arrêt immédiat du service.</div>
+    <div style="margin-top: 25px;padding: 5px 10px;width: 530px; background-color: #C0C0C0;"><strong>RIB</strong> </div>
+    <div style="margin-top: 10px;padding: 0px 15px;width: 530px; background-color: #fff;font-size: 10px;">IBAN :
+        <strong>FR76 1695 8000 0115 4724 0729 575</strong> </div>
+    <div style="padding: 0px 15px;width: 530px; background-color: #fff;font-size: 10px;">BIC/SWIFT : <strong>
+            QNTOFRP1XXX</strong></div>
+    <div style="padding: 0px 15px;width: 320px; background-color: #fff;font-size: 10px;">Titulaire : <strong> QBSoft 20
+            av. Felix Raybaud 06130 GRASSE</strong></div>
+    </td>
 </body>
+
 </html>
