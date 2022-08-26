@@ -24,11 +24,7 @@ exports.create = async (req, res) => {
 
     const project = await Projects.create(req.body);
 
-    let architect = await Architects.findByIdAndUpdate(
-      req.body.architect,
-      { $push: { projects: project._id } },
-      { new: true }
-    );
+    let architect = await Architects.findByIdAndUpdate(req.body.architect, { $push: { projects: project._id } }, { new: true });
 
     if (project.market_type === 'Trades') {
       // Creating Trade
@@ -514,11 +510,7 @@ const createArchChap = async (item, req) => {
     level2: chap0Level2,
     chap0: chap0._id,
   });
-  await Architects.findByIdAndUpdate(
-    req.body.architect,
-    { $push: { chap0part2: architectsChap0._id } },
-    { new: true }
-  );
+  await Architects.findByIdAndUpdate(req.body.architect, { $push: { chap0part2: architectsChap0._id } }, { new: true });
   return {
     id: architectsChap0._id,
     status: 'modified',
@@ -645,6 +637,48 @@ exports.updateWorkRanking = async (req, res) => {
   }
 };
 
+exports.swapWorkRanking = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const work1Id = req.body.work1Id;
+    const work2Id = req.body.work2Id;
+    let project = await Projects.findById(projectId);
+
+    const work1 = project.works.filter((_) => _._id == work1Id)[0];
+    const work2 = project.works.filter((_) => _._id == work2Id)[0];
+
+    if (!work1 || !work2) {
+      return res.status(400).json({
+        success: false,
+        message: 'Work ids are not correct.',
+      });
+    }
+
+    const work1ranking = work1.ranking;
+    const work2ranking = work2.ranking;
+
+    project.works.map((_) => {
+      if (_._id == work1Id) {
+        _.ranking = work2ranking;
+      } else if (_._id == work2Id) {
+        _.ranking = work1ranking;
+      }
+      return _;
+    });
+
+    project.save();
+
+    res.json({
+      success: true,
+      message: 'Ranking updated successfully',
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.log('Error ----> ', err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.updateWorkDetailRanking = async (req, res) => {
   try {
     const projectId = req.params.projectId;
@@ -673,6 +707,58 @@ exports.updateWorkDetailRanking = async (req, res) => {
   }
 };
 
+exports.swapWorkDetailRanking = async (req, res) => {
+  try {
+    const projectId = req.body.projectId;
+    const workId = req.body.workId;
+    const workDetail1Id = req.body.workDetail1Id;
+    const workDetail2Id = req.body.workDetail2Id;
+
+    let project = await Projects.findById(projectId);
+
+    const work = project.works.filter((_) => _._id == workId)[0];
+
+    const workDetail1 = work.work_details.filter((_) => _._id.toString() == workDetail1Id)[0];
+    const workDetail2 = work.work_details.filter((_) => _._id.toString() == workDetail2Id)[0];
+
+    if (!workDetail1 || !workDetail2) {
+      return res.status(400).json({
+        success: false,
+        message: 'Work details ids are not correct.',
+      });
+    }
+
+    const workDetail1ranking = workDetail1.ranking;
+    const workDetail2ranking = workDetail2.ranking;
+
+    project.works.map((_) => {
+      if (_._id == work._id) {
+        _.work_details.map((__) => {
+          if (__._id.toString() == workDetail1._id) {
+            console.log(__._id, '__._id', '1');
+            __.ranking == workDetail2ranking;
+          } else if (__._id.toString() == workDetail2._id) {
+            __.ranking == workDetail1ranking;
+          }
+          return __;
+        });
+      }
+      return _;
+    });
+
+    project.save();
+
+    res.json({
+      success: true,
+      message: 'Ranking updated successfully',
+    }); // Success
+  } catch (err) {
+    // Error handling
+    console.trace(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 /**
  * Delete project
  * @param {object} req
@@ -683,11 +769,7 @@ exports.delete = async (req, res) => {
     const projectId = req.params.projectId; // Getting projectId from URL parameter
     const project = await Projects.findByIdAndDelete(projectId); // Deleting the project
 
-    let architect = await Architects.findByIdAndUpdate(
-      project.architect,
-      { $pull: { projects: projectId } },
-      { new: true }
-    );
+    let architect = await Architects.findByIdAndUpdate(project.architect, { $pull: { projects: projectId } }, { new: true });
 
     res.json({
       success: true,
@@ -705,11 +787,7 @@ exports.deleteWork = async (req, res) => {
   try {
     const projectId = req.params.projectId;
     const workId = req.body.workId;
-    await Projects.findByIdAndUpdate(
-      projectId,
-      { $pull: { works: { _id: workId } } },
-      { new: true }
-    );
+    await Projects.findByIdAndUpdate(projectId, { $pull: { works: { _id: workId } } }, { new: true });
     res.json({
       success: true,
       message: 'Work deleted successfully',
@@ -738,11 +816,7 @@ exports.deleteWorkDetail = async (req, res) => {
     });
     project.save();
     if (workId) {
-      await Projects.findByIdAndUpdate(
-        projectId,
-        { $pull: { works: { _id: workId } } },
-        { new: true }
-      );
+      await Projects.findByIdAndUpdate(projectId, { $pull: { works: { _id: workId } } }, { new: true });
     }
 
     res.json({
@@ -777,11 +851,7 @@ exports.addWork = async (req, res) => {
       });
     }
 
-    const project = await Projects.findByIdAndUpdate(
-      req.params.projectId,
-      { $push: { works: req.body } },
-      { new: true }
-    );
+    const project = await Projects.findByIdAndUpdate(req.params.projectId, { $push: { works: req.body } }, { new: true });
     res.json({
       success: true,
       message: 'Work added to project',

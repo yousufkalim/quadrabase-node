@@ -1,36 +1,36 @@
-const xlsx = require("xlsx");
-const fs = require("fs");
+const xlsx = require('xlsx');
+const fs = require('fs');
 
 // TODO import models
-const Families = require("../models/Families");
-const BookLibraries = require("../models/BookLibraries");
-const Categories = require("../models/Categories");
-const Works = require("../models/Works");
-const WorkDetails = require("../models/WorkDetails");
-const Units = require("../models/Units");
+const Families = require('../models/Families');
+const BookLibraries = require('../models/BookLibraries');
+const Categories = require('../models/Categories');
+const Works = require('../models/Works');
+const WorkDetails = require('../models/WorkDetails');
+const Units = require('../models/Units');
 
 const populateQuery = [
   {
-    path: "families",
+    path: 'families',
     populate: [
       {
-        path: "Families",
+        path: 'Families',
       },
     ],
   },
   {
-    path: "categories",
+    path: 'categories',
     populate: [
       {
-        path: "Categories",
+        path: 'Categories',
       },
     ],
   },
   {
-    path: "works",
+    path: 'works',
     populate: [
       {
-        path: "Works",
+        path: 'Works',
       },
     ],
   },
@@ -43,28 +43,28 @@ function cctpsArr(activeRow) {
   if (cctp1) {
     cctps.push(cctp1);
   } else {
-    cctps.push("");
+    cctps.push('');
   }
 
   const cctp2 = activeRow.CCTP2;
   if (cctp2) {
     cctps.push(cctp2);
   } else {
-    cctps.push("");
+    cctps.push('');
   }
 
   const cctp3 = activeRow.CCTP3;
   if (cctp3) {
     cctps.push(cctp3);
   } else {
-    cctps.push("");
+    cctps.push('');
   }
 
   const cctp4 = activeRow.CCTP4;
   if (cctp4) {
     cctps.push(cctp4);
   } else {
-    cctps.push("");
+    cctps.push('');
   }
 
   return cctps;
@@ -74,7 +74,7 @@ function cctpsArr(activeRow) {
 exports.import = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).send({ success: false, message: "file was not found." });
+      return res.status(400).send({ success: false, message: 'file was not found.' });
     }
 
     let file = req.file;
@@ -108,7 +108,7 @@ exports.import = async (req, res) => {
         ranking: ranking,
       });
 
-      lastCreatedIDFamily = (await Families.find().sort([["createdAt", -1]]))[0]._id;
+      lastCreatedIDFamily = (await Families.find().sort([['createdAt', -1]]))[0]._id;
     }
 
     for (let i = 0; i < jsonData.length - 1; i++) {
@@ -121,7 +121,7 @@ exports.import = async (req, res) => {
         //Creating BookLibrary
         let bookLibrary = await BookLibraries.create({
           name: activeRow.Libellé,
-          type: "public",
+          type: 'public',
           ranking: ranking,
           families: [lastCreatedIDFamily],
         }); // Adding BookLibrary in db
@@ -158,7 +158,7 @@ exports.import = async (req, res) => {
           }
         }
 
-        lastCreatedIDBookLibrary = (await BookLibraries.find().sort([["createdAt", -1]]))[0]._id;
+        lastCreatedIDBookLibrary = (await BookLibraries.find().sort([['createdAt', -1]]))[0]._id;
       } else if (activeRow.Niveau == 2) {
         // console.log(`THIS IS THE i: ${i}, lastCreatedIDBookLibrary: ${lastCreatedIDBookLibrary}, activeRow.Libellé: ${activeRow.Libellé}`);
 
@@ -209,7 +209,7 @@ exports.import = async (req, res) => {
           }
         }
 
-        lastCreatedIDCategory = (await Categories.find().sort([["createdAt", -1]]))[0]._id;
+        lastCreatedIDCategory = (await Categories.find().sort([['createdAt', -1]]))[0]._id;
       } else if (activeRow.Niveau == 3) {
         // console.log(`THIS IS THE i: ${i}, lastCreatedIDCategory: ${lastCreatedIDCategory}, activeRow.Libellé: ${activeRow.Libellé}`);
 
@@ -261,22 +261,22 @@ exports.import = async (req, res) => {
         }
 
         // Update unit_price
-        if (activeRow["P.U. H.T."] ?? activeRow["PU HT"]) {
+        if (activeRow['P.U. H.T.'] ?? activeRow['PU HT']) {
           // Update Works
-          work = await Works.findByIdAndUpdate(workId, { unit_price: activeRow["P.U. H.T."] ?? activeRow["PU HT"] }); // Updating the Works for unit_price.
+          work = await Works.findByIdAndUpdate(workId, { unit_price: activeRow['P.U. H.T.'] ?? activeRow['PU HT'] }); // Updating the Works for unit_price.
         }
 
         // Update bpu_text
         const objBpuArr = work.bpu_text;
-        if (activeRow["BPU"]) {
-          const existingBPU = objBpuArr.includes(activeRow["BPU"]);
+        if (activeRow['BPU']) {
+          const existingBPU = objBpuArr.includes(activeRow['BPU']);
           if (existingBPU) {
             // do nothing
           } else {
             // Update Works
             work = await Works.findByIdAndUpdate(
               workId,
-              { $push: { bpu_text: activeRow["BPU"] } },
+              { $push: { bpu_text: activeRow['BPU'] } },
               {
                 new: true,
               }
@@ -307,7 +307,7 @@ exports.import = async (req, res) => {
         // Update Work
         work = await Works.findByIdAndUpdate(workId, { unit: unitID }); // Update Work for unitID
 
-        lastCreatedIDWork = (await Works.find().sort([["createdAt", -1]]))[0]._id;
+        lastCreatedIDWork = (await Works.find().sort([['createdAt', -1]]))[0]._id;
       } else if (activeRow.Niveau == 4) {
         // console.log(`THIS IS THE i: ${i}, lastCreatedIDWork: ${lastCreatedIDWork}, activeRow.Libellé: ${activeRow.Libellé}`);
 
@@ -342,10 +342,10 @@ exports.import = async (req, res) => {
         ); // Updating the WorkDetails Schema
 
         // Update unit_price
-        if (activeRow["P.U. H.T."] ?? activeRow["PU HT"]) {
+        if (activeRow['P.U. H.T.'] ?? activeRow['PU HT']) {
           // Update Works
           workDetails = await WorkDetails.findByIdAndUpdate(workDetailId, {
-            unit_price: activeRow["P.U. H.T."] ?? activeRow["PU HT"],
+            unit_price: activeRow['P.U. H.T.'] ?? activeRow['PU HT'],
           }); // Updating the Works for unit_price.
         }
 
@@ -384,7 +384,57 @@ exports.import = async (req, res) => {
       message: `Imported -> ${file.originalname} Successfully.`,
     });
   } catch (error) {
-    console.trace("Error ----> ", error);
-    res.status(500).send("Something Failed");
+    console.trace('Error ----> ', error);
+    res.status(500).send('Something Failed');
+  }
+};
+
+// XLS import
+exports.importLib = async (req, res) => {
+  try {
+    let file = req.file;
+    const { importLibrary } = req.body;
+
+    if (!req.file) {
+      return res.status(400).send({ success: false, message: 'file was not found.' });
+    }
+
+    if (!importLibrary) {
+      return res.status(400).send({ success: false, message: 'importLib was not found.' });
+    }
+
+    const workbook = xlsx.readFile(file.path);
+    const sheets = workbook.SheetNames;
+    var xlData = workbook.Sheets[sheets[0]];
+    let jsonData = xlsx.utils.sheet_to_json(xlData);
+
+    let indexOfLib = jsonData.map((_) => _.Libellé).indexOf(importLibrary);
+
+    if (indexOfLib == -1) {
+      return res.status(400).send({ success: false, message: 'The import library doesnt exists in the file.' });
+    }
+
+    const arr = [];
+    for (let i = indexOfLib; i < jsonData.length; i++) {
+      const value = jsonData[i];
+
+      if (i != indexOfLib && value.Niveau == 1) {
+        break;
+      } else {
+        arr.push(value);
+      }
+    }
+
+    const xlsxLib = arr[0];
+    const dbLib = await BookLibraries.findOne({
+      name: xlsxLib.Libellé,
+    });
+
+    const cats = arr.filter((_) => _.Niveau == '2');
+
+    return res.json({ cats });
+  } catch (error) {
+    console.trace('Error ----> ', error);
+    res.status(500).send('Something Failed');
   }
 };
