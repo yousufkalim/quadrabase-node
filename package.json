@@ -34,6 +34,8 @@
     "nodemon": "^2.0.15",
     "pdf-creator-node": "^2.3.4",
     "stripe": "^8.195.0",
-    "xlsx": "^0.17.4"
+    "xlsx": "^0.17.4",
+    "fs-extra": "^10.1.0",
+    "request": "^2.88.2"
   }
 }
