@@ -60,6 +60,6 @@ const prodSizes = {
 };
 
 module.exports = {
-  options: process.env.MONGODB_URI.includes('localhost') ? devOptions : prodOptions,
-  sizes: process.env.MONGODB_URI.includes('localhost') ? devSizes : prodSizes,
+  options: process.env.MONGODB_URI.includes('localhost') ? devOptions : devOptions,
+  sizes: process.env.MONGODB_URI.includes('localhost') ? devSizes : devSizes,
 };

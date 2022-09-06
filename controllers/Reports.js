@@ -5,13 +5,13 @@ const pdf = require('pdf-creator-node');
 const path = require('path');
 const rgConfig = require('../utils/rg');
 
+const libre = require('libreoffice-convert');
+libre.convertAsync = require('util').promisify(libre.convert);
+
 exports.simpleEstimation = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr, footerKeysArr, footerValuesArr } = req.body;
 
-  const html = fs.readFileSync(
-    path.join(__dirname, '../templates/rg_simple_estimation.hbs'),
-    'utf-8'
-  );
+  const html = fs.readFileSync(path.join(__dirname, '../templates/rg_simple_estimation.hbs'), 'utf-8');
   const filename = Math.random() + '_doc' + '.pdf';
 
   const footerArr = [];
@@ -292,6 +292,34 @@ exports.CCTP = async (req, res) => {
   res.status(200).json({
     path: filepath,
   });
+};
+
+exports.docxToPDF = async (req, res) => {
+  try {
+    const file = req.file;
+
+    const ext = '.pdf';
+
+    const filename = Math.random() + '_doc' + ext;
+
+    const inputPath = path.join(__dirname, `../uploads/documents/${file.filename}`);
+    const outputPath = path.join(__dirname, `../uploads/reports/${filename}`);
+
+    const buffer = fs.readFileSync(inputPath);
+
+    const pdfBuf = await libre.convertAsync(buffer, ext, undefined);
+
+    fs.writeFileSync(outputPath, pdfBuf);
+
+    const filepath = `${process.env.BASE_URL}/uploads/reports/${filename}`;
+    res.status(200).json({
+      path: filepath,
+    });
+  } catch (err) {
+    // Error handling
+    console.trace('Error ----> ', err.message);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 function indexArr(arr) {
