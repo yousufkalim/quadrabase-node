@@ -352,7 +352,7 @@ exports.docxToPDF = async (req, res) => {
   } catch (err) {
     // Error handling
     console.trace('Error ----> ', err);
-    res.status(500).json({ message: 'Your CloudConvert quota has been exceeded.' });
+    res.status(500).json({ message: 'Votre quota est finis.' });
   }
 };
 
