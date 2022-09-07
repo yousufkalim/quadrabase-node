@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/falconitconsultant/Quadrabase-Node#readme",
   "dependencies": {
+    "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
+    "cloudconvert": "^2.3.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
