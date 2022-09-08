@@ -1,12 +1,9 @@
-const moment = require('moment');
-
 const fs = require('fs');
 const pdf = require('pdf-creator-node');
 const path = require('path');
 const rgConfig = require('../utils/rg');
-
-const libre = require('libreoffice-convert');
-libre.convertAsync = require('util').promisify(libre.convert);
+const CloudConvert = require('cloudconvert');
+const axios = require('axios');
 
 exports.simpleEstimation = async (req, res) => {
   const { headerArr, bodyKeysArr, bodyValuesArr, footerKeysArr, footerValuesArr } = req.body;
@@ -297,19 +294,56 @@ exports.CCTP = async (req, res) => {
 exports.docxToPDF = async (req, res) => {
   try {
     const file = req.file;
-
     const ext = '.pdf';
-
     const filename = Math.random() + '_doc' + ext;
 
     const inputPath = path.join(__dirname, `../uploads/documents/${file.filename}`);
     const outputPath = path.join(__dirname, `../uploads/reports/${filename}`);
+    const buffer = fs.readFileSync(inputPath, { encoding: 'base64' });
 
-    const buffer = fs.readFileSync(inputPath);
+    const cloudConvert = new CloudConvert(process.env.CLOUDCONVERT_API_KEY);
 
-    const pdfBuf = await libre.convertAsync(buffer, ext, undefined);
+    // Creating cloudconvert pipeline for converting docx to pdf
+    let job = await cloudConvert.jobs.create({
+      tasks: {
+        upload: {
+          operation: 'import/base64',
+          file: buffer,
+          filename: 'doc.docx',
+        },
+        convert: {
+          operation: 'convert',
+          input_format: 'docx',
+          output_format: 'pdf',
+          engine: 'office',
+          input: ['upload'],
+          optimize_print: true,
+          pdf_a: false,
+          include_markup: false,
+          bookmarks: false,
+        },
+        export: {
+          operation: 'export/url',
+          input: ['convert'],
+          inline: false,
+          archive_multiple_files: false,
+        },
+      },
+      tag: 'jobbuilder',
+    });
 
-    fs.writeFileSync(outputPath, pdfBuf);
+    // Waiting for job to finish
+    job = await cloudConvert.jobs.wait(job.id);
+
+    // Downloading the result
+    const url = job.tasks.filter((a) => a.name === 'export')[0].result.files[0].url;
+    const response = await axios({
+      url,
+      method: 'GET',
+      responseType: 'arraybuffer',
+    });
+
+    fs.writeFileSync(outputPath, response.data);
 
     const filepath = `${process.env.BASE_URL}/uploads/reports/${filename}`;
     res.status(200).json({
@@ -317,8 +351,8 @@ exports.docxToPDF = async (req, res) => {
     });
   } catch (err) {
     // Error handling
-    console.trace('Error ----> ', err.message);
-    res.status(500).json({ message: err.message });
+    console.trace('Error ----> ', err);
+    res.status(500).json({ message: 'Votre quota est finis.' });
   }
 };
 
