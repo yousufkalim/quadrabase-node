@@ -672,7 +672,7 @@ exports.swapWorkRanking = async (req, res) => {
       return _;
     });
 
-    project.save();
+    await project.save();
 
     res.json({
       success: true,
