@@ -86,7 +86,7 @@
         </td>
       </tr>
     <table>
-    <table style="margin-bottom: 20px;">
+    <table style="margin-bottom: 0;">
       <tr>
         <td align="left" valign="top">
           <tr style="background-color: #c0c0c0;">
@@ -99,7 +99,7 @@
           <td align="left" valign="top">
             <tr style="background-color: #FFFFFF;">
               {{#each this.v.data as |child childIndex|}}
-              <td align={{#ifCond ../this.v.type '==' 'total'}}right{{/ifCond}}   {{#ifCond ../this.v.type '!=' 'total'}} {{#ifCond childIndex '!=' 0}}{{#ifCond childIndex '!=' 1}} {{#ifCond childIndex '!=' 2}} right {{/ifCond}}{{/ifCond}}{{/ifCond}} {{#ifCond childIndex '==' 1}} left {{/ifCond}}{{#ifCond childIndex '==' 0}} left {{/ifCond}}{{#ifCond childIndex '==' 2}} center {{/ifCond}}{{/ifCond}} class={{#ifCond childIndex '!=' 1}} body_text {{/ifCond}} {{#ifCond childIndex '==' 1}} body_name_text {{/ifCond}}> {{#ifCond ../this.v.type '==' 'title'}}<strong> {{this}}</strong> {{/ifCond}} {{#ifCond ../this.v.type '==' 'total'}}<strong> {{this}}</strong>{{/ifCond}} {{#ifCond ../this.v.type '!=' 'total'}}{{#ifCond ../this.v.type '!=' 'title'}} {{this}} {{/ifCond}}{{/ifCond}}  </td>
+              <td align={{#ifCond ../this.v.type '==' 'total'}}right{{/ifCond}}   {{#ifCond ../this.v.type '!=' 'total'}} {{#ifCond childIndex '!=' 0}}{{#ifCond childIndex '!=' 1}} {{#ifCond childIndex '!=' 2}} right {{/ifCond}}{{/ifCond}}{{/ifCond}} {{#ifCond childIndex '==' 1}} left {{/ifCond}}{{#ifCond childIndex '==' 0}} left {{/ifCond}}{{#ifCond childIndex '==' 2}} center {{/ifCond}}{{/ifCond}} class={{#ifCond childIndex '!=' 1}} body_text {{/ifCond}} {{#ifCond childIndex '==' 1}} body_name_text {{/ifCond}}> {{#ifCond ../this.v.type '==' 'title'}}<strong> {{this}}</strong> {{/ifCond}} {{#ifCond ../this.v.type '==' 'total'}}<strong> {{this}}</strong>{{/ifCond}} {{#ifCond ../this.v.type '!=' 'total'}}{{#ifCond ../this.v.type '!=' 'title'}} {{{this}}} {{/ifCond}}{{/ifCond}}  </td>
               {{/each}}
             </tr>
           </td>

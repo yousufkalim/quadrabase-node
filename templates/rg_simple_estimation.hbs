@@ -96,7 +96,7 @@
           <td align="left" valign="top">
             <tr style="background-color: #FFFFFF;">
               {{#each this.v}}
-              <td align={{#ifCond this.i "==" 0}}left{{/ifCond}}{{#ifCond this.i "==" 1}}left{{/ifCond}}{{#ifCond this.i "==" 2}}center{{/ifCond}}{{#ifCond this.i "!=" 0}}{{#ifCond this.i "!=" 1}}{{#ifCond this.i "!=" 2}}right{{/ifCond}}{{/ifCond}}{{/ifCond}} class={{#ifCond this.i '!=' 1}} body_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_name_text {{/ifCond}}>{{this.v}}</td>
+              <td align={{#ifCond this.i "==" 0}}left{{/ifCond}}{{#ifCond this.i "==" 1}}left{{/ifCond}}{{#ifCond this.i "==" 2}}center{{/ifCond}}{{#ifCond this.i "!=" 0}}{{#ifCond this.i "!=" 1}}{{#ifCond this.i "!=" 2}}right{{/ifCond}}{{/ifCond}}{{/ifCond}} class={{#ifCond this.i '!=' 1}} body_text {{/ifCond}} {{#ifCond this.i '==' 1}} body_name_text {{/ifCond}}>{{{this.v}}}</td>
               {{/each}}
             </tr>
           </td>
