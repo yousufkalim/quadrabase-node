@@ -4,26 +4,29 @@ const mongoose = require('mongoose');
 const staticPagesSchema = new mongoose.Schema(
   {
     cgu: {
-      type: String,
+      type: String
     },
     cgv: {
-      type: String,
+      type: String
+    },
+    mentionLegal: {
+      type: String
     },
     privacy: {
-      type: String,
+      type: String
     },
     product: {
-      type: String,
+      type: String
     },
     supports: [
       {
         title: String,
-        text: String,
-      },
-    ],
+        text: String
+      }
+    ]
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 

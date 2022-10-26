@@ -48,14 +48,14 @@ exports.create = async (req, res) => {
       // If we found existing architect in db
       return res.status(404).json({
         success: false,
-        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1
       });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res.status(404).json({
         success: false,
-        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1
       });
     }
     if (req.file) {
@@ -93,14 +93,14 @@ exports.signup = async (req, res) => {
       // If we found existing architect in db
       return res.status(404).json({
         success: false,
-        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1
       });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res.status(404).json({
         success: false,
-        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1
       });
     }
     let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
@@ -112,9 +112,11 @@ exports.signup = async (req, res) => {
     // assinging subscription
     const data = {
       start_date: moment(new Date()).add(1, 'days').format('YYYY/MM/DD'),
-      end_date: moment(moment(new Date()).add(subscription.duration, 'months').add(1, 'days').calendar()).format('YYYY/MM/DD'),
+      end_date: moment(
+        moment(new Date()).add(subscription.duration, 'months').add(1, 'days').calendar()
+      ).format('YYYY/MM/DD'),
       projects: subscription.projects,
-      assigned_to: architect._id,
+      assigned_to: architect._id
     };
 
     const license = await Licenses.create(data);
@@ -125,7 +127,7 @@ exports.signup = async (req, res) => {
     // Done
     res.json({
       message: 'Prescripteur créé avec succès',
-      architect,
+      architect
     }); //Success
   } catch (err) {
     // Error handling
@@ -147,14 +149,14 @@ exports.createOnSingup = async (req, res) => {
       // If we found existing architect in db
       return res.status(404).json({
         success: false,
-        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1,
+        message: lang === 'fr' ? fr.ArchitectSignUp1 : en.ArchitectSignUp1
       });
     }
     if (existingAdmin) {
       // If we found existing admin in db
       return res.status(404).json({
         success: false,
-        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1,
+        message: lang === 'fr' ? fr.AdminRegisterMsg1 : en.AdminRegisterMsg1
       });
     }
     let client_code = Math.floor(1000 + Math.random() * 9000); //random number generator for client_code
@@ -168,7 +170,7 @@ exports.createOnSingup = async (req, res) => {
     res.json({
       success: true,
       message: 'Prescripteur créé avec succès',
-      architect,
+      architect
     }); //Success
   } catch (err) {
     // Error handling
@@ -197,13 +199,13 @@ exports.createBookLibrary = async (req, res) => {
       architectId,
       { $push: { libraries: BookLibrary._id } },
       {
-        new: true,
+        new: true
       }
     ); //update architect to push bookLibrary
     // Done
     res.json({
       message: 'BookLibrary created successfully',
-      BookLibrary,
+      BookLibrary
     }); //Success
   } catch (err) {
     // Error handling
@@ -220,8 +222,8 @@ exports.login = async (req, res) => {
       path: 'subscriptions',
       populate: {
         path: 'subscription',
-        model: 'Subscriptions',
-      },
+        model: 'Subscriptions'
+      }
     }); // Finding already existing Architect
     if (!user) {
       // If we found existing user in db
@@ -231,14 +233,14 @@ exports.login = async (req, res) => {
     const isCorrect = bcrypt.compareSync(password, user.password); // Check if user password is correct
     if (!isCorrect) return res.status(401).json({ message: 'Mot de passe incorrect' });
     const token = JWT.sign({ email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: 60 * 60 * 60,
+      expiresIn: 60 * 60 * 60
     });
     const result = { user, token };
     // Done
     res.json({
       success: true,
       message: "L'utilisateur s'est connecté avec succès",
-      result,
+      result
     }); //Success
   } catch (err) {
     // Error handling
@@ -263,7 +265,7 @@ exports.forgotPassword = async (req, res) => {
       if (!user)
         return res.status(404).json({
           success: false,
-          message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+          message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3
         });
     }
 
@@ -280,15 +282,15 @@ exports.forgotPassword = async (req, res) => {
         // Done
         res.json({
           success: true,
-          message: lang === 'fr' ? fr.AdminForgetPass2 : en.AdminForgetPass2,
+          message: lang === 'fr' ? fr.AdminForgetPass2 : en.AdminForgetPass2
         });
       })
-      .catch((err) => {
+      .catch(err => {
         // Error handling
         console.log('Error ----> ', err);
         res.status(500).json({
           success: false,
-          message: lang === 'fr' ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+          message: lang === 'fr' ? fr.AdminForgetPass3 : en.AdminForgetPass3
         });
       });
   } catch (err) {
@@ -296,7 +298,7 @@ exports.forgotPassword = async (req, res) => {
     console.log('Error ----> ', err);
     res.status(500).json({
       success: false,
-      message: lang === 'fr' ? fr.AdminForgetPass3 : en.AdminForgetPass3,
+      message: lang === 'fr' ? fr.AdminForgetPass3 : en.AdminForgetPass3
     });
   }
 };
@@ -323,8 +325,8 @@ exports.resetPassword = async (req, res) => {
       { _id: user._id },
       {
         $set: {
-          password: password,
-        },
+          password: password
+        }
       },
       { new: true }
     );
@@ -349,8 +351,8 @@ exports.getAll = async (req, res) => {
         path: 'subscriptions',
         populate: {
           path: 'subscription',
-          model: 'Subscriptions',
-        },
+          model: 'Subscriptions'
+        }
       }); // Finding all the Architects from db
     res.json({ success: true, architects }); // Success
   } catch (err) {
@@ -395,8 +397,8 @@ exports.getStakeholders = async (req, res) => {
       path: 'stakeholders',
       populate: {
         path: 'type',
-        model: 'StakeholderTypes',
-      },
+        model: 'StakeholderTypes'
+      }
     });
     res.status(200).json({ success: true, stakeholders: architect.stakeholders });
   } catch (err) {
@@ -418,12 +420,12 @@ exports.update = async (req, res) => {
       req.body.profile_pic = req.file.path;
     }
     const architect = await Architects.findByIdAndUpdate(architectId, req.body, {
-      new: true,
+      new: true
     }); // Updating the architect
     res.json({
       success: true,
       message: 'Architect updated successfully',
-      architect,
+      architect
     }); // Success
   } catch (err) {
     // Error handling
@@ -443,12 +445,12 @@ exports.updateByArchitect = async (req, res) => {
     if (req.body.oldPassword) {
       if (!req.body.newPassword)
         return res.status(401).json({
-          message: lang === 'fr' ? fr.ArchitectSignUp4 : en.ArchitectSignUp4,
+          message: lang === 'fr' ? fr.ArchitectSignUp4 : en.ArchitectSignUp4
         });
       const isCorrect = bcrypt.compareSync(req.body.oldPassword, req.user.password); // Check if old password is correct
       if (!isCorrect)
         return res.status(401).json({
-          message: lang === 'fr' ? fr.ArchitectSignUp5 : en.ArchitectSignUp5,
+          message: lang === 'fr' ? fr.ArchitectSignUp5 : en.ArchitectSignUp5
         });
 
       req.body.password = bcrypt.hashSync(req.body.newPassword, parseInt(bcryptSalt)); // setting new password
@@ -460,12 +462,12 @@ exports.updateByArchitect = async (req, res) => {
       } // checking for file
 
       const architect = await Architects.findByIdAndUpdate(req.params.architectId, req.body, {
-        new: true,
+        new: true
       }); // Updating the architect
       res.json({
         success: true,
         message: 'Updated successfully',
-        architect,
+        architect
       }); // Success
     } else {
       const architectId = req.params.architectId; // Getting architect id from URL parameter
@@ -473,12 +475,12 @@ exports.updateByArchitect = async (req, res) => {
         req.body.profile_pic = req.file.path;
       }
       const architect = await Architects.findByIdAndUpdate(architectId, req.body, {
-        new: true,
+        new: true
       }); // Updating the architect
       res.json({
         success: true,
         message: 'Updated successfully',
-        architect,
+        architect
       }); // Success
     }
   } catch (err) {
@@ -502,59 +504,62 @@ exports.delete = async (req, res) => {
       // If we not found existing architect in db
       return res.status(401).json({
         success: false,
-        message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3,
+        message: lang === 'fr' ? fr.ArchitectSignUp3 : en.ArchitectSignUp3
       });
     }
 
     architect = await Architects.findByIdAndDelete(architectId); // Deleting the architect
 
     await Stakeholders.findOneAndDelete({
-      architect: architectId,
+      architect: architectId
     }); // Deleting the Stakeholders
 
     await ArchitectsChap0.findOneAndDelete({
-      architect: architectId,
+      architect: architectId
     }); // Deleting the ArchitectsChap0
 
     await Projects.findOneAndDelete({
-      architect: architectId,
+      architect: architectId
     }); // Deleting from the Projects
 
     let bookLibraries = await BookLibraries.findOneAndDelete({
-      architect: architectId,
+      architect: architectId
     }); // Deleting the BookLibraries
     bookLibraries = await BookLibraries.find({});
     if (bookLibraries.length == 0) {
       return res.json({
         success: true,
         message: 'Architect Deleted Successfully',
-        architect,
+        architect
       }); // Success
     }
-    await Families.updateMany({ _id: bookLibraries.families }, { $pull: { book_libraries: bookLibraries._id } }); // Deleting from the Families
+    await Families.updateMany(
+      { _id: bookLibraries.families },
+      { $pull: { book_libraries: bookLibraries._id } }
+    ); // Deleting from the Families
 
     let categories = await Categories.findOneAndDelete({
-      book_library: bookLibraries._id,
+      book_library: bookLibraries._id
     }); // Deleting the Categories
     categories = await Categories.find({});
     if (categories.length == 0) {
       return res.json({
         success: true,
         message: 'Architect Deleted Successfully',
-        architect,
+        architect
       }); // Success
     }
     let works = await Works.findOneAndDelete({
-      category: categories._id,
+      category: categories._id
     }); // Deleting the Works
     await WorkDetails.findOneAndDelete({
-      work: works._id,
+      work: works._id
     }); // Deleting the WorkDetails
 
     res.json({
       success: true,
       message: 'Architect Deleted Successfully',
-      architect,
+      architect
     }); // Success
   } catch (err) {
     // Error handling
@@ -581,23 +586,23 @@ exports.deleteBookLibrary = async (req, res) => {
       architectId,
       { $pull: { libraries: BookLibraryId } },
       {
-        new: true,
+        new: true
       }
     ); // Deleting from the architect
     let categories = await Categories.deleteMany({
-      book_library: BookLibraryId,
+      book_library: BookLibraryId
     }); // Deleting from the Categories in BookLibraries
     const works = await Works.deleteMany({
-      category: categories._id,
+      category: categories._id
     }); // Deleting the Works
     await WorkDetails.deleteMany({
-      work: works._id,
+      work: works._id
     }); // Deleting the WorkDetails
 
     res.json({
       success: true,
       message: 'BookLibrary deleted successfully',
-      BookLibrary: bookLibrary,
+      BookLibrary: bookLibrary
     }); // Success
   } catch (err) {
     // Error handling
@@ -612,7 +617,7 @@ exports.addSubscription = async (req, res) => {
     if (!req.body.subscriptionId) {
       await Architects.findByIdAndUpdate(req.params.architectId, {
         subscriptions: [],
-        authorized: 'No',
+        authorized: 'No'
       });
       res.json({ success: true, message: 'Subscription Removed!' });
     } else {
@@ -625,7 +630,7 @@ exports.addSubscription = async (req, res) => {
         credit: subscription.credit,
         projects: req.body.projects,
         architect: req.params.architectId,
-        assigned_to: req.params.architectId,
+        assigned_to: req.params.architectId
       };
 
       const license = await Licenses.create(data);
@@ -633,7 +638,7 @@ exports.addSubscription = async (req, res) => {
       await Architects.findByIdAndUpdate(
         req.params.architectId,
         {
-          subscriptions: license._id,
+          subscriptions: license._id
         },
         { new: true }
       );
@@ -687,32 +692,32 @@ exports.generatePdf = async (req, res) => {
     totalTTC: req.body.TotalCost,
     paymentMode: req.body.paymentMode,
     logo,
-    screenshot,
+    screenshot
   };
 
   const document = {
     html: html,
     data: obj,
-    path: `./uploads/invoice/${filename}`,
+    path: `./uploads/invoice/${filename}`
   };
   await pdf
     .create(document, options)
-    .then((res) => {
+    .then(res => {
       console.log(res);
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error);
     });
   const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
   obj.invoiceCount = count ? count : 1;
   obj.filePath = filepath;
-  let temp = req.body.subscriptionsData.map((item) => {
+  let temp = req.body.subscriptionsData.map(item => {
     return { subscription: item._id, count: item.count };
   });
   obj.subscriptionsData = temp;
   await Invoice.create(obj);
   res.status(200).json({
-    path: filepath,
+    path: filepath
   });
 };
 
@@ -759,30 +764,43 @@ exports.generateQuotePdf = async (req, res) => {
       totalTTC: req.body.TotalCost,
       paymentMode: req.body.paymentMode,
       logo,
-      screenshot,
+      screenshot
     };
 
     const document = {
       html: html,
       data: obj,
-      path: `./uploads/invoice/${filename}`,
+      path: `./uploads/invoice/${filename}`
     };
     await pdf.create(document, options);
 
     const filepath = `${process.env.BASE_URL}/uploads/invoice/${filename}`;
+
     obj.invoiceCount = count ? count : 1;
+
     obj.filePath = filepath;
-    let temp = req.body.subscriptionsData.map((item) => {
+
+    let temp = req.body.subscriptionsData.map(item => {
       return { subscription: item._id, count: item.count };
     });
+
     obj.subscriptionsData = temp;
     await Invoice.create(obj);
 
     // Sending email to user
-    await sendQuoteEmail('contact@qbsoft.fr', filepath);
+
+    sendQuoteEmail('contact@qbsoft.fr', filepath)
+      .then(async () => {
+        // Success
+        console.log('Email has been sent');
+      })
+      .catch(err => {
+        // Error handling
+        console.log('Error ----> ', err);
+      });
 
     res.status(200).json({
-      path: filepath,
+      path: filepath
     });
   } catch (err) {
     console.log('Error occured ---> ', { ...err });

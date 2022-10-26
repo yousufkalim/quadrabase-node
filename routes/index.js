@@ -23,6 +23,9 @@ router.use('/Stakeholders', require('./Stakeholders')); // All the stakeholder r
 router.use('/StakeholderTypes', require('./StakeholderTypes')); // All the stakeholder routes
 router.use('/ArchitectsChap0', require('./ArchitectsChap0')); // All the ArchitectsChap0 routes
 router.use('/project', require('./Projects')); // All the Project routes
+
+router.use('/fabricant', require('./Fabricants')); // All the Fabricants routes
+
 router.use('/licenses', require('./Licenses')); // All the License routes
 router.use('/ImportXLS', require('./ImportXLS')); // All the ImportXLS routes
 router.use('/Tranches', require('./Tranches')); // All the Tranches routes
