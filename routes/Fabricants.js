@@ -24,13 +24,13 @@ router.put(
 );
 
 // Read
-router.get('/', Fabricants.getFabricants); // Get all Fabricants at once
+router.get('/library', Fabricants.getFabricantsLibrary); // Get all Fabricants library at once
 
 // Update
 router.put('/:FabricantsId', Auth(), Fabricants.update); // Update a specific Fabricants by it's id
 
 // delete support
-router.delete('/FabricantsId', Auth(), Fabricants.deleteFabricants); // Update a specific Fabricants by it's id
+router.delete('/:FabricantsId', Auth(), Fabricants.deleteFabricants); // Update a specific Fabricants by it's id
 
 // Export
 module.exports = router;
