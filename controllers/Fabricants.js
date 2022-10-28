@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
     const fabricantLibrary = await FabricantLibrary.create(req.body); // Adding Fabricants in db
 
     // Done
-    res.json({ message: 'Fabricants created successfully', fabricantLibrary }); //Success
+    res.json({ message: 'Bibliothèque fabricant ajoutée avec succès', fabricantLibrary }); //Success
   } catch (err) {
     // Error handling
     console.log('Error ----> ', err.message);
@@ -39,7 +39,7 @@ exports.addFabricant = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'fabricant added Successfully'
+      message: 'Fabricant ajouté avec succès'
       // FabricantLibrary
     }); // Success
   } catch (err) {
@@ -66,7 +66,7 @@ exports.editFabricant = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Fabricant updated Successfully',
+      message: 'Fabricant mis à jour avec succès',
       Fabricant
     }); // Success
   } catch (err) {
@@ -152,7 +152,7 @@ exports.deleteFabricants = async (req, res) => {
       }
     );
     await Fabricants.findByIdAndDelete(fabricantId); // Deleting the fabricants
-    res.json({ success: true, message: 'Deleted successfully' }); // Success
+    res.json({ success: true, message: 'Supprimé avec succès' }); // Success
   } catch (err) {
     // Error handlings
     console.log('Error ----> ', err.message);
