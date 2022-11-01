@@ -1,7 +1,8 @@
-const Folders = require("../models/Folders");
-const fs = require("fs");
-const path = require("path").resolve(__dirname, "..");
-const { promisify } = require("util");
+const Folders = require('../models/Folders');
+const fs = require('fs');
+const path = require('path').resolve(__dirname, '..');
+const { promisify } = require('util');
+const { promises } = require('fs');
 
 //Folders create
 exports.create = async (req, res) => {
@@ -10,17 +11,17 @@ exports.create = async (req, res) => {
     const existingFolder = await Folders.findOne({ name, parentFolder: null }); // Finding already existing Folders
     if (existingFolder) {
       // If we found existing Folders in db
-      return res.status(404).json({ success: false, message: "Folder already exists" });
+      return res.status(404).json({ success: false, message: 'Folder already exists' });
     }
 
     // Creating Folders
     const folder = await Folders.create(req.body); // Adding Folders in db
 
     // Done
-    res.json({ message: "Folder created successfully", folder }); //Success
+    res.json({ message: 'Folder created successfully', folder }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -29,17 +30,17 @@ exports.create = async (req, res) => {
 exports.createSubFolder = async (req, res) => {
   try {
     let parentId = req.params.parentId; //name
-    const parent = await Folders.findById(parentId).populate("subFolders"); // Finding already existing Folders
+    const parent = await Folders.findById(parentId).populate('subFolders'); // Finding already existing Folders
     if (!parent) {
       // If we found existing Folders in db
       return res.status(404).json({ success: false, message: "Parent folder doesn't exist" });
     }
 
     let name = req.body.name; //name
-    const existingFolder = parent.subFolders.find((item) => item.name === name); // Finding already existing Folders
+    const existingFolder = parent.subFolders.find(item => item.name === name); // Finding already existing Folders
     if (existingFolder) {
       // If we found existing Folders in db
-      return res.status(404).json({ success: false, message: "Subfolder already exists" });
+      return res.status(404).json({ success: false, message: 'Subfolder already exists' });
     }
 
     req.body.parentFolder = parent._id;
@@ -49,10 +50,10 @@ exports.createSubFolder = async (req, res) => {
     await Folders.findByIdAndUpdate(parentId, { $push: { subFolders: folder._id } });
 
     // Done
-    res.json({ message: "Subfolder created successfully", folder }); //Success
+    res.json({ message: 'Subfolder created successfully', folder }); //Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -64,11 +65,11 @@ exports.createSubFolder = async (req, res) => {
  */
 exports.getAllFolders = async (req, res) => {
   try {
-    const folder = await Folders.find({ parentFolder: null }).sort([["createdAt", -1]]); // Finding all the Folders from db
+    const folder = await Folders.find({ parentFolder: null }).sort([['createdAt', -1]]); // Finding all the Folders from db
     res.json({ success: true, folder }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -86,7 +87,7 @@ exports.getSubFolders = async (req, res) => {
     res.json({ success: true, folder, parentFolder }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -99,11 +100,11 @@ exports.getSubFolders = async (req, res) => {
 exports.getbyFolderName = async (req, res) => {
   try {
     const folderName = req.params.folderName; // Getting Folders id from URL parameter
-    const folder = (await Folders.findOne({ name: folderName }).populate("subFolders")).subFolders; // Finding Folders by id
+    const folder = (await Folders.findOne({ name: folderName }).populate('subFolders')).subFolders; // Finding Folders by id
     res.json({ success: true, folder }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log('Error ----> ', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -118,10 +119,10 @@ exports.update = async (req, res) => {
     const id = req.params.id; // Getting Folders id from URL parameter
 
     const folder = await Folders.findByIdAndUpdate(id, req.body, { new: true }); // Updating the Folders
-    res.json({ success: true, message: "Folder updated successfully", folder }); // Success
+    res.json({ success: true, message: 'Folder updated successfully', folder }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -136,20 +137,20 @@ exports.updateFile = async (req, res) => {
     const id = req.params.id; // Getting Folders id from URL parameter
     const folder = await Folders.findById(id); // Updating the Folders
 
-    if (req.body.type === "docx") {
-      folder.files.docx.map((item) => {
+    if (req.body.type === 'docx') {
+      folder.files.docx.map(item => {
         if (item._id.toString() === req.body._id.toString()) {
           item.name = req.body.name;
         }
       });
-    } else if (req.body.type === "videos") {
-      folder.files.videos.map((item) => {
+    } else if (req.body.type === 'videos') {
+      folder.files.videos.map(item => {
         if (item._id.toString() === req.body._id.toString()) {
           item.name = req.body.name;
         }
       });
-    } else if (req.body.type === "images") {
-      folder.files.images.map((item) => {
+    } else if (req.body.type === 'images') {
+      folder.files.images.map(item => {
         if (item._id.toString() === req.body._id.toString()) {
           item.name = req.body.name;
         }
@@ -157,10 +158,10 @@ exports.updateFile = async (req, res) => {
     }
     folder.save();
 
-    res.json({ success: true, message: "File updated successfully", folder }); // Success
+    res.json({ success: true, message: 'File updated successfully', folder }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -172,20 +173,33 @@ exports.updateFile = async (req, res) => {
  */
 exports.deleteFile = async (req, res) => {
   try {
+    console.log('id', req.params.id);
     const id = req.params.id; // Getting Folders id from URL parameter
 
-    if (req.body.type === "docx") {
-      await Folders.findByIdAndUpdate(id, { $pull: { "files.docx": { _id: req.body._id } } }, { new: true }); // Updating the Folders
-    } else if (req.body.type === "videos") {
-      await Folders.findByIdAndUpdate(id, { $pull: { "files.videos": { _id: req.body._id } } }, { new: true }); // Updating the Folders
-    } else if (req.body.type === "images") {
-      await Folders.findByIdAndUpdate(id, { $pull: { "files.images": { _id: req.body._id } } }, { new: true }); // Updating the Folders
+    if (req.body.type === 'docx') {
+      await Folders.findByIdAndUpdate(
+        id,
+        { $pull: { 'files.docx': { _id: req.body._id } } },
+        { new: true }
+      ); // Updating the Folders
+    } else if (req.body.type === 'videos') {
+      await Folders.findByIdAndUpdate(
+        id,
+        { $pull: { 'files.videos': { _id: req.body._id } } },
+        { new: true }
+      ); // Updating the Folders
+    } else if (req.body.type === 'images') {
+      await Folders.findByIdAndUpdate(
+        id,
+        { $pull: { 'files.images': { _id: req.body._id } } },
+        { new: true }
+      ); // Updating the Folders
     }
 
-    res.json({ success: true, message: "File deleted successfully" }); // Success
+    res.json({ success: true, message: 'File deleted successfully' }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -199,34 +213,46 @@ exports.uploadFile = async (req, res) => {
   try {
     if (req.file) {
       const id = req.params.id; // Getting Folders id from URL parameter
-      let typeCheck = req.file.mimetype.split("/");
-      let folder = "";
-      if (typeCheck[0] === "video") {
+      let typeCheck = req.file.mimetype.split('/');
+      let folder = '';
+      if (typeCheck[0] === 'video') {
         folder = await Folders.findByIdAndUpdate(
           id,
-          { $push: { "files.videos": { uri: req.file.path, name: req.body.name } } },
+          { $push: { 'files.videos': { uri: req.file.path, name: req.body.name } } },
           { new: true }
         ); //push file path
-      } else if (typeCheck[0] === "image") {
+      } else if (typeCheck[0] === 'image') {
+        let imagefolder = await Folders.findById(id);
+        let ImagesArray = imagefolder.files.images;
+        let ImageExists = ImagesArray.filter(file => file.name == req.body.name);
+        console.log('ImageExists ', ImageExists);
+        if (ImageExists.length >= 1) {
+          console.log('pull work');
+          await Folders.findByIdAndUpdate(
+            id,
+            { $pull: { 'files.images': { _id: ImageExists[0]._id } } },
+            { new: true }
+          ); //push file path
+        }
         folder = await Folders.findByIdAndUpdate(
           id,
-          { $push: { "files.images": { uri: req.file.path, name: req.body.name } } },
+          { $push: { 'files.images': { uri: req.file.path, name: req.body.name } } },
           { new: true }
         ); //push file path
       } else {
         folder = await Folders.findByIdAndUpdate(
           id,
-          { $push: { "files.docx": { uri: req.file.path, name: req.body.name } } },
+          { $push: { 'files.docx': { uri: req.file.path, name: req.body.name } } },
           { new: true }
         ); //push file path
       }
-      res.json({ success: true, message: "File uploaded successfully", folder }); // Success
+      res.json({ success: true, message: 'File uploaded successfully', folder }); // Success
     } else {
-      res.json({ success: false, message: "No file to upload" }); // Success
+      res.json({ success: false, message: 'No file to upload' }); // Success
     }
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -239,12 +265,12 @@ exports.uploadFile = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const id = req.params.id; // Getting Folders id from URL parameter
-    const deletedFolder = await Folders.findById(id).populate("subFolders"); // Deleting the Folders
+    const deletedFolder = await Folders.findById(id).populate('subFolders'); // Deleting the Folders
 
     let folders = deletedFolder.subFolders;
 
     for (let i = 0; i < folders.length; i++) {
-      let subfolder = await Folders.findById(folders[i]._id).populate("subFolders");
+      let subfolder = await Folders.findById(folders[i]._id).populate('subFolders');
       if (subfolder?.subFolders) {
         folders = [...folders, ...subfolder.subFolders];
       }
@@ -254,11 +280,11 @@ exports.delete = async (req, res) => {
     const unlinkSync = promisify(fs.unlink);
 
     let toDelete = [];
-    folders.map((item) => {
+    folders.map(item => {
       Object.keys(item.files).map(function (key, index) {
         if (item.files[key].length > 0) {
-          item.files[key].map((item) => {
-            unlinkSync(path + "/" + item.uri);
+          item.files[key].map(item => {
+            unlinkSync(path + '/' + item.uri);
           });
         }
       });
@@ -266,10 +292,10 @@ exports.delete = async (req, res) => {
     });
     await Folders.deleteMany({ _id: { $in: toDelete } });
 
-    res.json({ success: true, message: "Folders deleted successfully", folders }); // Success
+    res.json({ success: true, message: 'Folders deleted successfully', folders }); // Success
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.log('Error ----> ', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
