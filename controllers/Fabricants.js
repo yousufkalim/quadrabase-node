@@ -1,5 +1,20 @@
 const Fabricants = require('../models/Fabricants');
 const FabricantLibrary = require('../models/FabLibrary');
+const fs = require('fs');
+const path = require('path');
+const { promises } = require('fs');
+
+exports.getAllImages = async (req, res) => {
+  const directoryPath = path.join(__dirname, '../uploads/images/');
+  console.log('aaaaa', directoryPath);
+  try {
+    const files = await promises.readdir(directoryPath);
+
+    res.send(files);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 
 //Fabricants create
 exports.create = async (req, res) => {

@@ -26,6 +26,8 @@ router.put(
 // Read
 router.get('/library', Fabricants.getFabricantsLibrary); // Get all Fabricants library at once
 
+router.get('/alllogo', Fabricants.getAllImages);
+
 // Update
 router.put('/:FabricantsId', Auth(), Fabricants.update); // Update a specific Fabricants by it's id
 
