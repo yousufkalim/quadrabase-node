@@ -82,7 +82,8 @@ exports.editFabricant = async (req, res) => {
     res.json({
       success: true,
       message: 'Fabricant mis à jour avec succès',
-      Fabricant
+
+      fabricants
     }); // Success
   } catch (err) {
     // Error handling
@@ -138,7 +139,13 @@ exports.getFabricants = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const fabricantId = req.params.FabricantsId;
-    const fabricants = await Fabricants.findByIdAndUpdate(fabricantId, req.body, { new: true }); // Finding all the Fabricants from db
+    console.log('fabricantId', fabricantId);
+    console.log('ranking', req.body);
+    const fabricant = await Fabricants.findByIdAndUpdate(fabricantId, req.body, { new: true }); // Finding all the Fabricants from db
+    const fabricants = await FabricantLibrary.find().populate({
+      path: 'fabricants'
+      // options: { sort: { createdAt: -1 } }
+    });
     res.json({ success: true, message: 'Updated successfully', data: fabricants }); // Success
   } catch (err) {
     // Error handlings
