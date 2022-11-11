@@ -8,6 +8,11 @@ const fabricantSchema = new mongoose.Schema(
     },
     url: {
       type: String
+    },
+    ranking: {
+      type: Number,
+      required: true,
+      default: 0
     }
   },
   {
