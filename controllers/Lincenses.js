@@ -290,7 +290,7 @@ exports.checkoutMandat = async (req, res) => {
 
     // end web hook
 
-    // res.json({ success: true, url: process.env.STRIPE_RETURN_URL });
+    res.json({ success: true, url: process.env.STRIPE_RETURN_URL });
   } catch (err) {
     // Error handling
     console.log('Error ----> ', err.message);
