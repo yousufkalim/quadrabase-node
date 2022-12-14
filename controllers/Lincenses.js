@@ -190,6 +190,113 @@ exports.checkout = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+// checkoutMandat
+exports.checkoutMandat = async (req, res) => {
+  try {
+    let metaData = req.body.metaData;
+    let lineItems = req.body.line_items;
+    let invoice = '';
+    if (metaData.type === 'providerSignup' || metaData.type === 'ProviderOrder') {
+      invoice = await providerInvoice(req.body.invoiceData);
+    } else {
+      invoice = await architectInvoice(req.body.invoiceData);
+    }
+    metaData.filePath = invoice.filePath;
+    metaData.invoiceId = invoice._id.toString();
+
+    console.log('invoice mandat', invoice);
+    console.log('metaData mandat', metaData);
+
+    // webhook data
+    const subscriptionsData = (
+      await Invoice.findById(metaData.invoiceId).populate('subscriptionsData.subscription')
+    ).subscriptionsData;
+    delete metaData.invoiceId;
+    delete metaData.type;
+    let totalProjects = 0;
+    let totalDuration = 0;
+    let durationsArray = [];
+    console.log('subscriptionsData mandat', subscriptionsData);
+
+    subscriptionsData.map(async item => {
+      totalProjects += item.subscription.projects * item.count;
+      durationsArray.push(item.subscription.duration * item.count);
+      if (parseInt(item.count) !== 0) {
+        const data = {
+          subscription: item.subscription._id,
+          start_date:
+            item.subscription.duration > 0
+              ? moment(new Date()).add(1, 'days').format('YYYY/MM/DD')
+              : null,
+          end_date:
+            item.subscription.duration > 0
+              ? moment(
+                  moment(new Date())
+                    .add(item.subscription.duration * parseInt(item.count), 'months')
+                    .add(1, 'days')
+                    .calendar(),
+                  'DD/MM/YYYY'
+                ).format('YYYY/MM/DD')
+              : null,
+          projects:
+            item.subscription.projects >= 0 ? item.subscription.projects * parseInt(item.count) : 0,
+          architect: metaData.id,
+          assigned_to: metaData.id
+        };
+        const license = await Licenses.create(data);
+
+        await Architects.findByIdAndUpdate(
+          metaData.id,
+          { $push: { myLicenses: license._id } },
+          { new: true }
+        );
+      }
+    });
+
+    if (durationsArray.length > 0) {
+      totalDuration = Math.max(...durationsArray);
+    }
+
+    // finding architect
+    const architect = await Architects.findById(metaData.id); // Adding architect in db
+
+    // // assinging subscription
+    const data = {
+      start_date: moment(new Date()).format('YYYY/MM/DD'),
+      end_date: moment(
+        moment(new Date()).add(totalDuration, 'months').calendar(),
+        'DD/MM/YYYY'
+      ).format('YYYY/MM/DD'),
+      projects: totalProjects,
+      assigned_to: architect._id
+    };
+
+    const license = await Licenses.create(data);
+    architect.subscriptions = license._id;
+    architect.authorized = 'Yes';
+    await architect.save();
+    // Sending email to user
+    console.log('architect.email', architect.email);
+    console.log('metaData', metaData.filePath);
+    sendQuoteEmail(architect.email, metaData.filePath)
+      .then(async () => {
+        // Success
+        console.log('Email has been sent');
+      })
+      .catch(err => {
+        // Error handling
+        console.log('Error ----> ', err);
+      });
+
+    // end web hook
+
+    // res.json({ success: true, url: process.env.STRIPE_RETURN_URL });
+  } catch (err) {
+    // Error handling
+    console.log('Error ----> ', err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
 
 exports.Webhook = async (req, res) => {
   let sig = req.headers['stripe-signature'];
