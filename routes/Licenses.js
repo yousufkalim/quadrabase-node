@@ -1,40 +1,37 @@
-const router = require("express").Router();
-const Lincenses = require("../controllers/Lincenses");
-const { validateLincese, isValidated } = require("../middleware/validators");
-const Auth = require("../middleware/auth");
-const ArchitectsModel = require("../models/Architects");
-const express = require("express");
+const router = require('express').Router();
+const Lincenses = require('../controllers/Lincenses');
+const { validateLincese, isValidated } = require('../middleware/validators');
+const Auth = require('../middleware/auth');
+const ArchitectsModel = require('../models/Architects');
+const express = require('express');
 
 // post - buy subscription
 router.post(
-  "/buy/:architectId",
+  '/buy/:architectId',
   validateLincese,
   isValidated,
   Auth(ArchitectsModel),
   Lincenses.buy
 );
 // post - checkout
-router.post("/checkout", Lincenses.checkout);
+router.post('/checkout', Lincenses.checkout);
+router.post('/mandat', Lincenses.checkoutMandat);
 
 // post - webhook
-router.post(
-  "/stripe/webhook",
-  express.raw({ type: "application/json" }),
-  Lincenses.Webhook
-);
+router.post('/stripe/webhook', express.raw({ type: 'application/json' }), Lincenses.Webhook);
 
 // get - get invoice
-router.get("/invoice/:id", Lincenses.getInvoiceById);
+router.get('/invoice/:id', Lincenses.getInvoiceById);
 
 // get - get licenses by architectId
-router.get("/:architectId", Auth(ArchitectsModel), Lincenses.getByArchitectId);
+router.get('/:architectId', Auth(ArchitectsModel), Lincenses.getByArchitectId);
 
 // put - assign subscription
-router.put("/:licenseId", Auth(ArchitectsModel), Lincenses.assign);
+router.put('/:licenseId', Auth(ArchitectsModel), Lincenses.assign);
 
 // put - buy subscription
 router.put(
-  "/buyprojects/:licenseId",
+  '/buyprojects/:licenseId',
   validateLincese,
   isValidated,
   Auth(ArchitectsModel),
@@ -43,7 +40,7 @@ router.put(
 
 // put - renew subscription
 router.put(
-  "/renew/:licenseId",
+  '/renew/:licenseId',
   validateLincese,
   isValidated,
   Auth(ArchitectsModel),
